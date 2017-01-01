@@ -1,0 +1,14 @@
+---
+---
+
+{
+    {% for event in site.events %}
+        "{{ event.name }}": {
+            "name": "{{ event.name }}",
+            "dataType": "{{ event.dataType}}",
+            "description": "{{ event.description }}",
+            "variable": "{{ event.variable }}",
+            "parameters": {{ event.parameters | jsonify }}
+        }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+}
