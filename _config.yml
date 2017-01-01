@@ -6,6 +6,7 @@ baseurl: ""
 
 collections:
   - events
+  - licenses
 
 # Build settings
 markdown: kramdown

@@ -1,0 +1,11 @@
+---
+---
+
+{
+    {% for license in site.licenses %}
+        "{{ license.name }}": {
+            "header": "{{ license.header | normalize_whitespace }}",
+            "content": {{ license.content | strip_html | newline_to_br | split: '<br />' | jsonify }}
+        }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+}
