@@ -14,7 +14,7 @@ class LanguageClass implements IWritable {
 
     write(options: FormatableOptions): string {
         let formatter = new Formatter(options);
-        let output = this.classDefinition(formatter).write(formatter) + ";\n";
+        let output = this.classDefinition().write(formatter) + ";\n";
 
         for (let f of this.classFunctions) {
             output += "\n" + f.writeImplementation(this.className, formatter) + "\n";
@@ -23,7 +23,7 @@ class LanguageClass implements IWritable {
         return output;
     }
 
-    private classDefinition(formatter: Formatter): LanguageCodeBlock {
+    private classDefinition(): LanguageCodeBlock {
         let classBlock = new LanguageCodeBlock(
             this.classSignature(),
             this.classFunctions
@@ -36,11 +36,11 @@ class LanguageClass implements IWritable {
         let classSignature = `class ${this.className}`;
 
         if (this.classExtends.length > 0) {
-            let classExtensions = [];
+            let classExtensions: string[] = [];
 
-            this.classExtends.forEach(element => {
-                classExtensions.push(`${element[0]} ${element[1]}`);
-            });
+            for (let e of this.classExtends) {
+                classExtensions.push(`${e[0]} ${e[1]}`)
+            }
 
             classSignature += ` : ${classExtensions.join(', ')}`;
         }
