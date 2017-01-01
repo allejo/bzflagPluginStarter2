@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "pretty": false,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "../../assets/js/CodeBuilder.js",
+        "sourceMap": true,
+        "declaration": false,
+        "stripInternal": true,
+        "target": "ES3",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    },
+    "files": [
+        "Formatter.ts",
+        "IWritable.ts",
+        "LanguageClass.ts",
+        "LanguageCodeBlock.ts",
+        "LanguageComment.ts",
+        "LanguageFunction.ts",
+        "LanguageHelpers.ts",
+        "LanguageSwitchBlock.ts",
+        "LanguageSwitchCase.ts",
+        "WritableObject.ts"
+    ]
+}
