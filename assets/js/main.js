@@ -37,7 +37,7 @@ var bpsApp = new Vue({
     data: {
         pluginName: '',
         pluginAuthor: '',
-        pluginLicense: '',
+        pluginLicense: 'MIT',
         pluginEvents: [],
         styleIndentation: '4spaces',
         styleEventHandling: 'switch',
