@@ -1,4 +1,6 @@
 class LanguageClass implements IWritable {
+    classHeader: string[] = [];
+    classIncludes: string[] = [];
     classExtends: [string, string][] = [];
     classFunctions: LanguageFunction[] = [];
 
@@ -13,8 +15,12 @@ class LanguageClass implements IWritable {
     }
 
     write(options: FormatableOptions): string {
+        let output = '';
         let formatter = new Formatter(options);
-        let output = this.classDefinition().write(formatter) + ";\n";
+
+        output += this.classHeaderContent() + "\n";
+        output += this.classIncludeHeaders() + "\n";
+        output += this.classDefinition().write(formatter) + ";\n";
 
         for (let f of this.classFunctions) {
             output += "\n" + f.writeImplementation(this.className, formatter) + "\n";
@@ -30,6 +36,20 @@ class LanguageClass implements IWritable {
         );
 
         return classBlock;
+    }
+
+    private classHeaderContent(): string {
+        return `/*\n${this.classHeader.join('')}*/\n`;
+    }
+
+    private classIncludeHeaders(): string {
+        let headers: string[] = [];
+
+        for (let i of this.classIncludes) {
+            headers.push(`#include "${i}"`);
+        }
+
+        return headers.join("\n") + "\n";
     }
 
     private classSignature(): string {

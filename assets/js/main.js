@@ -1,8 +1,26 @@
 //
+// Prepare our application by fetching necessary data
+//
+var bzEvents = {};
+var licenses = {};
+$.when(
+    $.ajax('/data/events.json').done(function (data) {
+        bzEvents = data;
+    }),
+    $.ajax('/data/licenses.json').done(function (data) {
+        licenses = data;
+    })
+).then(function () {
+    bpsApp.buildPlugin();
+})
+
+
+//
 // Build the base plug-in structure
 //
 var plugin = new LanguageClass('SAMPLE_PLUGIN');
     plugin.extendsClass(['public', 'bz_Plugin']);
+    plugin.classIncludes = ['bzfsAPI.h', 'plugin_utils.h'];
 
 let constCharName = new LanguageFunction(Visibility.public, 'const char*', 'Name');
 let voidInit      = new LanguageFunction(Visibility.public, 'void', 'Init',  [{ returnType: 'const char*',   paramName: 'config' }]);
@@ -50,10 +68,12 @@ var bpsApp = new Vue({
         },
         pluginBuilder: plugin,
         pluginClassName: '',
-        pluginOutput: ''
+        pluginCopyright: '',
+        pluginOutput: '',
     },
     methods: {
         buildPlugin: function () {
+            this.buildLicenseHeader();
             this.pluginOutput = this.pluginBuilder.write(this.codeSettings);
         },
         classifyName: function () {
@@ -68,6 +88,18 @@ var bpsApp = new Vue({
             if (!isNaN(this.pluginClassName.charAt(0))) {
                 this.pluginClassName = literalNumbers[this.pluginClassName.charAt(0)] + this.pluginClassName.substring(1);
             }
+        },
+        buildLicenseHeader: function () {
+            var author = (this.pluginAuthor.length == 0) ? 'John Doe' : this.pluginAuthor;
+            var license = licenses[this.pluginLicense];
+            var header  = license.header
+                .replace('{year}', new Date().getFullYear())
+                .replace('{author}', author)
+                .replace('{name}', this.pluginName);
+
+            this.pluginCopyright = header;
+            this.pluginBuilder.classHeader = [this.pluginCopyright + "\n\n"];
+            this.pluginBuilder.classHeader = this.pluginBuilder.classHeader.concat(license.content);
         }
     },
     watch: {
@@ -75,6 +107,12 @@ var bpsApp = new Vue({
             this.classifyName();
             this.pluginBuilder.className = this.pluginClassName;
             this.buildPlugin();
+        },
+        pluginAuthor: function () {
+            this.buildPlugin();
+        },
+        pluginLicense: function () {
+            this.buildPlugin()
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {
@@ -94,7 +132,6 @@ var bpsApp = new Vue({
     }
 });
 
-bpsApp.buildPlugin();
 //
 // Let's enable `position: sticky`
 //

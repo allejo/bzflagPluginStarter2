@@ -8,6 +8,8 @@ var Formatter = (function () {
 var LanguageClass = (function () {
     function LanguageClass(className) {
         this.className = className;
+        this.classHeader = [];
+        this.classIncludes = [];
         this.classExtends = [];
         this.classFunctions = [];
     }
@@ -18,8 +20,11 @@ var LanguageClass = (function () {
         this.classFunctions.push(_function);
     };
     LanguageClass.prototype.write = function (options) {
+        var output = '';
         var formatter = new Formatter(options);
-        var output = this.classDefinition().write(formatter) + ";\n";
+        output += this.classHeaderContent() + "\n";
+        output += this.classIncludeHeaders() + "\n";
+        output += this.classDefinition().write(formatter) + ";\n";
         for (var _i = 0, _a = this.classFunctions; _i < _a.length; _i++) {
             var f = _a[_i];
             output += "\n" + f.writeImplementation(this.className, formatter) + "\n";
@@ -29,6 +34,17 @@ var LanguageClass = (function () {
     LanguageClass.prototype.classDefinition = function () {
         var classBlock = new LanguageCodeBlock(this.classSignature(), this.classFunctions);
         return classBlock;
+    };
+    LanguageClass.prototype.classHeaderContent = function () {
+        return "/*\n" + this.classHeader.join('') + "*/\n";
+    };
+    LanguageClass.prototype.classIncludeHeaders = function () {
+        var headers = [];
+        for (var _i = 0, _a = this.classIncludes; _i < _a.length; _i++) {
+            var i = _a[_i];
+            headers.push("#include \"" + i + "\"");
+        }
+        return headers.join("\n") + "\n";
     };
     LanguageClass.prototype.classSignature = function () {
         var classSignature = "class " + this.className;
