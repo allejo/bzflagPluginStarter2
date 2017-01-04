@@ -60,6 +60,8 @@ var bpsApp = new Vue({
         styleIndentation: '4spaces',
         styleEventHandling: 'switch',
         styleBracePlacement: 'newLine',
+        disableDocs: false,
+        disableComments: false,
 
         codeSettings: {
             indentWithSpaces: true,
@@ -67,9 +69,7 @@ var bpsApp = new Vue({
             bracesOnNewLine: true
         },
         pluginBuilder: plugin,
-        pluginClassName: '',
-        pluginCopyright: '',
-        pluginOutput: '',
+        pluginClassName: ''
     },
     methods: {
         buildPlugin: function () {
@@ -90,29 +90,81 @@ var bpsApp = new Vue({
             }
         },
         buildLicenseHeader: function () {
-            var author = (this.pluginAuthor.length == 0) ? 'John Doe' : this.pluginAuthor;
+            var author  = (this.pluginAuthor.length == 0) ? 'John Doe' : this.pluginAuthor;
             var license = licenses[this.pluginLicense];
             var header  = license.header
                 .replace('{year}', new Date().getFullYear())
                 .replace('{author}', author)
                 .replace('{name}', this.pluginName);
 
-            this.pluginCopyright = header;
-            this.pluginBuilder.classHeader = [this.pluginCopyright + "\n\n"];
+            this.pluginBuilder.classHeader = [header + "\n\n"];
             this.pluginBuilder.classHeader = this.pluginBuilder.classHeader.concat(license.content);
+        },
+        buildEventBlock: function (eventName) {
+            var event = bzEvents[eventName];
+            var block = [LanguageHelpers.createLiteral(
+                event['dataType'] + ' *' + event['variable'] + ' = (' + event['dataType'] + '*)eventData;'
+            )];
+
+            if (!this.disableDocs) {
+                block.push(LanguageHelpers.createNewLine());
+
+                for (var p = 0; p < event.parameters.length; p++) {
+                    block.push(new LanguageComment(
+                        '(' + event.parameters[p]['dataType'] + ') ' + event.parameters[p]['name'] + ' - ' + event.parameters[p]['description']
+                    ));
+                }
+            }
+
+            return block;
+        },
+        buildSwitchBlock: function () {
+            var block = new LanguageSwitchBlock('eventData->eventType');
+
+            for (var i = 0; i < this.pluginEvents.length; i++) {
+                var event = bzEvents[this.pluginEvents[i]];
+                var _case = new LanguageSwitchCase(event.name);
+                
+                _case.defineBody(this.buildEventBlock(event.name));
+                block.addCase(_case);
+            }
+
+            return block;
+        }
+    },
+    computed: {
+        pluginOutput: function () {
+            return this.pluginBuilder.write(this.codeSettings);
         }
     },
     watch: {
         pluginName: function () {
             this.classifyName();
             this.pluginBuilder.className = this.pluginClassName;
-            this.buildPlugin();
+
+            // Copyright headers for GPL licenses require the project name
+            if (this.pluginLicense.includes('GPL')) {
+                this.buildLicenseHeader();
+            }
+
+            // Update plug-in name in code
+            var pluginName = (this.pluginName.length == 0) ? 'SAMPLE_PLUGIN' : this.pluginName;
+
+            this.pluginBuilder.implementFunction('const char*', 'Name', [
+                LanguageHelpers.createLiteral('return "' + pluginName + '";')
+            ]);
         },
         pluginAuthor: function () {
-            this.buildPlugin();
+            this.buildLicenseHeader();
         },
         pluginLicense: function () {
-            this.buildPlugin()
+            this.buildLicenseHeader()
+        },
+        pluginEvents: function (data) {
+            var switchBlock = this.buildSwitchBlock();
+
+            this.pluginBuilder.implementFunction('void', 'Event', [switchBlock]);
+            this.buildPlugin();
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {
