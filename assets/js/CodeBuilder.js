@@ -11,13 +11,23 @@ var LanguageClass = (function () {
         this.classHeader = [];
         this.classIncludes = [];
         this.classExtends = [];
+        this.classFxnNames = {};
         this.classFunctions = [];
     }
     LanguageClass.prototype.extendsClass = function (extension) {
         this.classExtends.push(extension);
     };
     LanguageClass.prototype.declareFunction = function (_function) {
-        this.classFunctions.push(_function);
+        var index = this.classFunctions.push(_function);
+        this.classFxnNames[_function.returnType + " " + _function.name] = index - 1;
+    };
+    LanguageClass.prototype.implementFunction = function (returnType, name, body) {
+        var fxnIndex = this.classFxnNames[returnType + " " + name];
+        this.classFunctions[fxnIndex].implementFunction(body);
+    };
+    LanguageClass.prototype.appendFunction = function (returnType, name, body) {
+        var fxnIndex = this.classFxnNames[returnType + " " + name];
+        this.classFunctions[fxnIndex].appendFunction(body);
     };
     LanguageClass.prototype.write = function (options) {
         var output = '';
@@ -155,7 +165,7 @@ var LanguageHelpers = (function () {
         return (new LanguageComment(content));
     };
     LanguageHelpers.createNewLine = function () {
-        return (new WritableObject("\n"));
+        return (new WritableObject(''));
     };
     LanguageHelpers.createFunctionCall = function (name, params) {
         var functionParameters = [];

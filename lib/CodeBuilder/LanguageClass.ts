@@ -2,6 +2,7 @@ class LanguageClass implements IWritable {
     classHeader: string[] = [];
     classIncludes: string[] = [];
     classExtends: [string, string][] = [];
+    classFxnNames: any = {};
     classFunctions: LanguageFunction[] = [];
 
     constructor(public className: string) { }
@@ -11,7 +12,18 @@ class LanguageClass implements IWritable {
     }
 
     declareFunction(_function: LanguageFunction): void {
-        this.classFunctions.push(_function);
+        let index = this.classFunctions.push(_function);
+        this.classFxnNames[`${_function.returnType} ${_function.name}`] = index - 1;
+    }
+
+    implementFunction(returnType: string, name: string, body: IWritable[]): void {
+        let fxnIndex = this.classFxnNames[`${returnType} ${name}`];
+        this.classFunctions[fxnIndex].implementFunction(body);
+    }
+
+    appendFunction(returnType: string, name: string, body: IWritable[]): void {
+        let fxnIndex = this.classFxnNames[`${returnType} ${name}`];
+        this.classFunctions[fxnIndex].appendFunction(body);
     }
 
     write(options: FormatableOptions): string {

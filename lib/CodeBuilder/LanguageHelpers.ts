@@ -12,7 +12,7 @@ class LanguageHelpers {
     }
 
     public static createNewLine(): IWritable {
-        return (new WritableObject("\n"));
+        return (new WritableObject(''));
     }
 
     public static createFunctionCall(name: string, params: (string | IWritable)[]): IWritable {
