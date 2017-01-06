@@ -48,6 +48,22 @@ let boolSlashCommand = new LanguageFunction(
 );
 
 //
+// Generic helper functions
+//
+function maxLength (objectArray, key) {
+    return Enumerable.From(objectArray)
+        .OrderByDescending(function (x) { return x[key].length; })
+        .Select(function (x) { return x[key].length; })
+        .First();
+}
+
+function stringPad (string, charLimit) {
+    var spacesRemaining = charLimit - string.length + 1;
+    
+    return string + ' '.repeat(spacesRemaining);
+}
+
+//
 // Build the actual app
 //
 var bpsApp = new Vue({
@@ -69,7 +85,8 @@ var bpsApp = new Vue({
             bracesOnNewLine: true
         },
         pluginBuilder: plugin,
-        pluginClassName: ''
+        pluginClassName: '',
+        pluginEventsSorted: []
     },
     methods: {
         buildPlugin: function () {
@@ -108,28 +125,49 @@ var bpsApp = new Vue({
 
             if (!this.disableDocs) {
                 block.push(LanguageHelpers.createNewLine());
+                block.push(new LanguageComment('Data'));
+                block.push(new LanguageComment('----'));
+
+                var dataTypeLength = maxLength(event.parameters, 'dataType');
+                var varNameLength  = maxLength(event.parameters, 'name');
 
                 for (var p = 0; p < event.parameters.length; p++) {
+                    var dataType = stringPad('(' + event.parameters[p]['dataType'] + ')', dataTypeLength + 2);
+                    var varName  = stringPad(event.parameters[p]['name'], varNameLength);
+
                     block.push(new LanguageComment(
-                        '(' + event.parameters[p]['dataType'] + ') ' + event.parameters[p]['name'] + ' - ' + event.parameters[p]['description']
+                         dataType + varName + '- ' + event.parameters[p]['description']
                     ));
                 }
             }
 
             return block;
         },
-        buildSwitchBlock: function () {
-            var block = new LanguageSwitchBlock('eventData->eventType');
+        buildInitFunction: function () {
+            var initBody = [];
 
-            for (var i = 0; i < this.pluginEvents.length; i++) {
-                var event = bzEvents[this.pluginEvents[i]];
-                var _case = new LanguageSwitchCase(event.name);
-                
-                _case.defineBody(this.buildEventBlock(event.name));
-                block.addCase(_case);
+            this.pluginEventsSorted.forEach(function (event) {
+                initBody.push(LanguageHelpers.createFunctionCall('Register', [event]));
+            });
+
+            return initBody;
+        },
+        buildEventFunction: function () {
+            if (this.pluginEvents.length === 0) {
+                return [];
             }
 
-            return block;
+            var block  = new LanguageSwitchBlock('eventData->eventType');
+
+            this.pluginEventsSorted.forEach(function (eventName) {
+                var event = bzEvents[eventName];
+                var eventCase = new LanguageSwitchCase(event.name);
+                
+                eventCase.defineBody(this.buildEventBlock(event.name));
+                block.addCase(eventCase);
+            }.bind(this));
+
+            return [block];
         }
     },
     computed: {
@@ -160,10 +198,13 @@ var bpsApp = new Vue({
         pluginLicense: function () {
             this.buildLicenseHeader()
         },
-        pluginEvents: function (data) {
-            var switchBlock = this.buildSwitchBlock();
+        pluginEvents: function () {
+            // Duplicate the array since sorting the original will cause an endless loop due to Vue's watch functionality
+            this.pluginEventsSorted = this.pluginEvents.slice();
+            this.pluginEventsSorted.sort();
 
-            this.pluginBuilder.implementFunction('void', 'Event', [switchBlock]);
+            this.pluginBuilder.implementFunction('void', 'Init',  this.buildInitFunction());
+            this.pluginBuilder.implementFunction('void', 'Event', this.buildEventFunction());
             this.buildPlugin();
         },
         styleIndentation: function () {

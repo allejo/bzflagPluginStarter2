@@ -2,8 +2,7 @@ class LanguageClass implements IWritable {
     classHeader: string[] = [];
     classIncludes: string[] = [];
     classExtends: [string, string][] = [];
-    classFxnNames: any = {};
-    classFunctions: LanguageFunction[] = [];
+    classFunctions: { [name: string]: LanguageFunction; } = {};
 
     constructor(public className: string) { }
 
@@ -12,18 +11,19 @@ class LanguageClass implements IWritable {
     }
 
     declareFunction(_function: LanguageFunction): void {
-        let index = this.classFunctions.push(_function);
-        this.classFxnNames[`${_function.returnType} ${_function.name}`] = index - 1;
+        this.classFunctions[`${_function.returnType} ${_function.name}`] = _function;
     }
 
     implementFunction(returnType: string, name: string, body: IWritable[]): void {
-        let fxnIndex = this.classFxnNames[`${returnType} ${name}`];
-        this.classFunctions[fxnIndex].implementFunction(body);
+        this.classFunctions[`${returnType} ${name}`].implementFunction(body);
     }
 
     appendFunction(returnType: string, name: string, body: IWritable[]): void {
-        let fxnIndex = this.classFxnNames[`${returnType} ${name}`];
-        this.classFunctions[fxnIndex].appendFunction(body);
+        this.classFunctions[`${returnType} ${name}`].appendFunction(body);
+    }
+
+    removeFunction(returnType: string, name: string): void {
+        delete this.classFunctions[`${returnType} ${name}`];
     }
 
     write(options: FormatableOptions): string {
@@ -34,17 +34,23 @@ class LanguageClass implements IWritable {
         output += this.classIncludeHeaders() + "\n";
         output += this.classDefinition().write(formatter) + ";\n";
 
-        for (let f of this.classFunctions) {
-            output += "\n" + f.writeImplementation(this.className, formatter) + "\n";
+        for (let f in this.classFunctions) {
+            output += "\n" + this.classFunctions[f].writeImplementation(this.className, formatter) + "\n";
         }
 
         return output;
     }
 
     private classDefinition(): LanguageCodeBlock {
+        let functions = [];
+
+        for (let k in this.classFunctions) {
+            functions.push(this.classFunctions[k]);
+        }
+
         let classBlock = new LanguageCodeBlock(
             this.classSignature(),
-            this.classFunctions
+            functions
         );
 
         return classBlock;

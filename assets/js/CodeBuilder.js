@@ -11,23 +11,22 @@ var LanguageClass = (function () {
         this.classHeader = [];
         this.classIncludes = [];
         this.classExtends = [];
-        this.classFxnNames = {};
-        this.classFunctions = [];
+        this.classFunctions = {};
     }
     LanguageClass.prototype.extendsClass = function (extension) {
         this.classExtends.push(extension);
     };
     LanguageClass.prototype.declareFunction = function (_function) {
-        var index = this.classFunctions.push(_function);
-        this.classFxnNames[_function.returnType + " " + _function.name] = index - 1;
+        this.classFunctions[_function.returnType + " " + _function.name] = _function;
     };
     LanguageClass.prototype.implementFunction = function (returnType, name, body) {
-        var fxnIndex = this.classFxnNames[returnType + " " + name];
-        this.classFunctions[fxnIndex].implementFunction(body);
+        this.classFunctions[returnType + " " + name].implementFunction(body);
     };
     LanguageClass.prototype.appendFunction = function (returnType, name, body) {
-        var fxnIndex = this.classFxnNames[returnType + " " + name];
-        this.classFunctions[fxnIndex].appendFunction(body);
+        this.classFunctions[returnType + " " + name].appendFunction(body);
+    };
+    LanguageClass.prototype.removeFunction = function (returnType, name) {
+        delete this.classFunctions[returnType + " " + name];
     };
     LanguageClass.prototype.write = function (options) {
         var output = '';
@@ -35,14 +34,17 @@ var LanguageClass = (function () {
         output += this.classHeaderContent() + "\n";
         output += this.classIncludeHeaders() + "\n";
         output += this.classDefinition().write(formatter) + ";\n";
-        for (var _i = 0, _a = this.classFunctions; _i < _a.length; _i++) {
-            var f = _a[_i];
-            output += "\n" + f.writeImplementation(this.className, formatter) + "\n";
+        for (var f in this.classFunctions) {
+            output += "\n" + this.classFunctions[f].writeImplementation(this.className, formatter) + "\n";
         }
         return output;
     };
     LanguageClass.prototype.classDefinition = function () {
-        var classBlock = new LanguageCodeBlock(this.classSignature(), this.classFunctions);
+        var functions = [];
+        for (var k in this.classFunctions) {
+            functions.push(this.classFunctions[k]);
+        }
+        var classBlock = new LanguageCodeBlock(this.classSignature(), functions);
         return classBlock;
     };
     LanguageClass.prototype.classHeaderContent = function () {

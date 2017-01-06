@@ -8,7 +8,7 @@
         "sourceMap": true,
         "declaration": false,
         "stripInternal": true,
-        "target": "ES3",
+        "target": "ES5",
         "noUnusedLocals": true,
         "noUnusedParameters": true
     },
