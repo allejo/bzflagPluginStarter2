@@ -39,7 +39,7 @@ layout: default
                 <p>Select all of the events your plug-in will need to listen for.</p>
                 <div class="row">
                     {% for event in site.events %}
-                        <div class="columns medium-6">
+                        <div class="columns small-12 medium-6">
                             <label>
                                 <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
                                 [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
@@ -70,8 +70,8 @@ layout: default
 
                 <p><strong>Misc</strong></p>
                 <div class="row">
-                    <label class="columns"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
-                    <label class="columns"><input type="checkbox" v-model="disableComments"> Disable comments</label>
+                    <label class="columns small-12"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
+                    <label class="columns small-12"><input type="checkbox" v-model="disableComments"> Disable comments</label>
                 </div>
             </form>
         </div>
