@@ -11,7 +11,7 @@ $.when(
         licenses = data;
     })
 ).then(function () {
-    bpsApp.buildPlugin();
+    bpsApp.buildLicenseHeader();
 })
 
 
@@ -19,7 +19,7 @@ $.when(
 // Build the base plug-in structure
 //
 var plugin = new LanguageClass('SAMPLE_PLUGIN');
-    plugin.extendsClass(['public', 'bz_Plugin']);
+    plugin.addExtends(['public', 'bz_Plugin']);
     plugin.classIncludes = ['bzfsAPI.h', 'plugin_utils.h'];
 
 let constCharName = new LanguageFunction(Visibility.public, 'const char*', 'Name');
@@ -85,14 +85,10 @@ var bpsApp = new Vue({
             bracesOnNewLine: true
         },
         pluginBuilder: plugin,
-        pluginClassName: '',
+        pluginClassName: 'SAMPLE_PLUGIN',
         pluginEventsSorted: []
     },
     methods: {
-        buildPlugin: function () {
-            this.buildLicenseHeader();
-            this.pluginOutput = this.pluginBuilder.write(this.codeSettings);
-        },
         classifyName: function () {
             if (this.pluginName.trim().length == 0) {
                 this.pluginClassName = 'SAMPLE_PLUGIN';
@@ -172,7 +168,10 @@ var bpsApp = new Vue({
     },
     computed: {
         pluginOutput: function () {
-            return this.pluginBuilder.write(this.codeSettings);
+            let pluginBody = this.pluginBuilder.write(this.codeSettings);
+                pluginBody = pluginBody.replace('};', "};\n\nBZ_PLUGIN(" + this.pluginClassName + ")");
+
+            return pluginBody;
         }
     },
     watch: {
@@ -205,7 +204,6 @@ var bpsApp = new Vue({
 
             this.pluginBuilder.implementFunction('void', 'Init',  this.buildInitFunction());
             this.pluginBuilder.implementFunction('void', 'Event', this.buildEventFunction());
-            this.buildPlugin();
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {
@@ -214,13 +212,9 @@ var bpsApp = new Vue({
             } else {
                 this.codeSettings.indentWithSpaces = false;
             }
-
-            this.buildPlugin();
         },
         styleBracePlacement: function () {
             this.codeSettings.bracesOnNewLine = (this.styleBracePlacement == 'newLine');
-
-            this.buildPlugin();
         }
     }
 });
