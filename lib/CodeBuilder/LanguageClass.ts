@@ -4,26 +4,86 @@ class LanguageClass implements IWritable {
     classExtends: [string, string][] = [];
     classFunctions: { [name: string]: LanguageFunction; } = {};
 
+    /**
+     * @param className The name of the class
+     */
     constructor(public className: string) { }
 
-    extendsClass(extension: [string, string]): void {
-        this.classExtends.push(extension);
+    /**
+     * Define a class which this class will extend
+     * 
+     * @param classExtends A tuple of the visibility and name of the class this class is extending
+     */
+    addExtends(classExtends: [string, string]): void {
+        this.classExtends.push(classExtends);
     }
 
-    declareFunction(_function: LanguageFunction): void {
-        this.classFunctions[`${_function.returnType} ${_function.name}`] = _function;
+    /**
+     * Remove a parent class this one is extending
+     * 
+     * @param classExtends A tuple of the visibility and name of the class to no longer extend
+     * 
+     * @returns True if the deletion was successful
+     */
+    removeExtends(classExtends: [string, string]): boolean {
+        this.classExtends.forEach((element, index) => {
+            if (element[0] === classExtends[0] && element[1] === classExtends[1]) {
+                this.classExtends.splice(index, 1);
+                return true;
+            }
+        });
+
+        return false;
     }
 
+    /**
+     * Add a LanguageFunction to this class
+     * 
+     * @param classFunction The function that will belong to this class
+     */
+    declareFunction(classFunction: LanguageFunction): void {
+        this.classFunctions[`${classFunction.returnType} ${classFunction.name}`] = classFunction;
+    }
+
+    /**
+     * Implement the given function. This function call will overwrite any existing contents the function may have
+     * 
+     * @param returnType The returnType of the function to implement
+     * @param name       The name of the function to implement
+     * @param body       The contents of the function body
+     */
     implementFunction(returnType: string, name: string, body: IWritable[]): void {
         this.classFunctions[`${returnType} ${name}`].implementFunction(body);
     }
 
+    /**
+     * Amend the given function
+     * 
+     * @param returnType The returnType of the function to amend to
+     * @param name       The name of the function to amend to
+     * @param body       The contents of the function body
+     */
     appendFunction(returnType: string, name: string, body: IWritable[]): void {
         this.classFunctions[`${returnType} ${name}`].appendFunction(body);
     }
 
-    removeFunction(returnType: string, name: string): void {
-        delete this.classFunctions[`${returnType} ${name}`];
+    /**
+     * Remove a given function from this class definition
+     * 
+     * @param returnType The returnType of the function to delete
+     * @param name       The name of the function to delete
+     * 
+     * @returns True if the deletion was successful
+     */
+    removeFunction(returnType: string, name: string): boolean {
+        let functionSignature = `${returnType} ${name}`;
+
+        if (this.classFunctions.hasOwnProperty(functionSignature)) {
+            delete this.classFunctions[functionSignature];
+            return true;
+        }
+
+        return false;
     }
 
     write(options: FormatableOptions): string {
@@ -39,21 +99,6 @@ class LanguageClass implements IWritable {
         }
 
         return output;
-    }
-
-    private classDefinition(): LanguageCodeBlock {
-        let functions = [];
-
-        for (let k in this.classFunctions) {
-            functions.push(this.classFunctions[k]);
-        }
-
-        let classBlock = new LanguageCodeBlock(
-            this.classSignature(),
-            functions
-        );
-
-        return classBlock;
     }
 
     private classHeaderContent(): string {
@@ -84,5 +129,20 @@ class LanguageClass implements IWritable {
         }
 
         return classSignature;
+    }
+
+    private classDefinition(): LanguageCodeBlock {
+        let functions = [];
+
+        for (let k in this.classFunctions) {
+            functions.push(this.classFunctions[k]);
+        }
+
+        let classBlock = new LanguageCodeBlock(
+            this.classSignature(),
+            functions
+        );
+
+        return classBlock;
     }
 }

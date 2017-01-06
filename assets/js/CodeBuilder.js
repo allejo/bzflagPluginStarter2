@@ -13,11 +13,21 @@ var LanguageClass = (function () {
         this.classExtends = [];
         this.classFunctions = {};
     }
-    LanguageClass.prototype.extendsClass = function (extension) {
-        this.classExtends.push(extension);
+    LanguageClass.prototype.addExtends = function (classExtends) {
+        this.classExtends.push(classExtends);
     };
-    LanguageClass.prototype.declareFunction = function (_function) {
-        this.classFunctions[_function.returnType + " " + _function.name] = _function;
+    LanguageClass.prototype.removeExtends = function (classExtends) {
+        var _this = this;
+        this.classExtends.forEach(function (element, index) {
+            if (element[0] === classExtends[0] && element[1] === classExtends[1]) {
+                _this.classExtends.splice(index, 1);
+                return true;
+            }
+        });
+        return false;
+    };
+    LanguageClass.prototype.declareFunction = function (classFunction) {
+        this.classFunctions[classFunction.returnType + " " + classFunction.name] = classFunction;
     };
     LanguageClass.prototype.implementFunction = function (returnType, name, body) {
         this.classFunctions[returnType + " " + name].implementFunction(body);
@@ -26,7 +36,12 @@ var LanguageClass = (function () {
         this.classFunctions[returnType + " " + name].appendFunction(body);
     };
     LanguageClass.prototype.removeFunction = function (returnType, name) {
-        delete this.classFunctions[returnType + " " + name];
+        var functionSignature = returnType + " " + name;
+        if (this.classFunctions.hasOwnProperty(functionSignature)) {
+            delete this.classFunctions[functionSignature];
+            return true;
+        }
+        return false;
     };
     LanguageClass.prototype.write = function (options) {
         var output = '';
@@ -38,14 +53,6 @@ var LanguageClass = (function () {
             output += "\n" + this.classFunctions[f].writeImplementation(this.className, formatter) + "\n";
         }
         return output;
-    };
-    LanguageClass.prototype.classDefinition = function () {
-        var functions = [];
-        for (var k in this.classFunctions) {
-            functions.push(this.classFunctions[k]);
-        }
-        var classBlock = new LanguageCodeBlock(this.classSignature(), functions);
-        return classBlock;
     };
     LanguageClass.prototype.classHeaderContent = function () {
         return "/*\n" + this.classHeader.join('') + "*/\n";
@@ -69,6 +76,14 @@ var LanguageClass = (function () {
             classSignature += " : " + classExtensions.join(', ');
         }
         return classSignature;
+    };
+    LanguageClass.prototype.classDefinition = function () {
+        var functions = [];
+        for (var k in this.classFunctions) {
+            functions.push(this.classFunctions[k]);
+        }
+        var classBlock = new LanguageCodeBlock(this.classSignature(), functions);
+        return classBlock;
     };
     return LanguageClass;
 }());
