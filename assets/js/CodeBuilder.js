@@ -198,14 +198,27 @@ var LanguageSwitchBlock = (function () {
     function LanguageSwitchBlock(condition) {
         this.condition = condition;
         this.cases = [];
+        this.default = [];
     }
     LanguageSwitchBlock.prototype.addCase = function (caseStatement) {
         this.cases.push(caseStatement);
     };
+    LanguageSwitchBlock.prototype.defineDefault = function (body) {
+        this.default = body;
+    };
     LanguageSwitchBlock.prototype.write = function (formatter, indentCount) {
         if (indentCount === void 0) { indentCount = 0; }
         var signature = "switch (" + this.condition + ")";
-        var codeBlock = new LanguageCodeBlock(signature, this.cases);
+        var switchBody = this.cases.slice();
+        if (this.default.length == 0) {
+            switchBody.push(LanguageHelpers.createLiteral('default: break;'));
+        }
+        else {
+            var defaultBlock = new LanguageSwitchCase('');
+            defaultBlock.defineBody(this.default);
+            switchBody.push(defaultBlock);
+        }
+        var codeBlock = new LanguageCodeBlock(signature, switchBody);
         return codeBlock.write(formatter, indentCount);
     };
     return LanguageSwitchBlock;
@@ -219,7 +232,7 @@ var LanguageSwitchCase = (function () {
     };
     LanguageSwitchCase.prototype.write = function (formatter, indentCount) {
         if (indentCount === void 0) { indentCount = 0; }
-        var signature = "case " + this.condition + ":";
+        var signature = (this.condition.length == 0) ? 'default:' : "case " + this.condition + ":";
         var caseBlock = new LanguageCodeBlock(signature, this.body);
         var output = caseBlock.write(formatter, indentCount);
         output += "\n" + formatter.indentation.repeat(indentCount) + "break;";
