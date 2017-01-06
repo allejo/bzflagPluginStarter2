@@ -90,7 +90,8 @@ var bpsApp = new Vue({
         },
         pluginBuilder: plugin,
         pluginClassName: 'SAMPLE_PLUGIN',
-        pluginEventsSorted: []
+        pluginEventsSorted: [],
+        pluginEventsCache: {}
     },
     methods: {
         classifyName: function () {
@@ -122,26 +123,34 @@ var bpsApp = new Vue({
             var block = [LanguageHelpers.createLiteral(
                 event['dataType'] + ' *' + event['variable'] + ' = (' + event['dataType'] + '*)eventData;'
             )];
+            var docBlock = [];
 
             if (!this.disableDocs) {
-                block.push(LanguageHelpers.createNewLine());
-                block.push(new LanguageComment('Data'));
-                block.push(new LanguageComment('----'));
+                if (this.pluginEventsCache.hasOwnProperty(eventName)) {
+                    docBlock = this.pluginEventsCache[eventName];
+                } else {
+                    docBlock.push(LanguageHelpers.createNewLine());
+                    docBlock.push(new LanguageComment('Data'));
+                    docBlock.push(new LanguageComment('----'));
 
-                var dataTypeLength = maxLength(event.parameters, 'dataType');
-                var varNameLength  = maxLength(event.parameters, 'name');
+                    var dataTypeLength = maxLength(event.parameters, 'dataType');
+                    var varNameLength  = maxLength(event.parameters, 'name');
 
-                for (var p = 0; p < event.parameters.length; p++) {
-                    var dataType = stringPad('(' + event.parameters[p]['dataType'] + ')', dataTypeLength + 2);
-                    var varName  = stringPad(event.parameters[p]['name'], varNameLength);
+                    for (var p = 0; p < event.parameters.length; p++) {
+                        var dataType = stringPad('(' + event.parameters[p]['dataType'] + ')', dataTypeLength + 2);
+                        var varName  = stringPad(event.parameters[p]['name'], varNameLength);
 
-                    block.push(new LanguageComment(
-                         dataType + varName + '- ' + event.parameters[p]['description']
-                    ));
+                        docBlock.push(new LanguageComment(
+                            dataType + varName + '- ' + event.parameters[p]['description']
+                        ));
+                    }
+
+                    // Cache the result
+                    this.pluginEventsCache[eventName] = docBlock;
                 }
             }
 
-            return block;
+            return block.concat(docBlock);
         },
         buildInitFunction: function () {
             var initBody = [];
@@ -150,7 +159,7 @@ var bpsApp = new Vue({
                 initBody.push(LanguageHelpers.createFunctionCall('Register', [event]));
             });
 
-            return initBody;
+            this.pluginBuilder.implementFunction('void', 'Init', initBody);
         },
         buildCleanupFunction: function () {
             var cleanupBody = [LanguageHelpers.createFunctionCall('Flush', [])];
@@ -158,21 +167,23 @@ var bpsApp = new Vue({
             return cleanupBody;
         },
         buildEventFunction: function () {
-            if (this.pluginEvents.length === 0) {
-                return [];
+            var eventBlock = [];
+
+            if (this.pluginEvents.length !== 0) {
+                var block = new LanguageSwitchBlock('eventData->eventType');
+
+                this.pluginEventsSorted.forEach(function (eventName) {
+                    var event = bzEvents[eventName];
+                    var eventCase = new LanguageSwitchCase(event.name);
+                    
+                    eventCase.defineBody(this.buildEventBlock(event.name));
+                    block.addCase(eventCase);
+                }.bind(this));
+
+                eventBlock.push(block);
             }
 
-            var block  = new LanguageSwitchBlock('eventData->eventType');
-
-            this.pluginEventsSorted.forEach(function (eventName) {
-                var event = bzEvents[eventName];
-                var eventCase = new LanguageSwitchCase(event.name);
-                
-                eventCase.defineBody(this.buildEventBlock(event.name));
-                block.addCase(eventCase);
-            }.bind(this));
-
-            return [block];
+            this.pluginBuilder.implementFunction('void', 'Event', eventBlock);
         }
     },
     computed: {
@@ -211,8 +222,8 @@ var bpsApp = new Vue({
             this.pluginEventsSorted = this.pluginEvents.slice();
             this.pluginEventsSorted.sort();
 
-            this.pluginBuilder.implementFunction('void', 'Init',  this.buildInitFunction());
-            this.pluginBuilder.implementFunction('void', 'Event', this.buildEventFunction());
+            this.buildInitFunction();
+            this.buildEventFunction();
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {
@@ -224,6 +235,9 @@ var bpsApp = new Vue({
         },
         styleBracePlacement: function () {
             this.codeSettings.bracesOnNewLine = (this.styleBracePlacement == 'newLine');
+        },
+        disableDocs: function() {
+            this.buildEventFunction();
         }
     }
 });
