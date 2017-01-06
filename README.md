@@ -4,7 +4,7 @@ Welcome to the spontaneous version 2 of a project that no one asked for. I have 
 
 This Jekyll website is provided as a tool to generate the skeleton of a BZFlag plugin for developers to fill in the rest with whatever functionality the plugin requires. Here are the features that are currently supported or planned by this tool.
 
-- [ ] API Events
+- [x] API Events
 - [ ] Generic Callbacks
 - [ ] Map Objects
 - [ ] Slash Commands

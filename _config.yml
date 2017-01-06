@@ -10,9 +10,12 @@ collections:
 
 # Build settings
 markdown: kramdown
-gems:
-  - jekyll-feed
 exclude:
   - Gemfile
   - Gemfile.lock
   - lib/
+  - README.md
+  - LICENSE.md
+
+# Development settings
+livereload: true
