@@ -32,6 +32,10 @@ constCharName.implementFunction([
     LanguageHelpers.createLiteral(`return "${plugin.className}";`)
 ]);
 
+voidCleanup.implementFunction([
+    LanguageHelpers.createFunctionCall('Flush', [])
+]);
+
 plugin.declareFunction(constCharName);
 plugin.declareFunction(voidInit);
 plugin.declareFunction(voidCleanup);
@@ -147,6 +151,11 @@ var bpsApp = new Vue({
             });
 
             return initBody;
+        },
+        buildCleanupFunction: function () {
+            var cleanupBody = [LanguageHelpers.createFunctionCall('Flush', [])];
+
+            return cleanupBody;
         },
         buildEventFunction: function () {
             if (this.pluginEvents.length === 0) {
