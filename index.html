@@ -34,44 +34,61 @@ layout: default
                         {% endfor %}
                     </select>
                 </label>
+
                 <hr>
-                <h3>Plug-in Events</h3>
-                <p>Select all of the events your plug-in will need to listen for.</p>
-                <div class="row">
-                    {% for event in site.events %}
-                        <div class="columns small-12 medium-6">
-                            <label>
-                                <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
-                                [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
-                            </label>
+
+                <ul class="tabs" data-tabs id="app-tabs">
+                    <li class="tabs-title is-active">
+                        <a href="#plugin-events" aria-selected="true">Events</a>
+                    </li>
+                    <li class="tabs-title">
+                        <a href="#coding-style">Coding Style</a>
+                    </li>
+                </ul>
+
+                <div class="tabs-content" data-tabs-content="app-tabs">
+                    <div class="tabs-panel is-active" id="plugin-events">
+                        <h3>Plug-in Events</h3>
+                        <p>Select all of the events your plug-in will need to listen for.</p>
+                        <div class="row">
+                            {% for event in site.events %}
+                                <div class="columns small-12 medium-6">
+                                    <label>
+                                        <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
+                                        [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
+                                    </label>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                </div>
-                <hr>
-                <h3>Coding Style</h3>
-                <p><strong>Spacing</strong></p>
-                <div class="row">
-                    <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="2spaces"> 2 Spaces</label>
-                    <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="4spaces"> 4 spaces</label>
-                    <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="tabs"> Tabs</label>
-                </div>
+                    </div>
 
-                <p><strong>Event Handling</strong></p>
-                <div class="row">
-                    <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="if"> If Statement</label>
-                    <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="switch"> Switch Statement</label>
-                </div>
+                    <div class="tabs-panel" id="coding-style">
+                        <h3>Coding Style</h3>
+                        <p><strong>Spacing</strong></p>
+                        <div class="row">
+                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="2spaces"> 2 Spaces</label>
+                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="4spaces"> 4 spaces</label>
+                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="tabs"> Tabs</label>
+                        </div>
 
-                <p><strong>Braces Placement</strong></p>
-                <div class="row">
-                    <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="newLine"> New Line</label>
-                    <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="sameLine"> Same Line</label>
-                </div>
+                        <p><strong>Event Handling</strong></p>
+                        <div class="row">
+                            <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="if"> If Statement</label>
+                            <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="switch"> Switch Statement</label>
+                        </div>
 
-                <p><strong>Misc</strong></p>
-                <div class="row">
-                    <label class="columns small-12"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
-                    <label class="columns small-12"><input type="checkbox" v-model="disableComments"> Disable comments</label>
+                        <p><strong>Braces Placement</strong></p>
+                        <div class="row">
+                            <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="newLine"> New Line</label>
+                            <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="sameLine"> Same Line</label>
+                        </div>
+
+                        <p><strong>Misc</strong></p>
+                        <div class="row">
+                            <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
+                            <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableComments"> Disable comments</label>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
