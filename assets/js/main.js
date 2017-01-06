@@ -4,10 +4,10 @@
 var bzEvents = {};
 var licenses = {};
 $.when(
-    $.ajax('/data/events.json').done(function (data) {
+    $.ajax('/bzflagPluginStarter2/data/events.json').done(function (data) {
         bzEvents = data;
     }),
-    $.ajax('/data/licenses.json').done(function (data) {
+    $.ajax('/bzflagPluginStarter2/data/licenses.json').done(function (data) {
         licenses = data;
     })
 ).then(function () {
