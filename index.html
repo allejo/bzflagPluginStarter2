@@ -12,80 +12,93 @@ layout: default
 
     <div class="row">
         <div class="columns small-12 medium-6">
-            <form>
-                <h3>Plug-in Details</h3>
-                <p>Enter the details of your plug-in</p>
-                <label>
-                    <strong>Plug-in Name</strong> <input type="text" v-model="pluginName" placeholder="Sample Plugin">
-                </label>
-                <label>
-                    <strong>Author</strong><input type="text" v-model="pluginAuthor" placeholder="John Doe">
-                </label>
-                <label>
-                    <strong>License</strong>
-                    <select name="license" v-model="pluginLicense">
-                        {% for license in site.licenses %}
-                            <option value="{{ license.name }}">{{ license.name }}</option>
+            <h3>Plug-in Details</h3>
+            <p>Enter the details of your plug-in</p>
+            <label>
+                <strong>Plug-in Name</strong> <input type="text" v-model="pluginName" placeholder="Sample Plugin">
+            </label>
+            <label>
+                <strong>Author</strong><input type="text" v-model="pluginAuthor" placeholder="John Doe">
+            </label>
+            <label>
+                <strong>License</strong>
+                <select name="license" v-model="pluginLicense">
+                    {% for license in site.licenses %}
+                        <option value="{{ license.name }}">{{ license.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <hr>
+
+            <ul class="tabs" data-tabs id="app-tabs">
+                <li class="tabs-title is-active">
+                    <a href="#plugin-events" aria-selected="true">Events</a>
+                </li>
+                <li class="tabs-title">
+                    <a href="#slashcommands">Slash Commands</a>
+                </li>
+                <li class="tabs-title">
+                    <a href="#coding-style">Coding Style</a>
+                </li>
+            </ul>
+
+            <div class="tabs-content" data-tabs-content="app-tabs">
+                <div class="tabs-panel is-active" id="plugin-events">
+                    <h3>Plug-in Events</h3>
+                    <p>Select all of the events your plug-in will need to listen for.</p>
+                    <div class="row">
+                        {% for event in site.events %}
+                            <div class="columns small-12 medium-6">
+                                <label>
+                                    <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
+                                    [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
+                                </label>
+                            </div>
                         {% endfor %}
-                    </select>
-                </label>
-
-                <hr>
-
-                <ul class="tabs" data-tabs id="app-tabs">
-                    <li class="tabs-title is-active">
-                        <a href="#plugin-events" aria-selected="true">Events</a>
-                    </li>
-                    <li class="tabs-title">
-                        <a href="#coding-style">Coding Style</a>
-                    </li>
-                </ul>
-
-                <div class="tabs-content" data-tabs-content="app-tabs">
-                    <div class="tabs-panel is-active" id="plugin-events">
-                        <h3>Plug-in Events</h3>
-                        <p>Select all of the events your plug-in will need to listen for.</p>
-                        <div class="row">
-                            {% for event in site.events %}
-                                <div class="columns small-12 medium-6">
-                                    <label>
-                                        <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
-                                        [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
-                                    </label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div class="tabs-panel" id="coding-style">
-                        <h3>Coding Style</h3>
-                        <p><strong>Spacing</strong></p>
-                        <div class="row">
-                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="2spaces"> 2 Spaces</label>
-                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="4spaces"> 4 spaces</label>
-                            <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="tabs"> Tabs</label>
-                        </div>
-
-                        <p><strong>Event Handling</strong></p>
-                        <div class="row">
-                            <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="if"> If Statement</label>
-                            <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="switch"> Switch Statement</label>
-                        </div>
-
-                        <p><strong>Braces Placement</strong></p>
-                        <div class="row">
-                            <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="newLine"> New Line</label>
-                            <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="sameLine"> Same Line</label>
-                        </div>
-
-                        <p><strong>Misc</strong></p>
-                        <div class="row">
-                            <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
-                            <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableComments"> Disable comments</label>
-                        </div>
                     </div>
                 </div>
-            </form>
+
+                <div class="tabs-panel" id="slashcommands">
+                    <h3>Custom Slash Commands</h3>
+                    <input type="text" placeholder="slashcommand" v-model.trim="newSlashCommand" @keyup.enter="addSlashCommand">
+
+                    <ul>
+                        <li v-for="slashcommand in pluginSlashCommands" :key="slashcommand">
+                            <span>{% raw %}{{ slashcommand }}{% endraw %}</span>
+                            <button @click="removeSlashCommand(slashcommand)">Delete</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tabs-panel" id="coding-style">
+                    <h3>Coding Style</h3>
+                    <p><strong>Spacing</strong></p>
+                    <div class="row">
+                        <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="2spaces"> 2 Spaces</label>
+                        <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="4spaces"> 4 spaces</label>
+                        <label class="columns medium-4"><input type="radio" v-model="styleIndentation" value="tabs"> Tabs</label>
+                    </div>
+
+                    <p><strong>Event Handling</strong></p>
+                    <div class="row">
+                        <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="if"> If Statement</label>
+                        <label class="columns medium-4"><input type="radio" v-model="styleEventHandling" value="switch"> Switch Statement</label>
+                    </div>
+
+                    <p><strong>Braces Placement</strong></p>
+                    <div class="row">
+                        <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="newLine"> New Line</label>
+                        <label class="columns medium-4"><input type="radio" v-model="styleBracePlacement" value="sameLine"> Same Line</label>
+                    </div>
+
+                    <p><strong>Misc</strong></p>
+                    <div class="row">
+                        <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableDocs"> Disable API Documentation</label>
+                        <label class="columns small-12 medium-6"><input type="checkbox" v-model="disableComments"> Disable comments</label>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="columns small-12 medium-6 pluginOutput js-sticky">
             <pre><code>{% raw %}{{ pluginOutput }}{% endraw %}</code></pre>

@@ -46,7 +46,7 @@ let boolSlashCommand = new LanguageFunction(
     Visibility.public, 'bool', 'SlashCommand', [
         { returnType: 'int', paramName: 'playerID' },
         { returnType: 'bz_ApiString', paramName: 'command' },
-        { returnType: 'bz_ApiString', paramName: 'message' },
+        { returnType: 'bz_ApiString', paramName: '/*message*/' },
         { returnType: 'bz_APIStringList', paramName: '*params' }
     ]
 );
@@ -82,6 +82,7 @@ var bpsApp = new Vue({
         styleBracePlacement: 'newLine',
         disableDocs: false,
         disableComments: false,
+        newSlashCommand: '',
 
         codeSettings: {
             indentWithSpaces: true,
@@ -91,7 +92,8 @@ var bpsApp = new Vue({
         pluginBuilder: plugin,
         pluginClassName: 'SAMPLE_PLUGIN',
         pluginEventsSorted: [],
-        pluginEventsCache: {}
+        pluginEventsCache: {},
+        pluginSlashCommands: []
     },
     methods: {
         classifyName: function () {
@@ -159,12 +161,35 @@ var bpsApp = new Vue({
                 initBody.push(LanguageHelpers.createFunctionCall('Register', [event]));
             });
 
+            if (this.pluginSlashCommands.length > 0) {
+                if (this.pluginEventsSorted.length > 0) {
+                    initBody.push(LanguageHelpers.createNewLine());
+                }
+
+                this.pluginSlashCommands.forEach(function (command) {
+                    initBody.push(LanguageHelpers.createFunctionCall('bz_registerCustomSlashCommand', [
+                        LanguageHelpers.createString(command),
+                        'this'
+                    ]));
+                });
+            }
+
             this.pluginBuilder.implementFunction('void', 'Init', initBody);
         },
         buildCleanupFunction: function () {
             var cleanupBody = [LanguageHelpers.createFunctionCall('Flush', [])];
 
-            return cleanupBody;
+            if (this.pluginSlashCommands.length > 0) {
+                cleanupBody.push(LanguageHelpers.createNewLine());
+
+                this.pluginSlashCommands.forEach(function (command) {
+                    cleanupBody.push(LanguageHelpers.createFunctionCall('bz_removeCustomSlashCommand', [
+                        LanguageHelpers.createString(command)
+                    ]));
+                });
+            }
+
+            this.pluginBuilder.implementFunction('void', 'Cleanup', cleanupBody);
         },
         buildEventFunction: function () {
             var eventBlock = [];
@@ -184,6 +209,37 @@ var bpsApp = new Vue({
             }
 
             this.pluginBuilder.implementFunction('void', 'Event', eventBlock);
+        },
+        addSlashCommand: function () {
+            var value = this.newSlashCommand;
+
+            if (!value) {
+                return;
+            }
+
+            this.pluginSlashCommands.push(value);
+            this.newSlashCommand = '';
+
+            // Only needs to be done once when the first slash command is added
+            if (this.pluginSlashCommands.length == 1) {
+                this.pluginBuilder.addExtends(['public', 'bz_CustomSlashCommandHandler']);
+                this.pluginBuilder.declareFunction(boolSlashCommand);
+            }
+
+            this.buildInitFunction();
+            this.buildCleanupFunction();
+        },
+        removeSlashCommand: function (command) {
+            this.pluginSlashCommands.splice(this.pluginSlashCommands.indexOf(command), 1);
+
+            // No more slash commands exist, so remove that setup
+            if (this.pluginSlashCommands.length == 0) {
+                this.pluginBuilder.removeExtends(['public', 'bz_CustomSlashCommandHandler']);
+                this.pluginBuilder.removeFunction('bool', 'SlashCommand');
+            }
+
+            this.buildInitFunction();
+            this.buildCleanupFunction();
         }
     },
     computed: {
