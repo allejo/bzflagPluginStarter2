@@ -93,7 +93,8 @@ var bpsApp = new Vue({
         pluginClassName: 'SAMPLE_PLUGIN',
         pluginEventsSorted: [],
         pluginEventsCache: {},
-        pluginSlashCommands: []
+        pluginSlashCommands: [],
+        pluginSlashCommandsConfigured: false
     },
     methods: {
         classifyName: function () {
@@ -217,29 +218,15 @@ var bpsApp = new Vue({
                 return;
             }
 
-            this.pluginSlashCommands.push(value);
-            this.newSlashCommand = '';
-
-            // Only needs to be done once when the first slash command is added
-            if (this.pluginSlashCommands.length == 1) {
-                this.pluginBuilder.addExtends(['public', 'bz_CustomSlashCommandHandler']);
-                this.pluginBuilder.declareFunction(boolSlashCommand);
+            if (this.pluginSlashCommands.indexOf(value) >= 0) {
+                return;
             }
 
-            this.buildInitFunction();
-            this.buildCleanupFunction();
+            this.pluginSlashCommands.push(value);
+            this.newSlashCommand = '';
         },
         removeSlashCommand: function (command) {
             this.pluginSlashCommands.splice(this.pluginSlashCommands.indexOf(command), 1);
-
-            // No more slash commands exist, so remove that setup
-            if (this.pluginSlashCommands.length == 0) {
-                this.pluginBuilder.removeExtends(['public', 'bz_CustomSlashCommandHandler']);
-                this.pluginBuilder.removeFunction('bool', 'SlashCommand');
-            }
-
-            this.buildInitFunction();
-            this.buildCleanupFunction();
         }
     },
     computed: {
@@ -280,6 +267,21 @@ var bpsApp = new Vue({
 
             this.buildInitFunction();
             this.buildEventFunction();
+        },
+        pluginSlashCommands: function () {
+            // No more slash commands exist, so remove that setup
+            if (this.pluginSlashCommands.length == 0) {
+                this.pluginBuilder.removeExtends(['public', 'bz_CustomSlashCommandHandler']);
+                this.pluginBuilder.removeFunction('bool', 'SlashCommand');
+                this.pluginSlashCommandsConfigured = false;
+            } else if (!this.pluginSlashCommandsConfigured && this.pluginSlashCommands.length == 1) {
+                this.pluginBuilder.addExtends(['public', 'bz_CustomSlashCommandHandler']);
+                this.pluginBuilder.declareFunction(boolSlashCommand);
+                this.pluginSlashCommandsConfigured = true;
+            }
+
+            this.buildInitFunction();
+            this.buildCleanupFunction();
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {
