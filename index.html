@@ -61,14 +61,16 @@ layout: default
 
                 <div class="tabs-panel" id="slashcommands">
                     <h3>Custom Slash Commands</h3>
-                    <input type="text" placeholder="slashcommand" v-model.trim="newSlashCommand" @keyup.enter="addSlashCommand">
+                    <p>Enter your slash command</p>
+                    <input type="text" placeholder="slash command" v-model.trim="newSlashCommand" @keyup.enter="addSlashCommand">
 
-                    <ul>
-                        <li v-for="slashcommand in pluginSlashCommands" :key="slashcommand">
-                            <span>{% raw %}{{ slashcommand }}{% endraw %}</span>
-                            <button @click="removeSlashCommand(slashcommand)">Delete</button>
-                        </li>
-                    </ul>
+                    <article class="clearfix" v-for="slashcommand in pluginSlashCommands" :key="slashcommand">
+                        <span class="float-left">{% raw %}/{{ slashcommand }}{% endraw %}</span>
+                        <button type="button" class="float-right button alert small" @click="removeSlashCommand(slashcommand)">
+                            <span aria-hidden="true"><i class="fa fa-trash"></i></span>
+                            <span class="show-for-sr">Delete</span>
+                        </button>
+                    </article>
                 </div>
 
                 <div class="tabs-panel" id="coding-style">
