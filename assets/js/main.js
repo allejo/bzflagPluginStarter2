@@ -196,14 +196,21 @@ var bpsApp = new Vue({
             var eventBlock = [];
 
             if (this.pluginEvents.length !== 0) {
-                var block = new LanguageSwitchBlock('eventData->eventType');
+                var condition = 'eventData->eventType';
+                var block = (this.styleEventHandling == 'switch') ? new LanguageSwitchBlock(condition) : new LanguageIfBlock();
 
                 this.pluginEventsSorted.forEach(function (eventName) {
                     var event = bzEvents[eventName];
-                    var eventCase = new LanguageSwitchCase(event.name);
-                    
-                    eventCase.defineBody(this.buildEventBlock(event.name));
-                    block.addCase(eventCase);
+                    var bodyConent = this.buildEventBlock(event.name);
+
+                    if (this.styleEventHandling == 'switch') {
+                        var eventCase = new LanguageSwitchCase(event.name);
+                            eventCase.defineBody(bodyConent);
+
+                        block.addCase(eventCase);
+                    } else {
+                        block.addCondition(condition + ' == ' + event.name, bodyConent);
+                    }
                 }.bind(this));
 
                 eventBlock.push(block);
@@ -310,6 +317,9 @@ var bpsApp = new Vue({
             } else {
                 this.codeSettings.indentWithSpaces = false;
             }
+        },
+        styleEventHandling: function () {
+            this.buildEventFunction();
         },
         styleBracePlacement: function () {
             this.codeSettings.bracesOnNewLine = (this.styleBracePlacement == 'newLine');
