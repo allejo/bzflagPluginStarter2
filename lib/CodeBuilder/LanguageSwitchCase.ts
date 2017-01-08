@@ -11,7 +11,7 @@ class LanguageSwitchCase implements IWritable {
         let signature = (this.condition.length == 0) ? 'default:' : `case ${this.condition}:`;
         let caseBlock = new LanguageCodeBlock(signature, this.body);
         let output = caseBlock.write(formatter, indentCount);
-        output += "\n" + formatter.indentation.repeat(indentCount) + "break;"
+        output += "\n" + formatter.indentation.repeat(indentCount) + "break;\n"
 
         return output;
     }

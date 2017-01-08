@@ -269,7 +269,7 @@ var LanguageSwitchCase = (function () {
         var signature = (this.condition.length == 0) ? 'default:' : "case " + this.condition + ":";
         var caseBlock = new LanguageCodeBlock(signature, this.body);
         var output = caseBlock.write(formatter, indentCount);
-        output += "\n" + formatter.indentation.repeat(indentCount) + "break;";
+        output += "\n" + formatter.indentation.repeat(indentCount) + "break;\n";
         return output;
     };
     return LanguageSwitchCase;
