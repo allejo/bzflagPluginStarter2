@@ -211,6 +211,22 @@ var bpsApp = new Vue({
 
             this.pluginBuilder.implementFunction('void', 'Event', eventBlock);
         },
+        buildSlashCommandFunction: function () {
+            let ifBlock = new LanguageIfBlock();
+
+            this.pluginSlashCommands.forEach(element => {
+                ifBlock.addCondition('command == "' + element + '"', [
+                    LanguageHelpers.createNewLine(),
+                    LanguageHelpers.createLiteral('return true;')
+                ]);
+            });
+
+            this.pluginBuilder.implementFunction('bool', 'SlashCommand', [
+                ifBlock,
+                LanguageHelpers.createNewLine(),
+                LanguageHelpers.createLiteral('return false;')
+            ]);
+        },
         addSlashCommand: function () {
             var value = this.newSlashCommand;
 
@@ -282,6 +298,10 @@ var bpsApp = new Vue({
 
             this.buildInitFunction();
             this.buildCleanupFunction();
+
+            if (this.pluginSlashCommands.length > 0) {
+                this.buildSlashCommandFunction();
+            }
         },
         styleIndentation: function () {
             if (this.styleIndentation == '2spaces' || this.styleIndentation == '4spaces') {

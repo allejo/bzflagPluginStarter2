@@ -194,6 +194,40 @@ var LanguageHelpers = (function () {
     };
     return LanguageHelpers;
 }());
+var LanguageIfBlock = (function () {
+    function LanguageIfBlock() {
+        this.conditions = {};
+        this.elseCondition = [];
+    }
+    LanguageIfBlock.prototype.addCondition = function (condition, body) {
+        this.conditions[condition] = body;
+    };
+    LanguageIfBlock.prototype.defineElseCondition = function (body) {
+        this.elseCondition = body;
+    };
+    LanguageIfBlock.prototype.write = function (formatter, indentCount) {
+        if (indentCount === void 0) { indentCount = 0; }
+        var ifBlocks = [];
+        var first = true;
+        for (var condition in this.conditions) {
+            var signature = "if (" + condition + ")";
+            if (!first) {
+                signature = 'else ' + signature;
+            }
+            ifBlocks.push(new LanguageCodeBlock(signature, this.conditions[condition]));
+            first = false;
+        }
+        if (this.elseCondition.length > 0) {
+            ifBlocks.push(new LanguageCodeBlock('else', this.elseCondition));
+        }
+        var output = '';
+        ifBlocks.forEach(function (element) {
+            output += element.write(formatter, indentCount) + "\n" + formatter.indentation.repeat(indentCount);
+        });
+        return output.trim();
+    };
+    return LanguageIfBlock;
+}());
 var LanguageSwitchBlock = (function () {
     function LanguageSwitchBlock(condition) {
         this.condition = condition;
