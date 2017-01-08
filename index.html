@@ -103,7 +103,13 @@ layout: default
             </div>
         </div>
         <div class="columns small-12 medium-6 pluginOutput js-sticky">
-            <pre><code>{% raw %}{{ pluginOutput }}{% endraw %}</code></pre>
+            <div class="toolbar button-group">
+                <button id="copyToBoard" class="button" data-clipboard-target="#plugin-output">
+                    <span aria-hidden="true"><i class="fa fa-clipboard"></i></span>
+                    <span class="show-for-sr">Copy to clipboard</span>
+                </button>
+            </div>
+            <pre><code id="plugin-output">{% raw %}{{ pluginOutput }}{% endraw %}</code></pre>
         </div>
     </div>
 </div>

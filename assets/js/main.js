@@ -321,15 +321,19 @@ var bpsApp = new Vue({
 });
 
 //
-// Let's enable `position: sticky`
+// Build and initialize UI components
 //
+
+// Let's enable `position: sticky`
 var stickyElements = document.getElementsByClassName('js-sticky');
 
 for (var i = stickyElements.length - 1; i >= 0; i--) {
     Stickyfill.add(stickyElements[i]);
 }
 
-//
 // Initialize Foundation
-//
 $(document).foundation();
+
+// Enable the "copy to clipboard" button
+new Clipboard('#copyToBoard');
+
