@@ -27,3 +27,15 @@ pre code {
     top: 0;
     right: .9375rem;
 }
+
+footer {
+    li,
+    p {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+
+    .menu li:last-child {
+        margin-right: 0;
+    }
+}

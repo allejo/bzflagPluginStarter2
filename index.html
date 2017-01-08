@@ -13,7 +13,7 @@ layout: default
     <div class="row">
         <div class="columns small-12 medium-6">
             <h3>Plug-in Details</h3>
-            <p>Enter the details of your plug-in</p>
+            <p>Enter the details of your <a href="https://wiki.bzflag.org/Plug-ins">BZFlag plug-in</a> and start inputting information to build the skeleton for your plug-in.</p>
             <label>
                 <strong>Plug-in Name</strong> <input type="text" v-model="pluginName" placeholder="Sample Plugin">
             </label>
@@ -101,6 +101,19 @@ layout: default
                     </div>
                 </div>
             </div>
+
+            <footer class="row align-justify">
+                <div class="column">
+                    <p>Copyright &copy; {{ 'now' | date: '%Y' }}</p>
+                </div>
+                <div class="column">
+                    <ul class="menu simple align-right">
+                        <li><a href="https://allejo.io">Author</a></li>
+                        <li><a href="http://bzflag.org">BZFlag</a></li>
+                        <li><a href="https://github.com/allejo/bzflagPluginStarter2">GitHub</a></li>
+                    </ul>
+                </div>
+            </footer>
         </div>
         <div class="columns small-12 medium-6 pluginOutput js-sticky">
             <div class="toolbar button-group">
