@@ -228,7 +228,7 @@ var bpsApp = new Vue({
             ]);
         },
         addSlashCommand: function () {
-            var value = this.newSlashCommand;
+            var value = this.newSlashCommand.replace(/\//g, '');
 
             if (!value) {
                 return;
