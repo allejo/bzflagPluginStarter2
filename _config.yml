@@ -8,6 +8,8 @@ collections:
   - events
   - licenses
 
+google_analytics: UA-59480871-2
+
 # Build settings
 markdown: kramdown
 exclude:
