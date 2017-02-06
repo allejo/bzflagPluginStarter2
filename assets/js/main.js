@@ -42,7 +42,7 @@ plugin.declareFunction(voidCleanup);
 plugin.declareFunction(voidEvent);
 
 // Define the SlashCommand function but don't add it by default since it's only needed when slash commands exist
-let boolSlashCommand = new LanguageFunction(
+var boolSlashCommand = new LanguageFunction(
     Visibility.public, 'bool', 'SlashCommand', [
         { returnType: 'int', paramName: 'playerID' },
         { returnType: 'bz_ApiString', paramName: 'command' },
@@ -70,6 +70,31 @@ function stringPad (string, charLimit) {
 //
 // Build the actual app
 //
+Vue.component('string-input-repeater', {
+    template: '#string-repeater',
+    props: ['storage', 'placeholder'],
+    methods: {
+        addNewString: function () {
+            var value = this.newString.replace(/\//g, '');
+
+            if (!value || this.storage.indexOf(value) >= 0) {
+                return;
+            }
+
+            this.storage.push(value);
+            this.newString = '';
+        },
+        removeString: function (item) {
+            this.storage.splice(this.storage.indexOf(item), 1);
+        }
+    },
+    data: function () {
+        return {
+            newString: ''
+        };
+    }
+});
+
 var bpsApp = new Vue({
     el: '#bpsApp',
     data: {
@@ -234,23 +259,6 @@ var bpsApp = new Vue({
                 LanguageHelpers.createNewLine(),
                 LanguageHelpers.createLiteral('return false;')
             ]);
-        },
-        addSlashCommand: function () {
-            var value = this.newSlashCommand.replace(/\//g, '');
-
-            if (!value) {
-                return;
-            }
-
-            if (this.pluginSlashCommands.indexOf(value) >= 0) {
-                return;
-            }
-
-            this.pluginSlashCommands.push(value);
-            this.newSlashCommand = '';
-        },
-        removeSlashCommand: function (command) {
-            this.pluginSlashCommands.splice(this.pluginSlashCommands.indexOf(command), 1);
         }
     },
     computed: {

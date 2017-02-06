@@ -1,0 +1,13 @@
+<script type="text/x-template" id="string-repeater">
+    <div>
+        <input type="text" :placeholder="placeholder" v-model.trim="newString" @keyup.enter="addNewString">
+
+        <article class="clearfix" v-for="item in storage" :key="item">
+            <span class="float-left">{% raw %}{{ item }}{% endraw %}</span>
+            <button type="button" class="float-right button alert small" @click="removeString(item)">
+                <span aria-hidden="true"><i class="fa fa-trash"></i></span>
+                <span class="show-for-sr">Delete</span>
+            </button>
+        </article>
+    </div>
+</script>
