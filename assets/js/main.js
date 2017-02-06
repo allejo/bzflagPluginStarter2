@@ -111,12 +111,13 @@ var bpsApp = new Vue({
             }
         },
         buildLicenseHeader: function () {
+            var pluginName = (this.pluginName.length == 0) ? 'SAMPLE_PLUGIN' : this.pluginName;
             var author  = (this.pluginAuthor.length == 0) ? 'John Doe' : this.pluginAuthor;
             var license = licenses[this.pluginLicense];
             var header  = license.header
                 .replace('{year}', new Date().getFullYear())
                 .replace('{author}', author)
-                .replace('{name}', this.pluginName);
+                .replace('{name}', pluginName);
 
             this.pluginBuilder.classHeader = [header + "\n\n"];
             this.pluginBuilder.classHeader = this.pluginBuilder.classHeader.concat(license.content);

@@ -4,7 +4,7 @@
 {
     {% for license in site.licenses %}
         "{{ license.name }}": {
-            "header": "{{ license.header | normalize_whitespace }}",
+            "header": "{{ license.header | rstrip | newline_to_br | strip_newlines | replace: '<br />', '\n' }}",
             "content": {{ license.content | strip_html | newline_to_br | split: '<br />' | jsonify }}
         }{% unless forloop.last %},{% endunless %}
     {% endfor %}
