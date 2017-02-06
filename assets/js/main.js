@@ -50,6 +50,12 @@ var boolSlashCommand = new LanguageFunction(
         { returnType: 'bz_APIStringList', paramName: '*params' }
     ]
 );
+var intGenericCallback = new LanguageFunction(
+    Visibility.public, 'int', 'GeneralCallback', [
+        { returnType: 'const char*', paramName: 'name' },
+        { returnType: 'void*', paramName: 'data' }
+    ]
+);
 
 //
 // Generic helper functions
@@ -119,7 +125,9 @@ var bpsApp = new Vue({
         pluginEventsSorted: [],
         pluginEventsCache: {},
         pluginSlashCommands: [],
-        pluginSlashCommandsConfigured: false
+        pluginSlashCommandsConfigured: false,
+        pluginGenericCallbacks: [],
+        pluginGenericCallbacksConfigured: false
     },
     methods: {
         classifyName: function () {
@@ -247,7 +255,7 @@ var bpsApp = new Vue({
         buildSlashCommandFunction: function () {
             let ifBlock = new LanguageIfBlock();
 
-            this.pluginSlashCommands.forEach(element => {
+            this.pluginSlashCommands.forEach(function (element) {
                 ifBlock.addCondition('command == "' + element + '"', [
                     LanguageHelpers.createNewLine(),
                     LanguageHelpers.createLiteral('return true;')
@@ -258,6 +266,24 @@ var bpsApp = new Vue({
                 ifBlock,
                 LanguageHelpers.createNewLine(),
                 LanguageHelpers.createLiteral('return false;')
+            ]);
+        },
+        buildGenericCallbackFunction: function () {
+            let ifBlock = new LanguageIfBlock();
+
+            this.pluginGenericCallbacks.forEach(function (element) {
+                ifBlock.addCondition('callback == "' + element + '"', [
+                    LanguageHelpers.createNewLine(),
+                    LanguageHelpers.createLiteral('return 1;')
+                ]);
+            });
+
+            this.pluginBuilder.implementFunction('int', 'GeneralCallback', [
+                LanguageHelpers.createLiteral('std::string callback = name;'),
+                LanguageHelpers.createNewLine(),
+                ifBlock,
+                LanguageHelpers.createNewLine(),
+                LanguageHelpers.createLiteral('return 0;')
             ]);
         }
     },
@@ -317,6 +343,23 @@ var bpsApp = new Vue({
 
             if (this.pluginSlashCommands.length > 0) {
                 this.buildSlashCommandFunction();
+            }
+        },
+        pluginGenericCallbacks: function () {
+            // No more slash commands exist, so remove that setup
+            if (this.pluginGenericCallbacks.length == 0) {
+                this.pluginBuilder.removeFunction('int', 'GeneralCallback');
+                this.pluginGenericCallbacksConfigured = false;
+            } else if (!this.pluginGenericCallbacksConfigured && this.pluginGenericCallbacks.length == 1) {
+                this.pluginBuilder.declareFunction(intGenericCallback);
+                this.pluginGenericCallbacksConfigured = true;
+            }
+
+            this.buildInitFunction();
+            this.buildCleanupFunction();
+
+            if (this.pluginGenericCallbacks.length > 0) {
+                this.buildGenericCallbackFunction();
             }
         },
         styleIndentation: function () {

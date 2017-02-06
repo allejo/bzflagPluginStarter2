@@ -6,7 +6,7 @@ This Jekyll website is provided as a tool to generate the skeleton of a BZFlag p
 
 - [x] API Events
 - [ ] Custom Poll Types
-- [ ] Generic Callbacks
+- [x] Generic Callbacks
 - [ ] Map Objects
 - [x] Slash Commands
 - [ ] URL Jobs
