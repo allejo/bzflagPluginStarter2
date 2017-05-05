@@ -1,8 +1,7 @@
 title: BZFlag Plugin Starter
 description: >
-  An opinionated but useful tool to generate the skeleton for a BZFlag
-  plugin.
-baseurl: /bzflagPluginStarter2
+  An opinionated but useful tool to generate the skeleton for a BZFlag plugin.
+baseurl: /
 
 collections:
   - events
