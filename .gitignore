@@ -5,3 +5,4 @@ _site
 .vscode
 Gemfile.lock
 *.map
+CodeBuilder.js

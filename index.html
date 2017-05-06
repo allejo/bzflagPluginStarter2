@@ -73,6 +73,10 @@ layout: default
                     <span aria-hidden="true"><i class="fa fa-clipboard"></i></span>
                     <span class="show-for-sr">Copy to clipboard</span>
                 </button>
+                <button id="downloadPlugin" class="button" v-on:click="downloadPlugin">
+                    <span aria-hidden="true"><i class="fa fa-download"></i></span>
+                    <span class="show-for-sr">Download plug-in</span>
+                </button>
             </div>
             <pre><code id="plugin-output">{% raw %}{{ pluginOutput }}{% endraw %}</code></pre>
         </div>

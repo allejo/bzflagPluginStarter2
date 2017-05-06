@@ -285,6 +285,10 @@ var bpsApp = new Vue({
                 LanguageHelpers.createNewLine(),
                 LanguageHelpers.createLiteral('return 0;')
             ]);
+        },
+        downloadPlugin: function () {
+            var blob = new Blob([this.pluginOutput], {type: 'text/plain;charset=utf-8'});
+            saveAs(blob, this.pluginClassName + '.cpp');
         }
     },
     computed: {
