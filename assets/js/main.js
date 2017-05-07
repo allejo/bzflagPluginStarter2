@@ -157,6 +157,11 @@ var bpsApp = new Vue({
         },
         buildEventBlock: function (eventName) {
             var event = bzEvents[eventName];
+
+            if (!event['dataType']) {
+                return [];
+            }
+
             var block = [LanguageHelpers.createLiteral(
                 event['dataType'] + ' *' + event['variable'] + ' = (' + event['dataType'] + '*)eventData;'
             )];
