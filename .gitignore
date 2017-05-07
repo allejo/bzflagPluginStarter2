@@ -6,3 +6,5 @@ _site
 Gemfile.lock
 *.map
 CodeBuilder.js
+workspace/
+_events/

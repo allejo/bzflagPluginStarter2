@@ -17,6 +17,7 @@ exclude:
   - lib/
   - README.md
   - LICENSE.md
+  - tools/
 
 # Development settings
 livereload: true

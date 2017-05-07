@@ -3,10 +3,11 @@
     <p>Select all of the events your plug-in will need to listen for.</p>
     <div class="row">
         {% for event in site.events %}
+            {% capture eventName %}{{ event.path | replace: '_events/', '' | replace: '.md', '' }}{% endcapture %}
             <div class="columns small-12 medium-6">
                 <label>
-                    <input type="checkbox" v-model="pluginEvents" value="{{ event.name }}"> {{ event.name }}
-                    [<a href="http://wiki.bzflag.org/{{ event.name }}" target="_blank">?</a>]
+                    <input type="checkbox" v-model="pluginEvents" value="{{ eventName }}"> {{ eventName }}
+                    [<a href="http://wiki.bzflag.org/{{ eventName }}" target="_blank">?</a>]
                 </label>
             </div>
         {% endfor %}
