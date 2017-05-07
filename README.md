@@ -7,19 +7,48 @@ This Jekyll website is provided as a tool to generate the skeleton of a BZFlag p
 - [x] API Events
 - [ ] Custom Poll Types
 - [x] Generic Callbacks
-- [ ] Map Objects
+- [ ] Custom Map Objects
 - [x] Slash Commands
 - [ ] URL Jobs
 
-## Development
+## Building
 
-This is a standard Jekyll website with some JavaScript dependencies. Building the website is as simple as cloning the project and running the following command:
+This is a standard Jekyll website with some dependencies. Building the website requires a few steps:
 
 ```bash
+# npm install -g typescript
+tsc --project lib/CodeBuilder
+
+bash tools/fetchEvents.sh
+
 bundle; bundle exec jekyll serve
 ```
 
-All BZFlag API events are located under `_events` as collection items and all supported licenses are located under `_licenses`; the given structure of the respective items should be straightforward. All of the data of these collection items are then compiled together into single JSON files located in the `data/` folder. If you'd like to submit a new license, please note that only open source licenses will be accepted.
+or
+
+```
+make build
+```
+
+## Dependencies/Components
+
+This project makes use of a few separate parts so here's a brief explanation of each.
+
+### BZFS API Events
+
+All BZFlag API events are generated automatically from BZFlag's [official documentation](https://github.com/BZFlag-Dev/bzflag.org/tree/master/_documentation) repository. The event documentation is not committed directly to this repository and instead is just fetched from the official docs during the deployment process; any changes to this information should be made in the respective repository.
+
+Use the included script to fetch all of the events.
+
+```
+bash tools/fetchEvents.sh
+```
+
+### Licenses
+
+The license headers available to be picked are stored in the `_licenses` directory. The given structure of the licenses is straightforward; if you'd like to submit a new license, please note that only open source licenses will be accepted.
+
+### "CodeBuilder.js"
 
 This website is largely built around a yet to be named JS library, for now dubbed "CodeBuilder" located in `lib/CodeBuilder`. The library is written in TypeScript and in order to compile the library, run the following command from the root of the project:
 
@@ -28,7 +57,7 @@ This website is largely built around a yet to be named JS library, for now dubbe
 tsc --project lib/CodeBuilder
 ```
 
-Because Jekyll only supports CoffeeScript compilation, the compiled version of this project is committed to version control at `assets/js/CodeBuilder.js`.
+The compiled JS file and map should **not** be committed to version control. This script is automatically built during the deployment process.
 
 ## License
 
