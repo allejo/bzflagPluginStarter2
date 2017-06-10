@@ -69,11 +69,11 @@ layout: default
         </div>
         <div class="columns small-12 medium-6 pluginOutput js-sticky">
             <div class="toolbar button-group">
-                <button id="copyToBoard" class="button" data-clipboard-target="#plugin-output">
+                <button id="copyToBoard" class="button" data-clipboard-target="#plugin-output" title="Copy the code to your clipboard">
                     <span aria-hidden="true"><i class="fa fa-clipboard"></i></span>
                     <span class="show-for-sr">Copy to clipboard</span>
                 </button>
-                <button id="downloadPlugin" class="button" v-on:click="downloadPlugin">
+                <button id="downloadPlugin" class="button" v-on:click="downloadPlugin" title="Download the plug-in as a file">
                     <span aria-hidden="true"><i class="fa fa-download"></i></span>
                     <span class="show-for-sr">Download plug-in</span>
                 </button>
