@@ -22,10 +22,10 @@ var plugin = new LanguageClass('SAMPLE_PLUGIN');
     plugin.addExtends(['public', 'bz_Plugin']);
     plugin.classIncludes = ['bzfsAPI.h', 'plugin_utils.h'];
 
-let constCharName = new LanguageFunction(Visibility.public, 'const char*', 'Name');
-let voidInit      = new LanguageFunction(Visibility.public, 'void', 'Init',  [{ returnType: 'const char*',   paramName: 'config' }]);
-let voidEvent     = new LanguageFunction(Visibility.public, 'void', 'Event', [{ returnType: 'bz_EventData*', paramName: 'eventData' }]);
-let voidCleanup   = new LanguageFunction(Visibility.public, 'void', 'Cleanup');
+var constCharName = new LanguageFunction(Visibility.public, 'const char*', 'Name');
+var voidInit      = new LanguageFunction(Visibility.public, 'void', 'Init',  [{ returnType: 'const char*',   paramName: 'config' }]);
+var voidEvent     = new LanguageFunction(Visibility.public, 'void', 'Event', [{ returnType: 'bz_EventData*', paramName: 'eventData' }]);
+var voidCleanup   = new LanguageFunction(Visibility.public, 'void', 'Cleanup');
 
 // Implement default functions
 constCharName.implementFunction([
@@ -258,7 +258,7 @@ var bpsApp = new Vue({
             this.pluginBuilder.implementFunction('void', 'Event', eventBlock);
         },
         buildSlashCommandFunction: function () {
-            let ifBlock = new LanguageIfBlock();
+            var ifBlock = new LanguageIfBlock();
 
             this.pluginSlashCommands.forEach(function (element) {
                 ifBlock.addCondition('command == "' + element + '"', [
@@ -274,7 +274,7 @@ var bpsApp = new Vue({
             ]);
         },
         buildGenericCallbackFunction: function () {
-            let ifBlock = new LanguageIfBlock();
+            var ifBlock = new LanguageIfBlock();
 
             this.pluginGenericCallbacks.forEach(function (element) {
                 ifBlock.addCondition('callback == "' + element + '"', [
@@ -298,7 +298,7 @@ var bpsApp = new Vue({
     },
     computed: {
         pluginOutput: function () {
-            let pluginBody = this.pluginBuilder.write(this.codeSettings);
+            var pluginBody = this.pluginBuilder.write(this.codeSettings);
                 pluginBody = pluginBody.replace('};', "};\n\nBZ_PLUGIN(" + this.pluginClassName + ")");
 
             return pluginBody;
