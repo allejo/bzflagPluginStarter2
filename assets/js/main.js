@@ -310,7 +310,7 @@ var bpsApp = new Vue({
             this.pluginBuilder.className = this.pluginClassName;
 
             // Copyright headers for GPL licenses require the project name
-            if (this.pluginLicense.includes('GPL')) {
+            if (this.pluginLicense.indexOf('GPL') !== -1) {
                 this.buildLicenseHeader();
             }
 
