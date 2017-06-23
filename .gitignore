@@ -8,3 +8,4 @@ Gemfile.lock
 CodeBuilder.js
 workspace/
 _events/
+node_modules/

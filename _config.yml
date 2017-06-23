@@ -19,6 +19,7 @@ exclude:
   - LICENSE.md
   - tools/
   - Makefile
+  - node_modules
 
 # Development settings
 livereload: true
