@@ -8,7 +8,9 @@
             @pluginEventSelectionUpdated="updateEvent"
         />
 
-        <plugin-generator />
+        <plugin-generator
+            :pluginDefinition="plugin"
+        />
     </div>
 </template>
 
@@ -24,9 +26,13 @@
             return {
                 plugin: {
                     name: 'Sample Plugin',
-                    license: {},
+                    author: 'John Doe',
+                    license: {
+                        name: '',
+                        body: '',
+                    },
                     events: [],
-                    slashcommands: [],
+                    slashCommands: [],
                 },
             };
         },
