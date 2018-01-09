@@ -1,7 +1,37 @@
 {
+    "name": "bzflag-plugin-starter",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/allejo/bzflagPluginStarter2"
+    },
+    "description": "Repo for my course on building a Vue.js interface",
+    "version": "2.1.0",
+    "scripts": {
+        "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --content-base ./app",
+        "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    },
     "dependencies": {
-        "babel-cli": "^6.24.1",
-        "babel-preset-env": "^1.5.2",
-        "typescript": "^2.3.4"
+        "lodash": "^4.17.4",
+        "vue": "^2.3.3"
+    },
+    "devDependencies": {
+        "babel-core": "^6.0.0",
+        "babel-loader": "^6.0.0",
+        "babel-preset-env": "^1.5.1",
+        "cross-env": "^3.0.0",
+        "css-loader": "^0.25.0",
+        "eslint": "^4.4.1",
+        "eslint-plugin-vue": "^2.1.0",
+        "extract-text-webpack-plugin": "^2.1.2",
+        "file-loader": "^0.9.0",
+        "front-matter-loader": "^0.2.0",
+        "postcss-loader": "^2.0.6",
+        "raw-loader": "^0.5.1",
+        "style-loader": "^0.18.2",
+        "vue-loader": "^12.1.0",
+        "vue-template-compiler": "^2.3.3",
+        "webpack": "^2.6.1",
+        "webpack-dev-server": "^2.4.5"
     }
 }

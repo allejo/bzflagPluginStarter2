@@ -1,8 +1,4 @@
----
-name: BSD3
-header: Copyright (C) {year}, {author}
----
-
+Copyright (C) {year}, {author}
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
