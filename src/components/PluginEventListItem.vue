@@ -8,6 +8,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import {IPluginEvent} from "../lib/IPluginEvent";
 
     @Component({
         name: 'plugin-event-list-item'

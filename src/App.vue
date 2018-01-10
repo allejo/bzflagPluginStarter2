@@ -15,13 +15,11 @@
 </template>
 
 <script lang="ts">
-    /// <reference path="lib/ILicense.ts" />
-    /// <reference path="lib/IPlugin.ts" />
-    /// <reference path="lib/IPluginEvent.ts" />
-
     import * as _ from 'lodash';
     import Vue from 'vue';
-    import {Component, Emit} from "vue-property-decorator";
+    import {Component, Emit} from 'vue-property-decorator';
+    import {ILicense} from './lib/ILicense';
+    import {IPlugin} from './lib/IPlugin';
     import PluginDefinition from './components/PluginDefinition.vue';
     import PluginEventList from './components/PluginEventList.vue';
     import PluginGenerator from './components/PluginGenerator.vue';

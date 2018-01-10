@@ -9,11 +9,10 @@
 </template>
 
 <script lang="ts">
-    /// <reference path="../lib/IPluginEvent.ts" />
-
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
     import PluginEventListItem from './PluginEventListItem.vue';
+    import {IPluginEvent} from "../lib/IPluginEvent";
 
     let eventsAsYaml = require.context("../../_events/", true, /\.md$/);
     let eventsDictionary: { [key: string]: IPluginEvent } = {};

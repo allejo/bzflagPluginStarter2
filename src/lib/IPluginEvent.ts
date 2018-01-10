@@ -1,10 +1,10 @@
-interface IParameter {
+export interface IParameter {
     name: string;
     dataType: string;
     description: string;
 }
 
-interface IPluginEvent {
+export interface IPluginEvent {
     name: string;
     since: string,
     dataType: string;
