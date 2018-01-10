@@ -38,8 +38,12 @@
         name: 'plugin-license-selector'
     })
     export default class PluginLicenseSelector extends Vue {
-        selected: string = '';
+        selected: string = 'Proprietary';
         licenses: ILicenseDictionary = licensesDictionary;
+
+        created() {
+            this.onSelectedChange();
+        }
 
         @Watch('selected')
         onSelectedChange() {

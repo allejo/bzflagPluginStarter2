@@ -9,6 +9,7 @@
 <script lang="ts">
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import {IPluginEvent} from "../lib/IPluginEvent";
+    import {IPluginEventSelectionEvent} from "../lib/IPluginEventSelectionEvent";
 
     @Component({
         name: 'plugin-event-list-item'
@@ -21,10 +22,12 @@
 
         @Watch('selected')
         onSelectedChange() {
-            this.$parent.$emit('pluginEventSelectionUpdated', {
-                checked: this.selected,
+            let event: IPluginEventSelectionEvent = {
+                selected: this.selected,
                 event: this.event,
-            });
+            };
+
+            this.$parent.$emit('pluginEventSelectionUpdated', event);
         }
     }
 </script>

@@ -38,12 +38,14 @@
         }
 
         get license() {
+            let currentYear = new Date().getFullYear().toString();
+
             if (this.pluginDefinition.license === null) {
-                return '';
+                return `Copyright (C) ${currentYear} ${this.pluginDefinition.author}\nAll rights reserved.`;
             }
 
             return this.pluginDefinition.license.body
-                .replace('{year}', new Date().getFullYear().toString())
+                .replace('{year}', currentYear)
                 .replace('{author}', this.pluginDefinition.author)
                 .replace('{name}', this.pluginDefinition.name)
             ;
@@ -80,8 +82,13 @@
             // this.pluginBuilder.implementFunction('void', 'Init', initBody);
         }
 
+        @Watch('pluginDefinition.name')
+        onPluginNameUpdateEvent() {
+            this.buildInitFunction();
+        }
+
         @Watch('pluginDefinition.events')
-        onPluginDefinitionUpdateEvent() {
+        onPluginEventUpdateEvent() {
             this.buildInitFunction();
         }
     }
