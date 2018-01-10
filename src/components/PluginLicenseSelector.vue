@@ -15,8 +15,8 @@
 
 <script lang="ts">
     import * as _ from 'lodash';
-    import {Vue, Component, Provide, Watch} from 'vue-property-decorator';
-    import {ILicense} from "../lib/ILicense";
+    import {Component, Provide, Vue, Watch} from 'vue-property-decorator';
+    import {ILicense} from '../lib/ILicense';
 
     interface ILicenseDictionary {
         [key: string]: ILicense;

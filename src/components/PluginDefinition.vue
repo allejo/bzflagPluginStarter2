@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component, Watch } from "vue-property-decorator";
+    import {Component, Vue, Watch} from 'vue-property-decorator';
     import PluginLicenseSelector from './PluginLicenseSelector.vue';
 
     @Component({

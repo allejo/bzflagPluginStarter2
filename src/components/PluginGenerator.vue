@@ -9,7 +9,7 @@
 <script lang="ts">
     import * as _ from 'lodash';
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-    import {IPlugin} from "../lib/IPlugin";
+    import {IPlugin} from '../lib/IPlugin';
 
     @Component({
         name: 'plugin-generator'
