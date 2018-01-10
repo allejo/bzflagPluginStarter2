@@ -14,44 +14,44 @@
     </div>
 </template>
 
-<script>
-    import _ from 'lodash';
-    import PluginDefinition from './PluginDefinition.vue';
-    import PluginEventList from './PluginEventList.vue';
-    import Plugin from './Plugin.vue';
+<script lang="ts">
+    /// <reference path="lib/ILicense.ts" />
+    /// <reference path="lib/IPlugin.ts" />
+    /// <reference path="lib/IPluginEvent.ts" />
 
-    export default {
-        name: 'MainApp',
-        data() {
-            return {
-                plugin: {
-                    name: 'Sample Plugin',
-                    author: 'John Doe',
-                    license: {
-                        name: '',
-                        body: '',
-                    },
-                    events: [],
-                    slashCommands: [],
-                },
-            };
-        },
+    import * as _ from 'lodash';
+    import Vue from 'vue';
+    import {Component, Emit} from "vue-property-decorator";
+    import PluginDefinition from './components/PluginDefinition.vue';
+    import PluginEventList from './components/PluginEventList.vue';
+    import PluginGenerator from './components/PluginGenerator.vue';
+
+    @Component({
         components: {
-            'plugin-definition': PluginDefinition,
-            'plugin-event-list': PluginEventList,
-            'plugin-generator': Plugin,
-        },
-        methods: {
-            updateEvent(eventUpdateEvent) {
-                if (eventUpdateEvent.checked) {
-                    this.plugin.events.push(eventUpdateEvent.event);
-                } else {
-                    this.plugin.events = _.without(this.plugin.events, eventUpdateEvent.event);
-                }
-            },
-            updateLicense(licenseUpdateEvent) {
-                this.plugin.license = licenseUpdateEvent;
-            },
-        },
-    }
+            PluginDefinition,
+            PluginEventList,
+            PluginGenerator,
+        }
+    })
+    export default class App extends Vue {
+        plugin: IPlugin = {
+            name: '',
+            author: '',
+            license: null,
+            events: [],
+            slashCommands: [],
+        };
+
+        updateEvent(eventUpdateEvent: any) {
+            if (eventUpdateEvent.checked) {
+                this.plugin.events.push(eventUpdateEvent.event);
+            } else {
+                this.plugin.events = _.without(this.plugin.events, eventUpdateEvent.event);
+            }
+        };
+
+        updateLicense(licenseUpdateEvent: ILicense) {
+            this.plugin.license = licenseUpdateEvent;
+        };
+    };
 </script>
