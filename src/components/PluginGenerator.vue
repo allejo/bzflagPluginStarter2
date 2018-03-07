@@ -3,6 +3,8 @@
     /*
     {{ license }}
     */
+
+    {{ pluginBody }}
     </pre>
 </template>
 
@@ -10,15 +12,26 @@
     import * as _ from 'lodash';
     import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import {IPlugin} from '../lib/IPlugin';
+    import {CPPClass} from "../alyssa/CPPClass";
+    import {CPPHelper} from '../alyssa/CPPHelper';
+    import {CPPFunction} from "../alyssa/CPPFunction";
+    import {CPPVariable} from '../alyssa/CPPVariable';
+    import {CPPVisibility} from '../alyssa/CPPVisibility';
+    import {CPPFormatter} from "../alyssa/CPPFormatter";
+    import {CPPWritableObject} from "../alyssa/CPPWritableObject";
 
     @Component({
         name: 'plugin-generator'
     })
     export default class PluginGenerator extends Vue {
-        pluginBuilder: any;
+        pluginBuilder: CPPClass;
 
         @Prop()
         pluginDefinition: IPlugin;
+
+        created() {
+            this.pluginBuilder = new CPPClass(this.className);
+        }
 
         get className() {
             if (this.pluginDefinition.name.trim().length === 0) {
@@ -35,6 +48,15 @@
             }
 
             return pluginClassName;
+        }
+
+        get pluginBody() {
+            let formatter = new CPPFormatter({
+                indentWithSpaces: true,
+                indentSpaceCount: 4,
+            });
+
+            return this.pluginBuilder.write(formatter, 0);
         }
 
         get license() {
@@ -58,28 +80,31 @@
         buildInitFunction() {
             let initBody = [];
 
+            // Register events
             this.sortedEvents.forEach(function (event) {
-                // @todo generate a Register();
-                // initBody.push(event['name']);
+                initBody.push(CPPHelper.createFunctionCall('Register', [event.name]));
             });
 
+            // Register slash commands
             if (this.pluginDefinition.slashCommands.length > 0) {
                 if (this.sortedEvents.length > 0) {
-                    // @todo generate a new line
-                    // initBody.push()
+                    initBody.push(CPPHelper.createEmptyLine());
                 }
 
                 this.pluginDefinition.slashCommands.forEach(function (command: any) {
-                    // @todo create a function call to bz_registerCustomSlashCommand
-                    // initBody.push(LanguageHelpers.createFunctionCall('bz_registerCustomSlashCommand', [
-                    //     LanguageHelpers.createString(command),
-                    //     'this'
-                    // ]));
+                    initBody.push(CPPHelper.createFunctionCall('bz_registerCustomSlashCommand', [
+                        `"${command}"`,
+                        'this'
+                    ]));
                 });
             }
 
-            // @todo convert this into a CppClass instance
-            // this.pluginBuilder.implementFunction('void', 'Init', initBody);
+            // Build our Init() function
+            let fxn = new CPPFunction('void', 'name', [
+                CPPVariable.createConstChar('config')
+            ]);
+            fxn.implementFunction(initBody);
+            fxn.setParentClass(this.pluginBuilder, CPPVisibility.Public);
         }
 
         @Watch('pluginDefinition.name')
