@@ -6,6 +6,10 @@
             @pluginLicenseSelected="updateLicense"
         />
 
+        <plugin-formatter
+            @pluginFormatterChanged="updateFormatter"
+        />
+
         <plugin-event-list
             @pluginEventSelectionUpdated="updatePluginEvent"
         />
@@ -23,12 +27,15 @@
     import {IPlugin} from './lib/IPlugin';
     import {IPluginEventSelectionEvent} from './lib/IPluginEventSelectionEvent';
     import PluginDefinition from './components/PluginDefinition.vue';
+    import PluginFormatter from './components/PluginFormatter.vue';
     import PluginEventList from './components/PluginEventList.vue';
     import PluginGenerator from './components/PluginGenerator.vue';
+    import {ILanguageFormatter} from "./alyssa/ILanguageFormatter";
 
     @Component({
         components: {
             PluginDefinition,
+            PluginFormatter,
             PluginEventList,
             PluginGenerator,
         }
@@ -40,6 +47,7 @@
             license: null,
             events: [],
             slashCommands: [],
+            formatter: null,
         };
 
         updateName(name: string) {
@@ -60,6 +68,10 @@
             } else {
                 this.plugin.events = _.without(this.plugin.events, eventUpdateEvent.event);
             }
+        }
+
+        updateFormatter(formatter: ILanguageFormatter) {
+            this.plugin.formatter = formatter;
         }
     };
 </script>
