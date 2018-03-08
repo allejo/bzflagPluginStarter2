@@ -5,8 +5,13 @@
     "strict": true,
     "module": "es2015",
     "moduleResolution": "node",
-    "target": "es5",
-    "experimentalDecorators": true
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "preserveConstEnums": true,
+    "declaration": false,
+    "stripInternal": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
   "include": [
     "./src/**/*"
