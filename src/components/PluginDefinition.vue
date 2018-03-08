@@ -15,27 +15,27 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import PluginLicenseSelector from './PluginLicenseSelector.vue';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import PluginLicenseSelector from './PluginLicenseSelector.vue';
 
-    @Component({
-        name: 'plugin-definition',
-        components: {
-            PluginLicenseSelector
-        }
-    })
-    export default class PluginDefinition extends Vue {
-        pluginName: string = '';
-        pluginAuthor: string = '';
-
-        @Watch('pluginName')
-        onPluginNameChange() {
-            this.$emit('pluginNameChanged', this.pluginName);
-        }
-
-        @Watch('pluginAuthor')
-        onPluginAuthorChange() {
-            this.$emit('pluginAuthorChanged', this.pluginAuthor);
-        }
+@Component({
+    name: 'plugin-definition',
+    components: {
+        PluginLicenseSelector
     }
+})
+export default class PluginDefinition extends Vue {
+    pluginName: string = '';
+    pluginAuthor: string = '';
+
+    @Watch('pluginName')
+    onPluginNameChange() {
+        this.$emit('pluginNameChanged', this.pluginName);
+    }
+
+    @Watch('pluginAuthor')
+    onPluginAuthorChange() {
+        this.$emit('pluginAuthorChanged', this.pluginAuthor);
+    }
+}
 </script>

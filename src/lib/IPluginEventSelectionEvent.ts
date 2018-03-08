@@ -1,6 +1,6 @@
-import {IPluginEvent} from './IPluginEvent';
+import { IPluginEvent } from './IPluginEvent';
 
-export interface IPluginEventSelectionEvent {
+export default interface IPluginEventSelectionEvent {
     selected: boolean;
     event: IPluginEvent;
-}
+};

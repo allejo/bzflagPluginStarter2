@@ -1,12 +1,12 @@
-import {ILanguageFormatter} from '../alyssa/ILanguageFormatter';
-import {ILicense} from './ILicense';
-import {IPluginEvent} from './IPluginEvent';
+import ILanguageFormatter from '../alyssa/ILanguageFormatter';
+import ILicense from './ILicense';
+import { IPluginEvent } from './IPluginEvent';
 
-export interface IPlugin {
+export default interface IPlugin {
     name: string;
     author: string;
-    license: ILicense|null;
+    license: ILicense | null;
     events: IPluginEvent[];
     slashCommands: any[];
-    formatter: ILanguageFormatter|null;
-}
+    formatter: ILanguageFormatter | null;
+};

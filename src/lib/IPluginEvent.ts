@@ -6,7 +6,7 @@ export interface IParameter {
 
 export interface IPluginEvent {
     name: string;
-    since: string,
+    since: string;
     dataType: string;
     description: string;
     parameters: IParameter[];

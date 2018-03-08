@@ -1,4 +1,4 @@
-export interface ILicense {
+export default interface ILicense {
     name: string;
     body: string;
-}
+};
