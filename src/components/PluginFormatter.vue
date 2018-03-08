@@ -60,9 +60,15 @@ import CPPFormatter from '../alyssa/CPPFormatter';
     name: 'plugin-formatter'
 })
 export default class PluginFormatter extends Vue {
-    @Prop() spacingFormat: string = '4-spaces';
+    @Prop({
+        default: '4-spaces'
+    })
+    spacingFormat: string;
 
-    @Prop() bracesOnNewLine: boolean = true;
+    @Prop({
+        default: true
+    })
+    bracesOnNewLine: boolean;
 
     get formatterSettings() {
         return this.spacingFormat, this.bracesOnNewLine, Date.now();
