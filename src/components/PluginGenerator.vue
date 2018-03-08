@@ -29,6 +29,7 @@ export default class PluginGenerator extends Vue {
 
     created() {
         this.pluginBuilder = new CPPClass(this.className);
+        this.pluginBuilder.addExtends([CPPVisibility.Public, 'bz_Plugin']);
     }
 
     get className() {
@@ -54,7 +55,7 @@ export default class PluginGenerator extends Vue {
             indentSpaceCount: 4
         });
 
-        return this.pluginBuilder.write(formatter, 0);
+        return this.pluginBuilder.write(this.pluginDefinition.formatter || formatter, 0);
     }
 
     get license() {
@@ -75,7 +76,7 @@ export default class PluginGenerator extends Vue {
     }
 
     buildInitFunction() {
-        let initBody = [];
+        let initBody: IWritable[] = [];
 
         // Register events
         this.sortedEvents.forEach(function(event) {
@@ -96,6 +97,7 @@ export default class PluginGenerator extends Vue {
         // Build our Init() function
         let fxn = new CPPFunction('void', 'name', [CPPVariable.createConstChar('config')]);
         fxn.implementFunction(initBody);
+        fxn.setVirtual(true);
         fxn.setParentClass(this.pluginBuilder, CPPVisibility.Public);
     }
 
