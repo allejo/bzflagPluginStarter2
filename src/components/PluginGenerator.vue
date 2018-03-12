@@ -12,7 +12,7 @@
 import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import IPlugin from '../lib/IPlugin';
-import { CPPClass, CPPHelper, CPPFunction, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility } from 'alyssa';
+import { CPPClass, CPPComment, CPPHelper, CPPFunction, CPPIfBlock, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility, ILanguageWritable } from 'alyssa';
 import { IPluginEvent } from '../lib/IPluginEvent';
 
 @Component({
@@ -128,8 +128,59 @@ export default class PluginGenerator extends Vue {
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    private buildEventLoop(events: IPluginEvent[], buildWithIfBlock: boolean = false): CPPWritableObject[] {
+    private buildEventLoop(events: IPluginEvent[], buildWithIfBlock: boolean = true): ILanguageWritable[] {
+        if (buildWithIfBlock) {
+            let block = new CPPIfBlock();
+
+            events.forEach(function (event) {
+                block.defineCondition(`eventData->eventType == ${event.dataType}`, PluginGenerator.buildEventBlock(event));
+            });
+
+            return [block];
+        }
+
         return events && buildWithIfBlock ? [] : [];
+    }
+
+    private static buildEventBlock(event: IPluginEvent, showComments: boolean = true, buildDocBlock: boolean = true): ILanguageWritable[] {
+        let body: ILanguageWritable[] = [];
+
+        if (showComments) {
+            body.push(new CPPComment([event.description], false));
+        }
+
+        body.push(new CPPVariable(event.dataType, '*data', `(${event.dataType}*)eventData`));
+
+        if (buildDocBlock) {
+            body.push(CPPHelper.createEmptyLine());
+
+            let docBlock: string[] = [];
+
+            docBlock.push('Data');
+            docBlock.push('----');
+
+            let dataTypeMaxLength = PluginGenerator.maxLengthArray(_.map(event.parameters, 'dataType'));
+            let varNameMaxLength = PluginGenerator.maxLengthArray(_.map(event.parameters, 'name'));
+
+            event.parameters.forEach(function (value) {
+                let dataType = _.padEnd(`(${value.dataType})`, dataTypeMaxLength + 2);
+                let varName = _.padEnd(value.name, varNameMaxLength);
+
+                docBlock.push(`${dataType} ${varName} - ${value.description}`);
+            });
+
+            body.push(new CPPComment(docBlock, false));
+        }
+
+        return body;
+    }
+
+    private static maxLengthArray(elements: string[]): number {
+        let max = elements.reduce(function (prev, curr) {
+            return prev.length > curr.length ? prev : curr;
+        });
+
+        return max.length;
     }
 }
 </script>
