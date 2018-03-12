@@ -2,10 +2,11 @@
   "compilerOptions": {
     "outDir": "./built/",
     "sourceMap": true,
-    "strict": true,
+    "strict": false,
     "module": "es2015",
     "moduleResolution": "node",
     "target": "es2016",
+    "lib": ["es6", "dom"],
     "experimentalDecorators": true,
     "preserveConstEnums": true,
     "declaration": false,

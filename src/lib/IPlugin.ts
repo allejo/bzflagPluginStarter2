@@ -1,6 +1,6 @@
-import ILanguageFormatter from '../alyssa/ILanguageFormatter';
 import ILicense from './ILicense';
 import { IPluginEvent } from './IPluginEvent';
+import { CPPFormatter } from 'alyssa';
 
 export default interface IPlugin {
     name: string;
@@ -8,5 +8,5 @@ export default interface IPlugin {
     license: ILicense | null;
     events: IPluginEvent[];
     slashCommands: any[];
-    formatter: ILanguageFormatter | null;
+    formatter: CPPFormatter;
 };

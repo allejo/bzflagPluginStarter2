@@ -4,33 +4,24 @@
     {{ license }}
     */
 
-    {{ pluginBody }}
+    {{ pluginOutput }}
     </pre>
 </template>
 
 <script lang="ts">
 import * as _ from 'lodash';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import IPlugin from '../lib/IPlugin';
-import CPPClass from '../alyssa/CPPClass';
-import CPPHelper from '../alyssa/CPPHelper';
-import CPPFunction from '../alyssa/CPPFunction';
-import CPPVariable from '../alyssa/CPPVariable';
-import { CPPVisibility } from '../alyssa/CPPVisibility';
-import CPPFormatter from '../alyssa/CPPFormatter';
+import { CPPClass, CPPHelper, CPPFunction, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility } from 'alyssa';
+import { IPluginEvent } from '../lib/IPluginEvent';
 
 @Component({
     name: 'plugin-generator'
 })
 export default class PluginGenerator extends Vue {
-    pluginBuilder: CPPClass;
+    private plugin: CPPClass;
 
     @Prop() pluginDefinition: IPlugin;
-
-    created() {
-        this.pluginBuilder = new CPPClass(this.className);
-        this.pluginBuilder.addExtends([CPPVisibility.Public, 'bz_Plugin']);
-    }
 
     get className() {
         if (this.pluginDefinition.name.trim().length === 0) {
@@ -49,13 +40,13 @@ export default class PluginGenerator extends Vue {
         return pluginClassName;
     }
 
-    get pluginBody() {
+    get formatter() {
         let formatter = new CPPFormatter({
             indentWithSpaces: true,
             indentSpaceCount: 4
         });
 
-        return this.pluginBuilder.write(this.pluginDefinition.formatter || formatter, 0);
+        return this.pluginDefinition.formatter || formatter;
     }
 
     get license() {
@@ -71,21 +62,41 @@ export default class PluginGenerator extends Vue {
             .replace('{name}', this.pluginDefinition.name);
     }
 
-    get sortedEvents() {
+    get sortedEvents(): IPluginEvent[] {
         return _.sortBy(this.pluginDefinition.events, ['name']);
     }
 
-    buildInitFunction() {
-        let initBody: IWritable[] = [];
+    get pluginOutput() {
+        this.plugin = new CPPClass(this.className);
+        this.plugin.addExtends([CPPVisibility.Public, 'bz_Plugin']);
+
+        this.buildNameFunction();
+        this.buildInitFunction(this.sortedEvents);
+        this.buildCleanupFunction();
+        this.buildEventFunction(this.sortedEvents);
+
+        return this.plugin.write(this.formatter, 0);
+    }
+
+    private buildNameFunction(): void {
+        let fxn = new CPPFunction('const char*', 'Name');
+        fxn.implementFunction([new CPPWritableObject(`return "${this.pluginDefinition.name || 'SAMPLE PLUGIN'}";`)]);
+
+        fxn.setVirtual(true);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
+    }
+
+    private buildInitFunction(events: IPluginEvent[]): void {
+        let initBody: CPPWritableObject[] = [];
 
         // Register events
-        this.sortedEvents.forEach(function(event) {
+        events.forEach(function(event: IPluginEvent) {
             initBody.push(CPPHelper.createFunctionCall('Register', [event.name]));
         });
 
         // Register slash commands
         if (this.pluginDefinition.slashCommands.length > 0) {
-            if (this.sortedEvents.length > 0) {
+            if (events.length > 0) {
                 initBody.push(CPPHelper.createEmptyLine());
             }
 
@@ -95,20 +106,30 @@ export default class PluginGenerator extends Vue {
         }
 
         // Build our Init() function
-        let fxn = new CPPFunction('void', 'name', [CPPVariable.createConstChar('config')]);
+        let fxn = new CPPFunction('void', 'Init', [CPPVariable.createConstChar('config')]);
         fxn.implementFunction(initBody);
         fxn.setVirtual(true);
-        fxn.setParentClass(this.pluginBuilder, CPPVisibility.Public);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    @Watch('pluginDefinition.name')
-    onPluginNameUpdateEvent() {
-        this.buildInitFunction();
+    private buildCleanupFunction(): void {
+        let fxn = new CPPFunction('void', 'Cleanup');
+        fxn.implementFunction([new CPPWritableObject('Flush();')]);
+
+        fxn.setVirtual(true);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    @Watch('pluginDefinition.events')
-    onPluginEventUpdateEvent() {
-        this.buildInitFunction();
+    private buildEventFunction(events: IPluginEvent[]): void {
+        let fxn = new CPPFunction('void', 'Event', [new CPPVariable('bz_EventData*', 'eventData')]);
+        fxn.setVirtual(true);
+        fxn.implementFunction(this.buildEventLoop(events));
+
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
+    }
+
+    private buildEventLoop(events: IPluginEvent[], buildWithIfBlock: boolean = false): CPPWritableObject[] {
+        return events && buildWithIfBlock ? [] : [];
     }
 }
 </script>

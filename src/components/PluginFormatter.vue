@@ -53,38 +53,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import CPPFormatter from '../alyssa/CPPFormatter';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import { CPPFormatter } from 'alyssa';
 
 @Component({
     name: 'plugin-formatter'
 })
 export default class PluginFormatter extends Vue {
-    @Prop({
-        default: '4-spaces'
-    })
-    spacingFormat: string;
-
-    @Prop({
-        default: true
-    })
-    bracesOnNewLine: boolean;
+    spacingFormat: string = '4-spaces';
+    bracesOnNewLine: boolean = true;
 
     get formatterSettings() {
         return this.spacingFormat, this.bracesOnNewLine, Date.now();
     }
 
     get formatter() {
-        let indentWithSpaces: boolean = this.spacingFormat != 'tabs';
-        let indentSpaceCount: number = this.spacingFormat == '2-spaces' ? 2 : 4;
-        let bracesExist: boolean = true;
-        let bracesOnNewLine: boolean = this.bracesOnNewLine;
-
         return new CPPFormatter({
-            indentWithSpaces,
-            indentSpaceCount,
-            bracesExist,
-            bracesOnNewLine
+            indentWithSpaces: this.spacingFormat != 'tabs',
+            indentSpaceCount: this.spacingFormat == '2-spaces' ? 2 : 4,
+            bracesOnNewLine: this.bracesOnNewLine
         });
     }
 

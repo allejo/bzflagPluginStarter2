@@ -30,7 +30,7 @@ import PluginDefinition from './components/PluginDefinition.vue';
 import PluginFormatter from './components/PluginFormatter.vue';
 import PluginEventList from './components/PluginEventList.vue';
 import PluginGenerator from './components/PluginGenerator.vue';
-import ILanguageFormatter from './alyssa/ILanguageFormatter';
+import { CPPFormatter } from 'alyssa';
 
 @Component({
     components: {
@@ -70,7 +70,7 @@ export default class App extends Vue {
         }
     }
 
-    updateFormatter(formatter: ILanguageFormatter) {
+    updateFormatter(formatter: CPPFormatter) {
         this.plugin.formatter = formatter;
     }
 }
