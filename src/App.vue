@@ -1,5 +1,5 @@
 <template>
-    <b-container id="main-app">
+    <b-container fluid id="main-app">
         <b-row>
             <b-col md="6">
                 <article>
@@ -37,9 +37,11 @@
                             <span v-b-toggle.accordion2>Plug-in Events</span>
                         </b-card-header>
                         <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
-                            <plugin-event-list
-                                @pluginEventSelectionUpdated="updatePluginEvent"
-                            />
+                            <b-card-body>
+                                <plugin-event-list
+                                    @pluginEventSelectionUpdated="updatePluginEvent"
+                                />
+                            </b-card-body>
                         </b-collapse>
                     </b-card>
                 </div>
