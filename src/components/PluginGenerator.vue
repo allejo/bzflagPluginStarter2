@@ -75,7 +75,10 @@ export default class PluginGenerator extends Vue {
         this.buildCleanupFunction();
         this.buildEventFunction(this.sortedEvents);
 
-        return this.plugin.write(this.formatter, 0);
+        let output = this.plugin.write(this.formatter, 0);
+        output = output.replace('};', `};\n\nBZ_PLUGIN(${this.className})`);
+
+        return output;
     }
 
     private buildNameFunction(): void {
@@ -146,7 +149,7 @@ export default class PluginGenerator extends Vue {
         let body: ILanguageWritable[] = [];
 
         if (showComments) {
-            body.push(new CPPComment([event.description], false));
+            body.push(new CPPComment(event.description.trim(), false));
         }
 
         body.push(new CPPVariable(event.dataType, '*data', `(${event.dataType}*)eventData`));
@@ -175,6 +178,13 @@ export default class PluginGenerator extends Vue {
         return body;
     }
 
+    /**
+     * Get the length of the longest string in an array
+     *
+     * @param elements The array to analyze
+     *
+     * @returns The length of the longest string
+     */
     private static maxLengthArray(elements: string[]): number {
         let max = elements.reduce(function (prev, curr) {
             return prev.length > curr.length ? prev : curr;
