@@ -1,23 +1,36 @@
 <template>
-    <div id="main-app">
-        <plugin-definition
-            @pluginNameChanged="updateName"
-            @pluginAuthorChanged="updateAuthor"
-            @pluginLicenseSelected="updateLicense"
-        />
+    <b-container id="main-app">
+        <b-row>
+            <b-col md="6">
+                <article>
+                    <h1>BZFlag Plug-in Starter</h1>
 
-        <plugin-formatter
-            @pluginFormatterChanged="updateFormatter"
-        />
+                    <p>This tool will always generate plug-ins including features from the <a href="https://github.com/bzflag-dev/bzflag/tree/2.4">latest BZFlag 2.4.x branch</a>.</p>
 
-        <plugin-event-list
-            @pluginEventSelectionUpdated="updatePluginEvent"
-        />
+                    <p>Enter the details of your BZFlag plug-in and start inputting information to build the skeleton for your plug-in.</p>
+                </article>
 
-        <plugin-generator
-            :pluginDefinition="plugin"
-        />
-    </div>
+                <plugin-definition
+                    @pluginNameChanged="updateName"
+                    @pluginAuthorChanged="updateAuthor"
+                    @pluginLicenseSelected="updateLicense"
+                />
+
+                <plugin-formatter
+                    @pluginFormatterChanged="updateFormatter"
+                />
+
+                <plugin-event-list
+                    @pluginEventSelectionUpdated="updatePluginEvent"
+                />
+            </b-col>
+            <b-col md="6">
+                <plugin-generator
+                    :pluginDefinition="plugin"
+                />
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script lang="ts">

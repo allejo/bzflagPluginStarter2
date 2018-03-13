@@ -1,11 +1,15 @@
 <template>
-    <ul>
-        <plugin-event-list-item
-            v-for="(item, i) in events"
-            :event="item"
-            :key="i"
-        />
-    </ul>
+    <div>
+        <h2>Plug-in Events</h2>
+
+        <b-row>
+            <plugin-event-list-item
+                v-for="(item, i) in events"
+                :event="item"
+                :key="i"
+            />
+        </b-row>
+    </div>
 </template>
 
 <script lang="ts">

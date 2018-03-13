@@ -1,9 +1,7 @@
 <template>
-    <li>
-        <label>
-            <input type="checkbox" v-model="selected"> {{ event.name }}
-        </label>
-    </li>
+    <b-col md="6" class="mb-1">
+        <b-form-checkbox v-model="selected">{{ event.name }}</b-form-checkbox>
+    </b-col>
 </template>
 
 <script lang="ts">

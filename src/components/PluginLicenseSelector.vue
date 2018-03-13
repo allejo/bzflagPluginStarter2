@@ -1,7 +1,7 @@
 <template>
     <div>
         <label for="plugin-license">Plug-in License</label>
-        <select id="plugin-license" v-model="selected">
+        <b-form-select id="plugin-license" v-model="selected" class="mb-3">
             <option
                 v-for="(license, i) in licenses"
                 :value="license.name"
@@ -9,7 +9,7 @@
             >
                 {{ license.name }}
             </option>
-        </select>
+        </b-form-select>
     </div>
 </template>
 

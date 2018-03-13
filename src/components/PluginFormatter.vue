@@ -1,53 +1,21 @@
 <template>
     <div>
         <section>
-            <h3>Spacing Preferences</h3>
-            <ul>
-                <li>
-                    <label>
-                        <input type="radio"
-                               name="spacing"
-                               value="2-spaces"
-                               v-model="spacingFormat"
-                        > 2 Spaces
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="radio"
-                               name="spacing"
-                               value="4-spaces"
-                               v-model="spacingFormat"
-                        >
-                        4 Spaces
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="radio"
-                               name="spacing"
-                               value="tabs"
-                               v-model="spacingFormat"
-                        >
-                        Tabs
-                    </label>
-                </li>
-            </ul>
+            <b-form-group label="Spacing Preferences">
+                <b-form-radio-group v-model="spacingFormat" stacked>
+                    <b-form-radio value="2-spaces">2 Spaces</b-form-radio>
+                    <b-form-radio value="4-spaces">4 Spaces</b-form-radio>
+                    <b-form-radio value="tabs">Tabs</b-form-radio>
+                </b-form-radio-group>
+            </b-form-group>
         </section>
 
         <section>
             <h3>Coding Style</h3>
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox"
-                               name="braces"
-                               v-model="bracesOnNewLine"
-                        >
-                        Braces on new line
-                    </label>
-                </li>
-            </ul>
+
+            <b-form-checkbox v-model="bracesOnNewLine">
+                Braces on new line
+            </b-form-checkbox>
         </section>
     </div>
 </template>

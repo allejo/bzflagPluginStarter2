@@ -1,14 +1,12 @@
 <template>
     <div>
-        <div>
-            <label for="plugin-name">Plug-in Name</label>
-            <input type="text" id="plugin-name" v-model="pluginName">
-        </div>
+        <b-form-group label="Plug-in Name" label-form="plugin-name">
+            <b-form-input type="text" id="plugin-name" v-model="pluginName" />
+        </b-form-group>
 
-        <div>
-            <label for="plugin-author">Plug-in Author</label>
-            <input type="text" id="plugin-author" v-model="pluginAuthor">
-        </div>
+        <b-form-group label="Plug-in Author" label-form="plugin-author">
+            <b-form-input type="text" id="plugin-author" v-model="pluginAuthor" />
+        </b-form-group>
 
         <plugin-license-selector />
     </div>
