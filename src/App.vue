@@ -16,13 +16,33 @@
                     @pluginLicenseSelected="updateLicense"
                 />
 
-                <plugin-formatter
-                    @pluginFormatterChanged="updateFormatter"
-                />
+                <div role="tablist">
+                    <b-card no-body>
+                        <b-card-header header-tag="header" role="tab">
+                            <span v-b-toggle.accordion1>Coding Style</span>
+                        </b-card-header>
+                        <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                                <plugin-formatter
+                                    @pluginFormatterChanged="updateFormatter"
+                                    @docBlocksConfigChanged="updateDocBlocks"
+                                    @showCommentsChanged="updateShowComments"
+                                />
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
 
-                <plugin-event-list
-                    @pluginEventSelectionUpdated="updatePluginEvent"
-                />
+                    <b-card no-body>
+                        <b-card-header header-tag="header" role="tab">
+                            <span v-b-toggle.accordion2>Plug-in Events</span>
+                        </b-card-header>
+                        <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+                            <plugin-event-list
+                                @pluginEventSelectionUpdated="updatePluginEvent"
+                            />
+                        </b-collapse>
+                    </b-card>
+                </div>
             </b-col>
             <b-col md="6">
                 <plugin-generator
@@ -60,7 +80,9 @@ export default class App extends Vue {
         license: null,
         events: [],
         slashCommands: [],
-        formatter: null
+        formatter: null,
+        buildDocBlocks: true,
+        showComments: true
     };
 
     updateName(name: string) {
@@ -85,6 +107,14 @@ export default class App extends Vue {
 
     updateFormatter(formatter: CPPFormatter) {
         this.plugin.formatter = formatter;
+    }
+
+    updateDocBlocks(buildDocBlocks: boolean) {
+        this.plugin.buildDocBlocks = buildDocBlocks;
+    }
+
+    updateShowComments(showComments: boolean) {
+        this.plugin.showComments = showComments;
     }
 }
 </script>

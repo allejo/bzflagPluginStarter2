@@ -9,4 +9,6 @@ export default interface IPlugin {
     events: IPluginEvent[];
     slashCommands: any[];
     formatter: CPPFormatter;
+    buildDocBlocks: boolean;
+    showComments: boolean;
 };
