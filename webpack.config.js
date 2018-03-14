@@ -21,16 +21,25 @@ module.exports = {
                         // other preprocessors should work out of the box, no loader config like this necessary.
                         'scss': 'vue-style-loader!css-loader!sass-loader',
                         'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                        'ts': 'babel-loader!ts-loader',
+                        'tsx': 'babel-loader!ts-loader',
                     }
                 }
             },
             {
                 test: /\.tsx?$/,
-                loader: 'ts-loader',
                 exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/],
-                }
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    },
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            appendTsSuffixTo: [/\.vue$/],
+                        }
+                    }
+                ]
             },
             {
                 test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
@@ -65,14 +74,6 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
-            },
-            {
-                test: /\.tsx?$/,
-                loader: 'ts-loader',
-                exclude: /node_modules/,
-                options: {
-                    appendTsSuffixTo: [/\.vue$/],
-                }
             },
             {
                 test: /\.(png|jpg|gif|svg|json)$/,
