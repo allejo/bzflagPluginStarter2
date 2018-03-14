@@ -21,7 +21,7 @@ interface ILicenseDictionary {
     [key: string]: ILicense;
 }
 
-let licensesAsText = require.context('../../_licenses/', true, /\.txt$/);
+let licensesAsText = require.context('../licenses/', true, /\.txt$/);
 let licensesDictionary: ILicenseDictionary = {};
 
 licensesAsText.keys().forEach(key => {
