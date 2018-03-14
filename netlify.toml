@@ -1,0 +1,6 @@
+[build]
+  publish = "_site/"
+  command = "make build"
+
+[context.vue-dev]
+  publish = "app/"
