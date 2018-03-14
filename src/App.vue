@@ -65,7 +65,7 @@ import PluginDefinition from './components/PluginDefinition.vue';
 import PluginFormatter from './components/PluginFormatter.vue';
 import PluginEventList from './components/PluginEventList.vue';
 import PluginGenerator from './components/PluginGenerator.vue';
-import { CPPFormatter } from 'alyssa';
+import { CPPFormatter } from 'aclovis';
 
 @Component({
     components: {

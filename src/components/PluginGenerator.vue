@@ -12,7 +12,7 @@
 import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import IPlugin from '../lib/IPlugin';
-import { CPPClass, CPPComment, CPPHelper, CPPFunction, CPPIfBlock, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility, ILanguageWritable } from 'alyssa';
+import { CPPClass, CPPComment, CPPHelper, CPPFunction, CPPIfBlock, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility, ILanguageWritable } from 'aclovis';
 import { IPluginEvent } from '../lib/IPluginEvent';
 
 @Component({

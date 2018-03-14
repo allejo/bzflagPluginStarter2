@@ -1,6 +1,6 @@
 import ILicense from './ILicense';
 import { IPluginEvent } from './IPluginEvent';
-import { CPPFormatter } from 'alyssa';
+import { CPPFormatter } from 'aclovis';
 
 export default interface IPlugin {
     name: string;

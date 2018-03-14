@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { CPPFormatter } from 'alyssa';
+import { CPPFormatter } from 'aclovis';
 
 @Component({
     name: 'plugin-formatter'

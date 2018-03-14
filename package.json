@@ -13,7 +13,7 @@
         "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
     },
     "dependencies": {
-        "alyssa": "file:../../Libraries/alyssa",
+        "aclovis": "0.0.0",
         "bootstrap-vue": "^2.0.0-rc.2",
         "lodash": "^4.17.5",
         "vue": "^2.5.15",
