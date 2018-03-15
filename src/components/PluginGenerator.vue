@@ -25,6 +25,7 @@ import {
     ILanguageWritable
 } from 'aclovis';
 import { IPluginEvent } from '../lib/IPluginEvent';
+import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
 
 @Component({
     name: 'plugin-generator'
@@ -91,7 +92,8 @@ export default class PluginGenerator extends Vue {
         this.buildEventFunction(
             this.sortedEvents,
             this.pluginDefinition.showComments,
-            this.pluginDefinition.buildDocBlocks
+            this.pluginDefinition.buildDocBlocks,
+            this.pluginDefinition.useIfStatement
         );
         this.buildCallbackFunction(this.pluginDefinition.callbacks);
         this.buildSlashCommandFunction(this.pluginDefinition.slashCommands);
@@ -153,10 +155,15 @@ export default class PluginGenerator extends Vue {
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    private buildEventFunction(events: IPluginEvent[], showComments: boolean, buildDocBlocks: boolean): void {
+    private buildEventFunction(
+        events: IPluginEvent[],
+        showComments: boolean,
+        buildDocBlocks: boolean,
+        useIfStatement: boolean
+    ): void {
         let fxn = new CPPFunction('void', 'Event', [new CPPVariable('bz_EventData*', 'eventData')]);
         fxn.setVirtual(true);
-        fxn.implementFunction(this.buildEventLoop(events, true, showComments, buildDocBlocks));
+        fxn.implementFunction(this.buildEventLoop(events, useIfStatement, showComments, buildDocBlocks));
 
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
@@ -167,8 +174,14 @@ export default class PluginGenerator extends Vue {
         showComments: boolean,
         buildDocBlocks: boolean
     ): ILanguageWritable[] {
+        if (events.length == 0) {
+            return [];
+        }
+
+        let block = null;
+
         if (buildWithIfBlock) {
-            let block = new CPPIfBlock();
+            block = new CPPIfBlock();
 
             events.forEach(function(event) {
                 block.defineCondition(
@@ -176,11 +189,15 @@ export default class PluginGenerator extends Vue {
                     PluginGenerator.buildEventBlock(event, showComments, buildDocBlocks)
                 );
             });
+        } else {
+            block = new CPPSwitchBlock('eventData->eventType');
 
-            return [block];
+            events.forEach(function(event) {
+                block.defineCase(event.name, PluginGenerator.buildEventBlock(event, showComments, buildDocBlocks));
+            });
         }
 
-        return events && buildWithIfBlock ? [] : [];
+        return [block];
     }
 
     private buildCallbackFunction(callbacks: string[]): void {

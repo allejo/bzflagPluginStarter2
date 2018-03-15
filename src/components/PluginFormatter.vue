@@ -10,6 +10,10 @@
             </b-form-group>
         </b-col>
         <b-col md="6">
+            <b-form-checkbox v-model="useIfStatement">
+                Use an if statement for event handling
+            </b-form-checkbox>
+
             <b-form-checkbox v-model="bracesOnNewLine">
                 Braces on new line
             </b-form-checkbox>
@@ -34,6 +38,7 @@ import { CPPFormatter } from 'aclovis';
 })
 export default class PluginFormatter extends Vue {
     spacingFormat: string = '4-spaces';
+    useIfStatement: boolean = false;
     bracesOnNewLine: boolean = true;
     buildDocBlocks: boolean = true;
     showComments: boolean = true;
@@ -63,6 +68,11 @@ export default class PluginFormatter extends Vue {
     @Watch('showComments')
     onShowCommentsChange() {
         this.$emit('showCommentsChanged', this.showComments);
+    }
+
+    @Watch('useIfStatement')
+    onUseIfStatementChange() {
+        this.$emit('useIfStatementChanged', this.useIfStatement);
     }
 }
 </script>

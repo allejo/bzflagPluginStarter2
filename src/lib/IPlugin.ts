@@ -7,6 +7,7 @@ export default interface IPlugin {
     author: string;
     license: ILicense | null;
     events: IPluginEvent[];
+    useIfStatement: boolean;
     slashCommands: string[];
     callbacks: string[];
     formatter: CPPFormatter;

@@ -27,6 +27,7 @@
                                     @pluginFormatterChanged="updateFormatter"
                                     @docBlocksConfigChanged="updateDocBlocks"
                                     @showCommentsChanged="updateShowComments"
+                                    @useIfStatementChanged="updateEventBlock"
                                 />
                             </b-card-body>
                         </b-collapse>
@@ -115,6 +116,7 @@ export default class App extends Vue {
         events: [],
         slashCommands: [],
         callbacks: [],
+        useIfStatement: false,
         formatter: null,
         buildDocBlocks: true,
         showComments: true
@@ -150,6 +152,10 @@ export default class App extends Vue {
 
     updateShowComments(showComments: boolean) {
         this.plugin.showComments = showComments;
+    }
+
+    updateEventBlock(useIfStatement: boolean) {
+        this.plugin.useIfStatement = useIfStatement;
     }
 
     addSlashCommand(command: string) {
