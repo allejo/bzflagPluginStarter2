@@ -93,6 +93,7 @@ export default class PluginGenerator extends Vue {
             this.pluginDefinition.showComments,
             this.pluginDefinition.buildDocBlocks
         );
+        this.buildCallbackFunction(this.pluginDefinition.callbacks);
         this.buildSlashCommandFunction(this.pluginDefinition.slashCommands);
 
         let output = this.plugin.write(this.formatter, 0);
@@ -180,6 +181,39 @@ export default class PluginGenerator extends Vue {
         }
 
         return events && buildWithIfBlock ? [] : [];
+    }
+
+    private buildCallbackFunction(callbacks: string[]): void {
+        if (callbacks.length == 0) {
+            return;
+        }
+
+        let fxn = new CPPFunction('int', 'GeneralCallback', [
+            CPPVariable.createConstChar('name'),
+            new CPPVariable('void*', 'data')
+        ]);
+
+        let body: ILanguageWritable[] = [
+            new CPPVariable('std::string', 'callback', 'name'),
+            CPPHelper.createEmptyLine()
+        ];
+
+        let callbackMatching = new CPPIfBlock();
+
+        callbacks.forEach(function(value) {
+            callbackMatching.defineCondition(`callback == "${value}"`, [
+                CPPHelper.createEmptyLine(),
+                new CPPWritableObject('return 1;')
+            ]);
+        });
+
+        body.push(callbackMatching);
+        body.push(CPPHelper.createEmptyLine());
+        body.push(new CPPWritableObject('return 0;'));
+
+        fxn.setVirtual(true);
+        fxn.implementFunction(body);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
     private buildSlashCommandFunction(slashCommands: string[]): void {

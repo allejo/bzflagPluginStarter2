@@ -59,6 +59,21 @@
                             </b-card-body>
                         </b-collapse>
                     </b-card>
+
+                    <b-card no-body>
+                        <b-card-header header-tag="header" role="tab">
+                            <span v-b-toggle.accordion4>Generic Callbacks</span>
+                        </b-card-header>
+                        <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                                <crud-editor
+                                    :storage="plugin.callbacks"
+                                    @crudItemAdd="addCallback"
+                                    @crudItemRemove="delCallback"
+                                />
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
                 </div>
             </b-col>
             <b-col md="6">
@@ -99,6 +114,7 @@ export default class App extends Vue {
         license: null,
         events: [],
         slashCommands: [],
+        callbacks: [],
         formatter: null,
         buildDocBlocks: true,
         showComments: true
@@ -144,6 +160,14 @@ export default class App extends Vue {
 
     delSlashCommand(command: string) {
         this.plugin.slashCommands = _.without(this.plugin.slashCommands, command);
+    }
+
+    addCallback(callback: string) {
+        this.plugin.callbacks.push(callback);
+    }
+
+    delCallback(callback: string) {
+        this.plugin.callbacks = _.without(this.plugin.callbacks, callback);
     }
 }
 </script>

@@ -8,6 +8,7 @@ export default interface IPlugin {
     license: ILicense | null;
     events: IPluginEvent[];
     slashCommands: string[];
+    callbacks: string[];
     formatter: CPPFormatter;
     buildDocBlocks: boolean;
     showComments: boolean;
