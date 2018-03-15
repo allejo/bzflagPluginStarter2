@@ -12,7 +12,18 @@
 import * as _ from 'lodash';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import IPlugin from '../lib/IPlugin';
-import { CPPClass, CPPComment, CPPHelper, CPPFunction, CPPIfBlock, CPPVariable, CPPFormatter, CPPWritableObject, CPPVisibility, ILanguageWritable } from 'aclovis';
+import {
+    CPPClass,
+    CPPComment,
+    CPPHelper,
+    CPPFunction,
+    CPPIfBlock,
+    CPPVariable,
+    CPPFormatter,
+    CPPWritableObject,
+    CPPVisibility,
+    ILanguageWritable
+} from 'aclovis';
 import { IPluginEvent } from '../lib/IPluginEvent';
 
 @Component({
@@ -70,10 +81,19 @@ export default class PluginGenerator extends Vue {
         this.plugin = new CPPClass(this.className);
         this.plugin.addExtends([CPPVisibility.Public, 'bz_Plugin']);
 
+        if (this.pluginDefinition.slashCommands.length > 0) {
+            this.plugin.addExtends([CPPVisibility.Public, 'bz_CustomSlashCommandHandler']);
+        }
+
         this.buildNameFunction();
         this.buildInitFunction(this.sortedEvents);
         this.buildCleanupFunction();
-        this.buildEventFunction(this.sortedEvents, this.pluginDefinition.showComments, this.pluginDefinition.buildDocBlocks);
+        this.buildEventFunction(
+            this.sortedEvents,
+            this.pluginDefinition.showComments,
+            this.pluginDefinition.buildDocBlocks
+        );
+        this.buildSlashCommandFunction(this.pluginDefinition.slashCommands);
 
         let output = this.plugin.write(this.formatter, 0);
         output = output.replace('};', `};\n\nBZ_PLUGIN(${this.className})`);
@@ -117,8 +137,17 @@ export default class PluginGenerator extends Vue {
 
     private buildCleanupFunction(): void {
         let fxn = new CPPFunction('void', 'Cleanup');
-        fxn.implementFunction([new CPPWritableObject('Flush();')]);
+        let body = [new CPPWritableObject('Flush();')];
 
+        if (this.pluginDefinition.slashCommands.length > 0) {
+            body.push(CPPHelper.createEmptyLine());
+
+            this.pluginDefinition.slashCommands.forEach(function(value) {
+                body.push(CPPHelper.createFunctionCall('bz_removeCustomSlashCommand', [`"${value}"`]));
+            });
+        }
+
+        fxn.implementFunction(body);
         fxn.setVirtual(true);
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
@@ -131,12 +160,20 @@ export default class PluginGenerator extends Vue {
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    private buildEventLoop(events: IPluginEvent[], buildWithIfBlock: boolean, showComments: boolean, buildDocBlocks: boolean): ILanguageWritable[] {
+    private buildEventLoop(
+        events: IPluginEvent[],
+        buildWithIfBlock: boolean,
+        showComments: boolean,
+        buildDocBlocks: boolean
+    ): ILanguageWritable[] {
         if (buildWithIfBlock) {
             let block = new CPPIfBlock();
 
-            events.forEach(function (event) {
-                block.defineCondition(`eventData->eventType == ${event.name}`, PluginGenerator.buildEventBlock(event, showComments, buildDocBlocks));
+            events.forEach(function(event) {
+                block.defineCondition(
+                    `eventData->eventType == ${event.name}`,
+                    PluginGenerator.buildEventBlock(event, showComments, buildDocBlocks)
+                );
             });
 
             return [block];
@@ -145,7 +182,37 @@ export default class PluginGenerator extends Vue {
         return events && buildWithIfBlock ? [] : [];
     }
 
-    private static buildEventBlock(event: IPluginEvent, showComments: boolean, buildDocBlock: boolean): ILanguageWritable[] {
+    private buildSlashCommandFunction(slashCommands: string[]): void {
+        if (slashCommands.length == 0) {
+            return;
+        }
+
+        let fxn = new CPPFunction('bool', 'SlashCommand', [
+            CPPVariable.createInt('playerID'),
+            new CPPVariable('bz_ApiString', 'command'),
+            new CPPVariable('bz_ApiString', '/*message*/'),
+            new CPPVariable('bz_APIStringList', '*params')
+        ]);
+
+        let commandBlock = new CPPIfBlock();
+
+        slashCommands.forEach(function(value) {
+            commandBlock.defineCondition(`command == "${value}"`, [
+                CPPHelper.createEmptyLine(),
+                new CPPWritableObject('return true;')
+            ]);
+        });
+
+        fxn.setVirtual(true);
+        fxn.implementFunction([commandBlock, CPPHelper.createEmptyLine(), new CPPWritableObject('return false;')]);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
+    }
+
+    private static buildEventBlock(
+        event: IPluginEvent,
+        showComments: boolean,
+        buildDocBlock: boolean
+    ): ILanguageWritable[] {
         let body: ILanguageWritable[] = [];
 
         if (showComments) {
@@ -176,7 +243,7 @@ export default class PluginGenerator extends Vue {
             let dataTypeMaxLength = PluginGenerator.maxLengthArray(_.map(event.parameters, 'dataType'));
             let varNameMaxLength = PluginGenerator.maxLengthArray(_.map(event.parameters, 'name'));
 
-            event.parameters.forEach(function (value) {
+            event.parameters.forEach(function(value) {
                 let dataType = _.padEnd(`(${value.dataType})`, dataTypeMaxLength + 2);
                 let varName = _.padEnd(value.name, varNameMaxLength);
 
@@ -201,7 +268,7 @@ export default class PluginGenerator extends Vue {
             return 0;
         }
 
-        let max = elements.reduce(function (prev, curr) {
+        let max = elements.reduce(function(prev, curr) {
             return prev.length > curr.length ? prev : curr;
         });
 

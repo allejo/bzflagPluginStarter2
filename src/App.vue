@@ -44,6 +44,21 @@
                             </b-card-body>
                         </b-collapse>
                     </b-card>
+
+                    <b-card no-body>
+                        <b-card-header header-tag="header" role="tab">
+                            <span v-b-toggle.accordion3>Custom Slash Commands</span>
+                        </b-card-header>
+                        <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                                <crud-editor
+                                    :storage="plugin.slashCommands"
+                                    @crudItemAdd="addSlashCommand"
+                                    @crudItemRemove="delSlashCommand"
+                                />
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
                 </div>
             </b-col>
             <b-col md="6">
@@ -61,6 +76,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import ILicense from './lib/ILicense';
 import IPlugin from './lib/IPlugin';
 import IPluginEventSelectionEvent from './lib/IPluginEventSelectionEvent';
+import CrudEditor from './components/CrudEditor.vue';
 import PluginDefinition from './components/PluginDefinition.vue';
 import PluginFormatter from './components/PluginFormatter.vue';
 import PluginEventList from './components/PluginEventList.vue';
@@ -69,6 +85,7 @@ import { CPPFormatter } from 'aclovis';
 
 @Component({
     components: {
+        CrudEditor,
         PluginDefinition,
         PluginFormatter,
         PluginEventList,
@@ -117,6 +134,16 @@ export default class App extends Vue {
 
     updateShowComments(showComments: boolean) {
         this.plugin.showComments = showComments;
+    }
+
+    addSlashCommand(command: string) {
+        command = command.replace(/^\/*|\s/g, '');
+
+        this.plugin.slashCommands.push(command);
+    }
+
+    delSlashCommand(command: string) {
+        this.plugin.slashCommands = _.without(this.plugin.slashCommands, command);
     }
 }
 </script>
