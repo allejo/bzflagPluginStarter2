@@ -1,11 +1,8 @@
-_site
-.sass-cache
-.jekyll-metadata
 .DS_Store
-.vscode
-Gemfile.lock
+.idea/
+.vscode/
 *.map
-CodeBuilder.js
-workspace/
 _events/
+app/builds/
 node_modules/
+workspace/

@@ -1,7 +1,56 @@
 {
+    "name": "bzflag-plugin-starter",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/allejo/bzflagPluginStarter2"
+    },
+    "description": "Repo for my course on building a Vue.js interface",
+    "version": "2.1.0",
+    "scripts": {
+        "prettify": "prettier --write \"src/**/*.{js,ts,vue,scss}\"",
+        "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --content-base ./app",
+        "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    },
     "dependencies": {
-        "babel-cli": "^6.24.1",
-        "babel-preset-env": "^1.5.2",
-        "typescript": "^2.3.4"
+        "@types/file-saver": "^1.3.0",
+        "aclovis": "0.0.0",
+        "balloon-css": "^0.5.0",
+        "bootstrap-vue": "^2.0.0-rc.2",
+        "file-saver": "^1.3.3",
+        "font-awesome": "^4.7.0",
+        "google-fonts-webpack-plugin": "^0.4.4",
+        "lodash": "^4.17.5",
+        "vue": "^2.5.15",
+        "vue-class-component": "^6.2.0",
+        "vue-clipboard2": "0.0.9",
+        "vue-property-decorator": "^6.0.0"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.104",
+        "@types/webpack-env": "^1.13.5",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^6.0.0",
+        "babel-preset-env": "^1.6.1",
+        "cross-env": "^3.0.0",
+        "css-loader": "^0.25.0",
+        "eslint": "^4.18.2",
+        "eslint-plugin-vue": "^2.1.0",
+        "extract-text-webpack-plugin": "^2.1.2",
+        "file-loader": "^0.9.0",
+        "front-matter-loader": "^0.2.0",
+        "node-sass": "^4.7.2",
+        "postcss-loader": "^2.1.1",
+        "prettier": "^1.11.1",
+        "raw-loader": "^0.5.1",
+        "sass-loader": "^6.0.7",
+        "style-loader": "^0.18.2",
+        "ts-loader": "^3.5.0",
+        "tslint": "^5.9.1",
+        "typescript": "^2.7.2",
+        "vue-loader": "^12.1.0",
+        "vue-template-compiler": "^2.5.15",
+        "webpack": "^2.6.1",
+        "webpack-dev-server": "^2.11.2"
     }
 }
