@@ -1,5 +1,7 @@
 <template>
     <div>
+        <p>BZFS dispatches events when certain actions happen on the server. Select the events your plug-in will listen to.</p>
+
         <b-row>
             <plugin-event-list-item
                 v-for="(item, i) in events"

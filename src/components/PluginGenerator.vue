@@ -1,5 +1,7 @@
 <template>
     <section>
+        <h2 class="sr-only">Plug-in Preview</h2>
+
         <div class="plugin-container">
             <div class="c-toolbar">
                 <button class="btn btn-primary"

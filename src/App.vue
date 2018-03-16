@@ -51,6 +51,8 @@
                         </header>
 
                         <b-collapse id="slash_command_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
+                            <p>Slash commands are the <code>/</code> commands that are used by players and admins. A plug-in can create custom slash commands with arbitrary behavior.</p>
+
                             <crud-editor
                                 :label="'Slash Command'"
                                 :storage="plugin.slashCommands"
@@ -66,6 +68,8 @@
                         </header>
 
                         <b-collapse id="callback_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
+                            <p>Callbacks are used to allow plugins to communicate with each other. Transmitting and accepting data happens by casting the <code>void*</code> data.</p>
+
                             <crud-editor
                                 :label="'Callback'"
                                 :storage="plugin.callbacks"
@@ -128,7 +132,7 @@ $_border: 1px solid $color-light-green;
 
 .c-accordion__body {
     border-top: $_border;
-    padding: 10px;
+    padding: 15px 10px;
 }
 
 .plugin-preview {

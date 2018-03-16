@@ -14,3 +14,15 @@ label:not(.custom-control-label) {
     color: $color-green;
     font-weight: bold;
 }
+
+.section-header {
+    color: $color-green;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.5;
+    padding-bottom: calc(0.375rem + 1px);
+}
+
+.line-height-1 {
+    line-height: 1em;
+}

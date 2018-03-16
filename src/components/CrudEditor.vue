@@ -8,12 +8,13 @@
                        class="w-100"
                        autocomplete="off"
                        :id="uid"
+                       :aria-describedby="uid + '-desc'"
                        v-model="newItem"
                        @keyup.enter="requestAddItem"
                 />
             </div>
 
-            <p class="m-0">
+            <p class="m-0" :id="uid + '-desc'">
                 <small class="text-muted">Press <kbd>Enter</kbd> to register the {{ label.toLowerCase() }}</small>
             </p>
         </div>
