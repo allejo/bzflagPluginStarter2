@@ -11,6 +11,7 @@
                 @pluginNameChanged="updateName"
                 @pluginAuthorChanged="updateAuthor"
                 @pluginLicenseSelected="updateLicense"
+                @callsignChanged="updateCallsign"
             />
         </article>
 
@@ -164,6 +165,7 @@ export default class App extends Vue {
         name: '',
         author: '',
         license: null,
+        callsign: '',
         events: [],
         slashCommands: [],
         callbacks: [],
@@ -183,6 +185,10 @@ export default class App extends Vue {
 
     updateLicense(licenseUpdateEvent: ILicense) {
         this.plugin.license = licenseUpdateEvent;
+    }
+
+    updateCallsign(callsign: string) {
+        this.plugin.callsign = callsign;
     }
 
     updatePluginEvent(eventUpdateEvent: IPluginEventSelectionEvent) {

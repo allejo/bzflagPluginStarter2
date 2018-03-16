@@ -6,6 +6,7 @@ export default interface IPlugin {
     name: string;
     author: string;
     license: ILicense | null;
+    callsign: string;
     events: IPluginEvent[];
     useIfStatement: boolean;
     slashCommands: string[];

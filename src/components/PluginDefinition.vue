@@ -12,6 +12,10 @@
 
         <b-col md="6">
             <plugin-license-selector />
+
+            <b-form-group label="BZFlag Callsign" label-form="bzflag-callsign">
+                <b-form-input type="text" id="bzflag-callsign" v-model="callsign" placeholder="" />
+            </b-form-group>
         </b-col>
     </b-row>
 </template>
@@ -29,6 +33,7 @@ import PluginLicenseSelector from './PluginLicenseSelector.vue';
 export default class PluginDefinition extends Vue {
     pluginName: string = '';
     pluginAuthor: string = '';
+    callsign: string = '';
 
     @Watch('pluginName')
     onPluginNameChange() {
@@ -38,6 +43,11 @@ export default class PluginDefinition extends Vue {
     @Watch('pluginAuthor')
     onPluginAuthorChange() {
         this.$emit('pluginAuthorChanged', this.pluginAuthor);
+    }
+
+    @Watch('callsign')
+    onCallsignChange() {
+        this.$emit('callsignChanged', this.callsign);
     }
 }
 </script>

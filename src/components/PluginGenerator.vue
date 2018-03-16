@@ -192,6 +192,18 @@ export default class PluginGenerator extends Vue {
             });
         }
 
+        if (this.pluginDefinition.callbacks.length > 0) {
+            if (events.length > 0 || this.pluginDefinition.slashCommands.length > 0) {
+                initBody.push(CPPHelper.createEmptyLine());
+            }
+
+            if (this.pluginDefinition.showComments) {
+                initBody.push(new CPPWritableObject('// Namespace our clip fields to avoid plug-in conflicts'));
+            }
+
+            initBody.push(CPPHelper.createFunctionCall('bz_setclipFieldString', [`"${this.pluginDefinition.callsign}/${this.className}"`, 'Name()']));
+        }
+
         // Build our Init() function
         let fxn = new CPPFunction('void', 'Init', [CPPVariable.createConstChar('config')]);
         fxn.implementFunction(initBody);
