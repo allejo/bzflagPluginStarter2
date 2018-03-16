@@ -157,7 +157,7 @@ export default class PluginGenerator extends Vue {
     }
 
     downloadPlugin() {
-        let blob = new Blob([this.pluginOutput], {type: 'text/plain;charset=utf-8'});
+        let blob = new Blob([this.pluginOutput], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, `${this.className}.cpp`);
     }
 

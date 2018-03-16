@@ -23,7 +23,7 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class SiteFooter extends Vue {
     get year() {
-        return (new Date()).getFullYear();
+        return new Date().getFullYear();
     }
 }
 </script>
