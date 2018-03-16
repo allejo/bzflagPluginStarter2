@@ -1,6 +1,11 @@
 <template>
     <div>
         <div class="c-toolbar">
+            <button class="btn btn-primary" @click="downloadPlugin">
+                <span class="fa fa-download" aria-hidden="true"></span>
+                <span class="sr-only">Download Plugin</span>
+            </button>
+
             <button class="btn btn-primary" v-clipboard:copy="pluginOutput">
                 <span class="fa fa-paste" aria-hidden="true"></span>
                 <span class="sr-only">Copy to Clipboard</span>
@@ -46,6 +51,7 @@ import {
 } from 'aclovis';
 import { IPluginEvent } from '../lib/IPluginEvent';
 import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
+import { saveAs } from 'file-saver';
 
 @Component({
     name: 'plugin-generator'
@@ -130,6 +136,11 @@ export default class PluginGenerator extends Vue {
 
     get pluginOutput() {
         return `${this.license}\n\n${this.pluginCode}`;
+    }
+
+    downloadPlugin() {
+        let blob = new Blob([this.pluginOutput], {type: 'text/plain;charset=utf-8'});
+        saveAs(blob, `${this.className}.cpp`);
     }
 
     private buildNameFunction(): void {
