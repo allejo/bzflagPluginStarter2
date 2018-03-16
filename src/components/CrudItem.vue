@@ -5,7 +5,11 @@
                 {{ itemValue }}
             </b-col>
             <b-col class="text-right">
-                <button class="btn btn-danger" @click="requestDelete">
+                <button class="btn btn-danger"
+                        data-balloon-pos="up"
+                        data-balloon="Delete"
+                        @click="requestDelete"
+                >
                     <span aria-hidden="true" class="fa fa-trash-o"></span>
                     <span class="sr-only">Delete</span>
                 </button>

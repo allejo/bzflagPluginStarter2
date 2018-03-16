@@ -2,14 +2,22 @@
     <section>
         <div class="plugin-container">
             <div class="c-toolbar">
-                <button class="btn btn-primary" @click="downloadPlugin">
+                <button class="btn btn-primary"
+                        data-balloon-pos="up"
+                        data-balloon="Download the plug-in file"
+                        @click="downloadPlugin"
+                >
                     <span class="fa fa-download" aria-hidden="true"></span>
-                    <span class="sr-only">Download Plugin</span>
+                    <span class="sr-only">Download the plug-in file</span>
                 </button>
 
-                <button class="btn btn-primary" v-clipboard:copy="pluginOutput">
+                <button class="btn btn-primary"
+                        data-balloon-pos="up"
+                        data-balloon="Copy the plug-in code to your clipboard"
+                        v-clipboard:copy="pluginOutput"
+                >
                     <span class="fa fa-paste" aria-hidden="true"></span>
-                    <span class="sr-only">Copy to Clipboard</span>
+                    <span class="sr-only">Copy the plug-in code to your clipboard</span>
                 </button>
             </div>
             <pre><code id="plugin-body">{{ pluginOutput }}</code></pre>
