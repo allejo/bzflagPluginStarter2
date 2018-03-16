@@ -159,7 +159,16 @@ export default class PluginGenerator extends Vue {
     }
 
     get pluginOutput() {
-        return `${this.license}\n\n${this.pluginCode}`;
+        let pluginChunks: string[] = [];
+
+        pluginChunks.push(this.license);
+        pluginChunks.push('\n\n');
+        pluginChunks.push('#include "bzfsAPI.h"\n');
+        pluginChunks.push('#include "plugin_utils.h"');
+        pluginChunks.push('\n\n');
+        pluginChunks.push(this.pluginCode);
+
+        return pluginChunks.join('');
     }
 
     downloadPlugin() {
