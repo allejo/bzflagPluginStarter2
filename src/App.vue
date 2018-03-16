@@ -1,6 +1,6 @@
 <template>
     <b-container id="main-app">
-        <article class="border-bottom pt-4 pb-2">
+        <article class="c-setup pt-4 pb-2">
             <h1 class="mb-3">BZFlag Plug-in Starter</h1>
 
             <p>This tool generates the skeleton for BZFlag 2.4 compatible plug-ins. The documentation and features used on this website are always in sync with the <a href="https://github.com/bzflag-dev/bzflag/tree/2.4">latest BZFlag 2.4.x development branch</a>. If you are not using the latest and greatest version of BZFS, be sure to check minimum requirements.</p>
@@ -15,68 +15,64 @@
         </article>
 
         <b-row>
-            <b-col class="mt-4" md="6">
+            <b-col md="6">
                 <div role="tablist">
-                    <b-card no-body>
-                        <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.coding_style>Coding Style</span>
-                        </b-card-header>
-                        <b-collapse id="coding_style" visible accordion="plugin-builder-accordion" role="tabpanel">
-                            <b-card-body>
-                                <plugin-formatter
-                                    @pluginFormatterChanged="updateFormatter"
-                                    @docBlocksConfigChanged="updateDocBlocks"
-                                    @showCommentsChanged="updateShowComments"
-                                    @useIfStatementChanged="updateEventBlock"
-                                />
-                            </b-card-body>
-                        </b-collapse>
-                    </b-card>
+                    <article class="c-accordion">
+                        <header v-b-toggle.coding_style role="tab">
+                            <h2>Coding Style</h2>
+                        </header>
 
-                    <b-card no-body>
-                        <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.event_list>Plug-in Events</span>
-                        </b-card-header>
-                        <b-collapse id="event_list" accordion="plugin-builder-accordion" role="tabpanel">
-                            <b-card-body>
-                                <plugin-event-list
-                                    @pluginEventSelectionUpdated="updatePluginEvent"
-                                />
-                            </b-card-body>
+                        <b-collapse id="coding_style" class="c-accordion__body" visible accordion="plugin-builder-accordion" role="tabpanel">
+                            <plugin-formatter
+                                @pluginFormatterChanged="updateFormatter"
+                                @docBlocksConfigChanged="updateDocBlocks"
+                                @showCommentsChanged="updateShowComments"
+                                @useIfStatementChanged="updateEventBlock"
+                            />
                         </b-collapse>
-                    </b-card>
+                    </article>
 
-                    <b-card no-body>
-                        <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.slash_command_editor>Custom Slash Commands</span>
-                        </b-card-header>
-                        <b-collapse id="slash_command_editor" accordion="plugin-builder-accordion" role="tabpanel">
-                            <b-card-body>
-                                <crud-editor
-                                    :label="'Slash Command'"
-                                    :storage="plugin.slashCommands"
-                                    @crudItemAdd="addSlashCommand"
-                                    @crudItemRemove="delSlashCommand"
-                                />
-                            </b-card-body>
-                        </b-collapse>
-                    </b-card>
+                    <article class="c-accordion">
+                        <header v-b-toggle.event_list role="tab">
+                            <h2>Plug-in Events</h2>
+                        </header>
 
-                    <b-card no-body>
-                        <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.callback_editor>Generic Callbacks</span>
-                        </b-card-header>
-                        <b-collapse id="callback_editor" accordion="plugin-builder-accordion" role="tabpanel">
-                            <b-card-body>
-                                <crud-editor
-                                    :label="'Callback'"
-                                    :storage="plugin.callbacks"
-                                    @crudItemAdd="addCallback"
-                                    @crudItemRemove="delCallback"
-                                />
-                            </b-card-body>
+                        <b-collapse id="event_list" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
+                            <plugin-event-list
+                                @pluginEventSelectionUpdated="updatePluginEvent"
+                            />
                         </b-collapse>
-                    </b-card>
+                    </article>
+
+                    <article class="c-accordion">
+                        <header v-b-toggle.slash_command_editor role="tab">
+                            <h2>Custom Slash Commands</h2>
+                        </header>
+
+                        <b-collapse id="slash_command_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
+                            <crud-editor
+                                :label="'Slash Command'"
+                                :storage="plugin.slashCommands"
+                                @crudItemAdd="addSlashCommand"
+                                @crudItemRemove="delSlashCommand"
+                            />
+                        </b-collapse>
+                    </article>
+
+                    <article class="c-accordion">
+                        <header v-b-toggle.callback_editor role="tab">
+                            <h2>Custom Callbacks</h2>
+                        </header>
+
+                        <b-collapse id="callback_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
+                            <crud-editor
+                                :label="'Callback'"
+                                :storage="plugin.callbacks"
+                                @crudItemAdd="addCallback"
+                                @crudItemRemove="delCallback"
+                            />
+                        </b-collapse>
+                    </article>
                 </div>
 
                 <site-footer />
@@ -91,6 +87,49 @@
 </template>
 
 <style lang="scss" scoped>
+@import 'scss/variables';
+
+$_border: 1px solid $color-light-green;
+
+.c-setup,
+.c-accordion {
+    border-bottom: $_border;
+}
+
+.c-accordion {
+    header {
+        cursor: pointer;
+        padding-bottom: 10px;
+        padding-top: 10px;
+
+        h2::before {
+            content: '\f107';
+            font-family: FontAwesome;
+            display: inline-block;
+            text-align: center;
+            width: 1.5em;
+        }
+
+        &.collapsed {
+            h2::before {
+                content: '\f105';
+            }
+        }
+    }
+
+    h2 {
+        color: $color-green;
+        font-size: 1.25em;
+        font-weight: bold;
+        margin: 0;
+    }
+}
+
+.c-accordion__body {
+    border-top: $_border;
+    padding: 10px;
+}
+
 .plugin-preview {
     position: relative;
 }

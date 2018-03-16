@@ -35,20 +35,16 @@ section {
 }
 
 .plugin-container {
-    padding: {
-        bottom: $_margin;
-        top: $_margin;
-    }
+    padding-bottom: $_margin;
+    padding-top: $_margin;
     position: relative;
 }
 
 pre {
-    --margin: $_margin;
-
     background-color: #e6e6e6;
     border: 1px solid #cacaca;
     margin-bottom: 0;
-    max-height: calc(100vh - (var(--margin) * 2));
+    height: calc(100vh - #{$_margin * 2});
     padding: 10px;
 }
 

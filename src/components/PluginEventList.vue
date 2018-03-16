@@ -1,7 +1,5 @@
 <template>
     <div>
-        <h2>Plug-in Events</h2>
-
         <b-row>
             <plugin-event-list-item
                 v-for="(item, i) in events"
