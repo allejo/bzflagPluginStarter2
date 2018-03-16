@@ -1,6 +1,15 @@
 [build]
-  publish = "_site/"
+  publish = "app/"
   command = "make build"
 
-[context.vue-dev]
-  publish = "app/"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "https://bz-plugin-starter.projects.allejo.io/*"
+  to = "https://bzflag-plugin-starter.allejo.org/:splat"
+  status = 301
+  force = true
