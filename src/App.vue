@@ -1,27 +1,27 @@
 <template>
-    <b-container fluid id="main-app">
+    <b-container id="main-app">
+        <article class="border-bottom pt-4 pb-2 mb-4">
+            <h1 class="mb-3">BZFlag Plug-in Starter</h1>
+
+            <p>This tool generates the skeleton for BZFlag 2.4 compatible plug-ins. The documentation and features used on this website are always in sync with the <a href="https://github.com/bzflag-dev/bzflag/tree/2.4">latest BZFlag 2.4.x development branch</a>. If you are not using the latest and greatest version of BZFS, be sure to check minimum requirements.</p>
+
+            <p>Enter the details of your BZFlag plug-in and start inputting information to build the skeleton for your plug-in.</p>
+
+            <plugin-definition
+                @pluginNameChanged="updateName"
+                @pluginAuthorChanged="updateAuthor"
+                @pluginLicenseSelected="updateLicense"
+            />
+        </article>
+
         <b-row>
             <b-col md="6">
-                <article>
-                    <h1>BZFlag Plug-in Starter</h1>
-
-                    <p>This tool will always generate plug-ins including features from the <a href="https://github.com/bzflag-dev/bzflag/tree/2.4">latest BZFlag 2.4.x branch</a>.</p>
-
-                    <p>Enter the details of your BZFlag plug-in and start inputting information to build the skeleton for your plug-in.</p>
-                </article>
-
-                <plugin-definition
-                    @pluginNameChanged="updateName"
-                    @pluginAuthorChanged="updateAuthor"
-                    @pluginLicenseSelected="updateLicense"
-                />
-
                 <div role="tablist">
                     <b-card no-body>
                         <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.accordion1>Coding Style</span>
+                            <span v-b-toggle.coding_style>Coding Style</span>
                         </b-card-header>
-                        <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
+                        <b-collapse id="coding_style" visible accordion="plugin-builder-accordion" role="tabpanel">
                             <b-card-body>
                                 <plugin-formatter
                                     @pluginFormatterChanged="updateFormatter"
@@ -35,9 +35,9 @@
 
                     <b-card no-body>
                         <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.accordion2>Plug-in Events</span>
+                            <span v-b-toggle.event_list>Plug-in Events</span>
                         </b-card-header>
-                        <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
+                        <b-collapse id="event_list" accordion="plugin-builder-accordion" role="tabpanel">
                             <b-card-body>
                                 <plugin-event-list
                                     @pluginEventSelectionUpdated="updatePluginEvent"
@@ -48,11 +48,12 @@
 
                     <b-card no-body>
                         <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.accordion3>Custom Slash Commands</span>
+                            <span v-b-toggle.slash_command_editor>Custom Slash Commands</span>
                         </b-card-header>
-                        <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
+                        <b-collapse id="slash_command_editor" accordion="plugin-builder-accordion" role="tabpanel">
                             <b-card-body>
                                 <crud-editor
+                                    :label="'Slash Command'"
                                     :storage="plugin.slashCommands"
                                     @crudItemAdd="addSlashCommand"
                                     @crudItemRemove="delSlashCommand"
@@ -63,11 +64,12 @@
 
                     <b-card no-body>
                         <b-card-header header-tag="header" role="tab">
-                            <span v-b-toggle.accordion4>Generic Callbacks</span>
+                            <span v-b-toggle.callback_editor>Generic Callbacks</span>
                         </b-card-header>
-                        <b-collapse id="accordion4" accordion="my-accordion" role="tabpanel">
+                        <b-collapse id="callback_editor" accordion="plugin-builder-accordion" role="tabpanel">
                             <b-card-body>
                                 <crud-editor
+                                    :label="'Callback'"
                                     :storage="plugin.callbacks"
                                     @crudItemAdd="addCallback"
                                     @crudItemRemove="delCallback"

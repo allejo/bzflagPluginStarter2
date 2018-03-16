@@ -1,3 +1,16 @@
+@import 'variables';
+
 body {
-    background-color: #efefef;
+    font-family: Raleway, -apple-system, Helvetica Neue, Arial, sans-serif;
+}
+
+h1 {
+    color: $color-green;
+    font-family: Bitter, sans-serif;
+}
+
+fieldset legend,
+label:not(.custom-control-label) {
+    color: $color-green;
+    font-weight: bold;
 }

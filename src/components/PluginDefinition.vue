@@ -1,15 +1,19 @@
 <template>
-    <div>
-        <b-form-group label="Plug-in Name" label-form="plugin-name">
-            <b-form-input type="text" id="plugin-name" v-model="pluginName" />
-        </b-form-group>
+    <b-row>
+        <b-col md="6">
+            <b-form-group label="Plug-in Name" label-form="plugin-name">
+                <b-form-input type="text" id="plugin-name" v-model="pluginName" placeholder="SAMPLE PLUGIN" />
+            </b-form-group>
 
-        <b-form-group label="Plug-in Author" label-form="plugin-author">
-            <b-form-input type="text" id="plugin-author" v-model="pluginAuthor" />
-        </b-form-group>
+            <b-form-group label="Plug-in Author" label-form="plugin-author">
+                <b-form-input type="text" id="plugin-author" v-model="pluginAuthor" placeholder="John Doe" />
+            </b-form-group>
+        </b-col>
 
-        <plugin-license-selector />
-    </div>
+        <b-col md="6">
+            <plugin-license-selector />
+        </b-col>
+    </b-row>
 </template>
 
 <script lang="ts">

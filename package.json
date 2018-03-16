@@ -15,10 +15,13 @@
     "dependencies": {
         "aclovis": "0.0.0",
         "bootstrap-vue": "^2.0.0-rc.2",
+        "font-awesome": "^4.7.0",
+        "google-fonts-webpack-plugin": "^0.4.4",
         "lodash": "^4.17.5",
         "vue": "^2.5.15",
         "vue-class-component": "^6.2.0",
-        "vue-property-decorator": "^6.0.0"
+        "vue-property-decorator": "^6.0.0",
+        "vue-uniq-ids": "^1.0.0"
     },
     "devDependencies": {
         "@types/lodash": "^4.14.104",

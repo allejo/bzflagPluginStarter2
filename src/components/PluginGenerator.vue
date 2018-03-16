@@ -1,12 +1,17 @@
 <template>
-    <pre>
-    /*
-    {{ license }}
-    */
+    <pre><code>{{ license }}
 
     {{ pluginOutput }}
-    </pre>
+    </code></pre>
 </template>
+
+<style lang="scss" scoped>
+pre {
+    background-color: #e6e6e6;
+    border: 1px solid #cacaca;
+    padding: 10px;
+}
+</style>
 
 <script lang="ts">
 import * as _ from 'lodash';
@@ -68,10 +73,14 @@ export default class PluginGenerator extends Vue {
             return `Copyright (C) ${currentYear} ${this.pluginDefinition.author}\nAll rights reserved.`;
         }
 
-        return this.pluginDefinition.license.body
+        let license = this.pluginDefinition.license.body
             .replace('{year}', currentYear)
             .replace('{author}', this.pluginDefinition.author)
             .replace('{name}', this.pluginDefinition.name);
+
+        let licenseBlock = new CPPComment(license.split('\n'), true);
+
+        return licenseBlock.write(this.formatter);
     }
 
     get sortedEvents(): IPluginEvent[] {

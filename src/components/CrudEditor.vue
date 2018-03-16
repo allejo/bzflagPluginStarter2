@@ -1,10 +1,22 @@
 <template>
     <div class="c-crud-editor">
-        <input type="text"
-               autocomplete="off"
-               v-model="newItem"
-               @keyup.enter="requestAddItem"
-        />
+        <div>
+            <label v-uni-for="'enter-crud-item'">Add New {{ label }}</label>
+
+            <div>
+                <input type="text"
+                       class="w-100"
+                       autocomplete="off"
+                       v-uni-id="'enter-crud-item'"
+                       v-model="newItem"
+                       @keyup.enter="requestAddItem"
+                />
+            </div>
+
+            <p class="m-0">
+                <small class="text-muted">Press <kbd>Enter</kbd> to register the {{ label.toLowerCase() }}</small>
+            </p>
+        </div>
 
         <div class="c-crud-list">
             <crud-item
@@ -28,6 +40,11 @@ import CrudItem from './CrudItem';
 })
 export default class CrudEditor extends Vue {
     newItem: string = '';
+
+    @Prop({
+        default: ''
+    })
+    label: string;
 
     @Prop() storage: any[];
 

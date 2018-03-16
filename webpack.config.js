@@ -1,6 +1,7 @@
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const GoogleFontsPlugin = require("google-fonts-webpack-plugin");
 
 module.exports = {
     entry: './src/main.ts',
@@ -102,6 +103,12 @@ module.exports = {
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery'
+        }),
+        new GoogleFontsPlugin({
+            fonts: [
+                { family: "Bitter" },
+                { family: "Raleway", variants: [ "400", "700" ] }
+            ]
         })
     ],
 
