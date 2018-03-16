@@ -3,12 +3,6 @@
   command = "make build"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "https://bz-plugin-starter.projects.allejo.io/*"
   to = "https://bzflag-plugin-starter.allejo.org/:splat"
   status = 301
