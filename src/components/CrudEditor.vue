@@ -1,13 +1,13 @@
 <template>
     <div class="c-crud-editor">
         <div>
-            <label v-uni-for="'enter-crud-item'">Add New {{ label }}</label>
+            <label :for="uid">Add New {{ label }}</label>
 
             <div>
                 <input type="text"
                        class="w-100"
                        autocomplete="off"
-                       v-uni-id="'enter-crud-item'"
+                       :id="uid"
                        v-model="newItem"
                        @keyup.enter="requestAddItem"
                 />
@@ -47,6 +47,10 @@ export default class CrudEditor extends Vue {
     label: string;
 
     @Prop() storage: any[];
+
+    get uid() {
+        return 'crud-' + this.label.replace(/\s/, '-').toLowerCase();
+    }
 
     requestAddItem() {
         this.$emit('crudItemAdd', this.newItem);

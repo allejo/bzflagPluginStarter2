@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import VueUniqIds from 'vue-uniq-ids';
 import Bootstrap from 'bootstrap-vue';
 import App from './App.vue';
 
@@ -10,7 +9,6 @@ import 'font-awesome/css/font-awesome.css';
 import './scss/main.scss';
 
 Vue.use(Bootstrap);
-Vue.use(VueUniqIds);
 
 new Vue({
     el: '#app',
