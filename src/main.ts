@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Bootstrap from 'bootstrap-vue';
+import VueClipboard from 'vue-clipboard2';
 import App from './App.vue';
 
 // Styles!
@@ -9,6 +10,7 @@ import 'font-awesome/css/font-awesome.css';
 import './scss/main.scss';
 
 Vue.use(Bootstrap);
+Vue.use(VueClipboard);
 
 new Vue({
     el: '#app',

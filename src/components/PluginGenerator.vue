@@ -1,15 +1,30 @@
 <template>
-    <pre><code>{{ license }}
-
-    {{ pluginOutput }}
-    </code></pre>
+    <div>
+        <div class="c-toolbar">
+            <button class="btn btn-primary" v-clipboard:copy="pluginOutput">
+                <span class="fa fa-paste" aria-hidden="true"></span>
+                <span class="sr-only">Copy to Clipboard</span>
+            </button>
+        </div>
+        <pre><code id="plugin-body">{{ pluginOutput }}</code></pre>
+    </div>
 </template>
 
 <style lang="scss" scoped>
+div {
+    position: relative;
+}
+
 pre {
     background-color: #e6e6e6;
     border: 1px solid #cacaca;
     padding: 10px;
+}
+
+.c-toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 </style>
 
@@ -87,7 +102,7 @@ export default class PluginGenerator extends Vue {
         return _.sortBy(this.pluginDefinition.events, ['name']);
     }
 
-    get pluginOutput() {
+    get pluginCode() {
         this.plugin = new CPPClass(this.className);
         this.plugin.addExtends([CPPVisibility.Public, 'bz_Plugin']);
 
@@ -111,6 +126,10 @@ export default class PluginGenerator extends Vue {
         output = output.replace('};', `};\n\nBZ_PLUGIN(${this.className})`);
 
         return output;
+    }
+
+    get pluginOutput() {
+        return `${this.license}\n\n${this.pluginCode}`;
     }
 
     private buildNameFunction(): void {

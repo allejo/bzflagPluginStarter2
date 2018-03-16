@@ -20,6 +20,7 @@
         "lodash": "^4.17.5",
         "vue": "^2.5.15",
         "vue-class-component": "^6.2.0",
+        "vue-clipboard2": "0.0.9",
         "vue-property-decorator": "^6.0.0"
     },
     "devDependencies": {
