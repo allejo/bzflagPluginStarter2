@@ -203,7 +203,12 @@ export default class PluginGenerator extends Vue {
                 initBody.push(new CPPWritableObject('// Namespace our clip fields to avoid plug-in conflicts'));
             }
 
-            initBody.push(CPPHelper.createFunctionCall('bz_setclipFieldString', [`"${this.pluginDefinition.callsign}/${this.className}"`, 'Name()']));
+            initBody.push(
+                CPPHelper.createFunctionCall('bz_setclipFieldString', [
+                    `"${this.pluginDefinition.callsign}/${this.className}"`,
+                    'Name()'
+                ])
+            );
         }
 
         // Build our Init() function
