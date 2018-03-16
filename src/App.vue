@@ -1,6 +1,6 @@
 <template>
     <b-container id="main-app">
-        <article class="border-bottom pt-4 pb-2 mb-4">
+        <article class="border-bottom pt-4 pb-2">
             <h1 class="mb-3">BZFlag Plug-in Starter</h1>
 
             <p>This tool generates the skeleton for BZFlag 2.4 compatible plug-ins. The documentation and features used on this website are always in sync with the <a href="https://github.com/bzflag-dev/bzflag/tree/2.4">latest BZFlag 2.4.x development branch</a>. If you are not using the latest and greatest version of BZFS, be sure to check minimum requirements.</p>
@@ -15,7 +15,7 @@
         </article>
 
         <b-row>
-            <b-col md="6">
+            <b-col class="mt-4" md="6">
                 <div role="tablist">
                     <b-card no-body>
                         <b-card-header header-tag="header" role="tab">
@@ -78,8 +78,10 @@
                         </b-collapse>
                     </b-card>
                 </div>
+
+                <site-footer />
             </b-col>
-            <b-col md="6">
+            <b-col md="6" class="plugin-preview">
                 <plugin-generator
                     :pluginDefinition="plugin"
                 />
@@ -87,6 +89,12 @@
         </b-row>
     </b-container>
 </template>
+
+<style lang="scss" scoped>
+.plugin-preview {
+    position: relative;
+}
+</style>
 
 <script lang="ts">
 import * as _ from 'lodash';
@@ -99,6 +107,7 @@ import PluginDefinition from './components/PluginDefinition.vue';
 import PluginFormatter from './components/PluginFormatter.vue';
 import PluginEventList from './components/PluginEventList.vue';
 import PluginGenerator from './components/PluginGenerator.vue';
+import SiteFooter from './components/SiteFooter.vue';
 import { CPPFormatter } from 'aclovis';
 
 @Component({
@@ -107,7 +116,8 @@ import { CPPFormatter } from 'aclovis';
         PluginDefinition,
         PluginFormatter,
         PluginEventList,
-        PluginGenerator
+        PluginGenerator,
+        SiteFooter
     }
 })
 export default class App extends Vue {

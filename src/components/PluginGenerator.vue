@@ -1,34 +1,52 @@
 <template>
-    <div>
-        <div class="c-toolbar">
-            <button class="btn btn-primary" @click="downloadPlugin">
-                <span class="fa fa-download" aria-hidden="true"></span>
-                <span class="sr-only">Download Plugin</span>
-            </button>
+    <section>
+        <div class="plugin-container">
+            <div class="c-toolbar">
+                <button class="btn btn-primary" @click="downloadPlugin">
+                    <span class="fa fa-download" aria-hidden="true"></span>
+                    <span class="sr-only">Download Plugin</span>
+                </button>
 
-            <button class="btn btn-primary" v-clipboard:copy="pluginOutput">
-                <span class="fa fa-paste" aria-hidden="true"></span>
-                <span class="sr-only">Copy to Clipboard</span>
-            </button>
+                <button class="btn btn-primary" v-clipboard:copy="pluginOutput">
+                    <span class="fa fa-paste" aria-hidden="true"></span>
+                    <span class="sr-only">Copy to Clipboard</span>
+                </button>
+            </div>
+            <pre><code id="plugin-body">{{ pluginOutput }}</code></pre>
         </div>
-        <pre><code id="plugin-body">{{ pluginOutput }}</code></pre>
-    </div>
+    </section>
 </template>
 
 <style lang="scss" scoped>
-div {
+$_margin: 1.5em;
+
+section {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+.plugin-container {
+    padding: {
+        bottom: $_margin;
+        top: $_margin;
+    }
     position: relative;
 }
 
 pre {
+    --margin: $_margin;
+
     background-color: #e6e6e6;
     border: 1px solid #cacaca;
+    margin-bottom: 0;
+    max-height: calc(100vh - (var(--margin) * 2));
     padding: 10px;
 }
 
 .c-toolbar {
     position: absolute;
-    top: 0;
+    top: $_margin;
     right: 0;
 }
 </style>
