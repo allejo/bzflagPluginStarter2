@@ -23,13 +23,15 @@
                             <h2>Coding Style</h2>
                         </header>
 
-                        <b-collapse id="coding_style" class="c-accordion__body" visible accordion="plugin-builder-accordion" role="tabpanel">
-                            <plugin-formatter
-                                @pluginFormatterChanged="updateFormatter"
-                                @docBlocksConfigChanged="updateDocBlocks"
-                                @showCommentsChanged="updateShowComments"
-                                @useIfStatementChanged="updateEventBlock"
-                            />
+                        <b-collapse id="coding_style" visible accordion="plugin-builder-accordion" role="tabpanel">
+                            <div class="c-accordion__body">
+                                <plugin-formatter
+                                    @pluginFormatterChanged="updateFormatter"
+                                    @docBlocksConfigChanged="updateDocBlocks"
+                                    @showCommentsChanged="updateShowComments"
+                                    @useIfStatementChanged="updateEventBlock"
+                                />
+                            </div>
                         </b-collapse>
                     </article>
 
@@ -38,10 +40,12 @@
                             <h2>Plug-in Events</h2>
                         </header>
 
-                        <b-collapse id="event_list" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
-                            <plugin-event-list
-                                @pluginEventSelectionUpdated="updatePluginEvent"
-                            />
+                        <b-collapse id="event_list" accordion="plugin-builder-accordion" role="tabpanel">
+                            <div class="c-accordion__body">
+                                <plugin-event-list
+                                    @pluginEventSelectionUpdated="updatePluginEvent"
+                                />
+                            </div>
                         </b-collapse>
                     </article>
 
@@ -50,15 +54,17 @@
                             <h2>Custom Slash Commands</h2>
                         </header>
 
-                        <b-collapse id="slash_command_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
-                            <p>Slash commands are the <code>/</code> commands that are used by players and admins. A plug-in can create custom slash commands with arbitrary behavior.</p>
+                        <b-collapse id="slash_command_editor" accordion="plugin-builder-accordion" role="tabpanel">
+                            <div class="c-accordion__body">
+                                <p>Slash commands are the <code>/</code> commands that are used by players and admins. A plug-in can create custom slash commands with arbitrary behavior.</p>
 
-                            <crud-editor
-                                :label="'Slash Command'"
-                                :storage="plugin.slashCommands"
-                                @crudItemAdd="addSlashCommand"
-                                @crudItemRemove="delSlashCommand"
-                            />
+                                <crud-editor
+                                    :label="'Slash Command'"
+                                    :storage="plugin.slashCommands"
+                                    @crudItemAdd="addSlashCommand"
+                                    @crudItemRemove="delSlashCommand"
+                                />
+                            </div>
                         </b-collapse>
                     </article>
 
@@ -67,15 +73,17 @@
                             <h2>Custom Callbacks</h2>
                         </header>
 
-                        <b-collapse id="callback_editor" class="c-accordion__body" accordion="plugin-builder-accordion" role="tabpanel">
-                            <p>Callbacks are used to allow plugins to communicate with each other. Transmitting and accepting data happens by casting the <code>void*</code> data.</p>
+                        <b-collapse id="callback_editor" accordion="plugin-builder-accordion" role="tabpanel">
+                            <div class="c-accordion__body">
+                                <p>Callbacks are used to allow plugins to communicate with each other. Transmitting and accepting data happens by casting the <code>void*</code> data.</p>
 
-                            <crud-editor
-                                :label="'Callback'"
-                                :storage="plugin.callbacks"
-                                @crudItemAdd="addCallback"
-                                @crudItemRemove="delCallback"
-                            />
+                                <crud-editor
+                                    :label="'Callback'"
+                                    :storage="plugin.callbacks"
+                                    @crudItemAdd="addCallback"
+                                    @crudItemRemove="delCallback"
+                                />
+                            </div>
                         </b-collapse>
                     </article>
                 </div>
