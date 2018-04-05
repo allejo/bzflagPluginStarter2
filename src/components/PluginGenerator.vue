@@ -299,7 +299,12 @@ export default class PluginGenerator extends Vue {
             new CPPVariable('void*', 'data')
         ]);
 
+        let nullCheck = new CPPIfBlock();
+        nullCheck.defineCondition('!name', [new CPPWritableObject('return -1;')]);
+
         let body: ILanguageWritable[] = [
+            nullCheck,
+            CPPHelper.createEmptyLine(),
             new CPPVariable('std::string', 'callback', 'name'),
             CPPHelper.createEmptyLine()
         ];
