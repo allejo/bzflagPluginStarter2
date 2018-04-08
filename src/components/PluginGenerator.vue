@@ -4,8 +4,14 @@
 
         <div class="plugin-container">
             <div class="c-toolbar">
+                <button class="btn btn-secondary"
+                        data-balloon-pos="down"
+                        data-balloon="Minimum BZFS requirement"
+                >
+                    {{ minimumBZFS }}
+                </button>
                 <button class="btn btn-primary"
-                        data-balloon-pos="up"
+                        data-balloon-pos="down"
                         data-balloon="Download the plug-in file"
                         @click="downloadPlugin"
                 >
@@ -14,7 +20,7 @@
                 </button>
 
                 <button class="btn btn-primary"
-                        data-balloon-pos="up"
+                        data-balloon-pos="down"
                         data-balloon="Copy the plug-in code to your clipboard"
                         v-clipboard:copy="pluginOutput"
                 >
@@ -76,6 +82,7 @@ import {
 import { IPluginEvent } from '../lib/IPluginEvent';
 import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
 import { saveAs } from 'file-saver';
+import semver from 'semver';
 
 @Component({
     name: 'plugin-generator'
@@ -169,6 +176,20 @@ export default class PluginGenerator extends Vue {
         pluginChunks.push(this.pluginCode);
 
         return pluginChunks.join('');
+    }
+
+    get minimumBZFS() {
+        const versions = this.pluginDefinition.events.sort(function(a, b) {
+            return semver.gt(b.since, a.since);
+        });
+
+        const highestEvent = _.first(versions);
+
+        if (highestEvent) {
+            return highestEvent.since;
+        }
+
+        return '2.4.0';
     }
 
     downloadPlugin() {

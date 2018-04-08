@@ -24,6 +24,7 @@
         "font-awesome": "^4.7.0",
         "google-fonts-webpack-plugin": "^0.4.4",
         "lodash": "^4.17.5",
+        "semver": "^5.5.0",
         "vue": "^2.5.15",
         "vue-class-component": "^6.2.0",
         "vue-clipboard2": "0.0.9",
