@@ -4,5 +4,6 @@
 *.map
 _events/
 app/builds/
+src/events/*.md
 node_modules/
 workspace/
