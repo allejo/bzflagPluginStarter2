@@ -17,7 +17,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import PluginEventListItem from './PluginEventListItem.vue';
 import { IPluginEvent } from '../lib/IPluginEvent';
 
-let eventsAsYaml = require.context('../../_events/', true, /\.md$/);
+let eventsAsYaml = require.context('../events/', true, /\.md$/);
 let eventsDictionary: { [key: string]: IPluginEvent } = {};
 
 eventsAsYaml.keys().forEach(key => {
