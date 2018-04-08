@@ -40,7 +40,7 @@
         "eslint": "^4.18.2",
         "eslint-plugin-vue": "^2.1.0",
         "extract-text-webpack-plugin": "^2.1.2",
-        "file-loader": "^0.9.0",
+        "file-loader": "^1.1.11",
         "front-matter-loader": "^0.2.0",
         "node-sass": "^4.7.2",
         "postcss-loader": "^2.1.1",

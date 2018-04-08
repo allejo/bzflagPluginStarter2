@@ -14,8 +14,8 @@ A [Vue.js](https://vuejs.org/) powered website used to generate the skeleton of 
 The website is built with [Webpack](https://webpack.js.org/) and has npm scripts to build the site for a development environment or for production.
 
 ```bash
-bash tools/fetchEvents.sh
 npm install
+npm run fetch-events
 
 # for a production build
 npm run build
@@ -34,10 +34,8 @@ This project makes use of a few separate parts so here's a brief explanation of 
 
 All BZFlag API events are generated automatically from BZFlag's [official documentation](https://github.com/BZFlag-Dev/bzflag.org/tree/master/_documentation) repository. The event documentation is not committed directly to this repository and instead is just fetched from the official docs during the deployment process; any changes to the documentation need be made in the official documentation and will be automatically updated on this website the next deployment.
 
-Use the included script to fetch all of the events.
-
-```
-bash tools/fetchEvents.sh
+```bash
+npm run fetch-events
 ```
 
 ### Licenses
