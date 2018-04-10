@@ -57,6 +57,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
+                    publicPath: './',
                     fallback: 'style-loader',
                     use: 'css-loader'
                 })
@@ -64,6 +65,7 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
+                    publicPath: './',
                     fallback: 'style-loader',
                     use: [
                         'css-loader',
