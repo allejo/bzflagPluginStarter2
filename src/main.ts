@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Bootstrap from 'bootstrap-vue';
 import VueClipboard from 'vue-clipboard2';
+import VueAutosize from 'vue-autosize';
 import App from './App.vue';
 
 // Styles!
@@ -12,6 +13,7 @@ import './scss/main.scss';
 
 Vue.use(Bootstrap);
 Vue.use(VueClipboard);
+Vue.use(VueAutosize);
 
 new Vue({
     el: '#app',
