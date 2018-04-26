@@ -2,7 +2,7 @@
     <div class="c-map-argument px-2 py-1">
         <div class="d-flex">
             <strong class="mr-1">{</strong>
-            <input v-autosize="name" :disabled="readonly" placeholder="xpos" :value="name" />
+            <input v-autosize="name" :disabled="readonly" placeholder="xpos" :value="arg.name" />
             <strong class="px-2">:</strong>
             <div class="select-container">
                 <select :disabled="readonly">
@@ -10,7 +10,7 @@
                         v-for="(item, index) in argumentTypes"
                         :value="item"
                         :key="index"
-                        :selected="(item === argType) && 'selected'"
+                        :selected="(item === arg.argType) && 'selected'"
                     >
                         {{ item }}
                     </option>
@@ -69,21 +69,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-enum ArgumentType {
-    Integer = 'Int',
-    Double = 'Double',
-    String = 'String',
-    Team = 'Team'
-}
+import { ArgumentType, IMapPropertyArgument } from '../lib/IMapPropertyArgument';
 
 @Component({
     name: 'map-property-argument'
 })
 export default class MapPropertyArgument extends Vue {
-    @Prop() name: string;
-    @Prop() argType: ArgumentType;
-    @Prop() readonly: boolean;
+    @Prop() arg: IMapPropertyArgument;
 
     argumentTypes = [ArgumentType.Integer, ArgumentType.Double, ArgumentType.String, ArgumentType.Team];
 }
