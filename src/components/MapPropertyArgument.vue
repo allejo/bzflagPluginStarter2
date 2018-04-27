@@ -1,21 +1,19 @@
 <template>
-    <div class="c-map-argument px-2 py-1">
+    <div class="c-map-argument px-2 py-1 d-inline-block">
         <div class="d-flex">
             <strong class="mr-1">{</strong>
-            <input v-autosize="name" :disabled="readonly" placeholder="xpos" :value="arg.name" />
+            <input v-autosize="arg.name" :disabled="arg.readonly" placeholder="xpos" :value="arg.name" />
             <strong class="px-2">:</strong>
-            <div class="select-container">
-                <select :disabled="readonly">
-                    <option
-                        v-for="(item, index) in argumentTypes"
-                        :value="item"
-                        :key="index"
-                        :selected="(item === arg.argType) && 'selected'"
-                    >
-                        {{ item }}
-                    </option>
-                </select>
-            </div>
+            <select :disabled="arg.readonly">
+                <option
+                    v-for="(item, index) in argumentTypes"
+                    :value="item"
+                    :key="index"
+                    :selected="(item === arg.type) && 'selected'"
+                >
+                    {{ item }}
+                </option>
+            </select>
             <strong>}</strong>
         </div>
     </div>
@@ -23,9 +21,9 @@
 
 <style lang="scss" scoped>
 .c-map-argument {
-    background-color: #e1ecf4;
+    background-color: #e1f4e4;
     border-radius: 5px;
-    color: #33658a;
+    color: #338a42;
     font-size: 0.8em;
 
     input {
@@ -47,22 +45,6 @@
         color: inherit;
         font-size: inherit;
         padding: 0;
-        padding-left: 13px;
-    }
-}
-
-.select-container {
-    position: relative;
-
-    &::after {
-        content: '\25BC';
-        display: block;
-        font-size: 0.8em;
-        pointer-events: none;
-        position: absolute;
-        top: 3px;
-        left: 0;
-        z-index: 0;
     }
 }
 </style>

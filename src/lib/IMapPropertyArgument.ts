@@ -7,6 +7,6 @@ export enum ArgumentType {
 
 export interface IMapPropertyArgument {
     name: string;
-    argType: ArgumentType;
+    type: ArgumentType;
     readonly: boolean;
 }
