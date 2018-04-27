@@ -1,8 +1,13 @@
 <template>
-    <div class="c-map-argument px-2 py-1 d-inline-block">
+    <div class="c-map-argument d-inline-block">
         <div class="d-flex">
             <strong class="mr-1">{</strong>
-            <input v-autosize="arg.name" :disabled="arg.readonly" placeholder="xpos" :value="arg.name" />
+            <editable
+                :content="arg.name"
+                :readonly="arg.readonly"
+                @textChanged="arg.name = $event"
+                :className="'c-map-argument__name'"
+            />
             <strong class="px-2">:</strong>
             <select :disabled="arg.readonly">
                 <option
@@ -25,16 +30,8 @@
     border-radius: 5px;
     color: #338a42;
     font-size: 0.8em;
-
-    input {
-        background-color: rgba(#fff, 1);
-        border: none;
-        border-radius: 5px;
-        color: inherit;
-        font-size: inherit;
-        font-weight: bold;
-        padding: 0 5px;
-    }
+    padding-left: 3px;
+    padding-right: 3px;
 
     select {
         -webkit-appearance: none;
@@ -47,14 +44,27 @@
         padding: 0;
     }
 }
+
+.c-map-argument__name {
+    border: none;
+    border-radius: 5px;
+    color: inherit;
+    font-size: inherit;
+    font-weight: bold;
+    padding: 0;
+}
 </style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ArgumentType, IMapPropertyArgument } from '../lib/IMapPropertyArgument';
+import Editable from './Editable';
 
 @Component({
-    name: 'map-property-argument'
+    name: 'map-property-argument',
+    components: {
+        Editable
+    }
 })
 export default class MapPropertyArgument extends Vue {
     @Prop() arg: IMapPropertyArgument;

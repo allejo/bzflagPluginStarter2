@@ -2,10 +2,10 @@
     <div class="c-map-property">
         <div class="d-flex">
             <div class="c-map-property__name">
-                <input type="text"
-                       v-autosize="definition.name"
-                       :value="definition.name"
-                       :readonly="definition.readonly"
+                <editable
+                    :content="definition.name"
+                    :readonly="definition.readonly"
+                    @textChange="definition.name = $update"
                 />
             </div>
             <div class="c-map-property__arguments">
@@ -20,23 +20,16 @@
     </div>
 </template>
 
-<style lang="scss" scoped>
-.c-map-property {
-    input {
-        background-color: #fff;
-        min-width: 100px;
-    }
-}
-</style>
-
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import Editable from './Editable';
 import MapPropertyArgument from './MapPropertyArgument';
 import { IMapProperty } from '../lib/IMapProperty';
 
 @Component({
     name: 'map-property',
     components: {
+        Editable,
         MapPropertyArgument
     }
 })
