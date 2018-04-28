@@ -5,26 +5,46 @@
                 <editable
                     :content="definition.name"
                     :readonly="definition.readonly"
-                    @textChange="definition.name = $update"
+                    @textChanged="definition.name = $event"
                 />
             </div>
             <div class="c-map-property__arguments">
                 <MapPropertyArgument
-                    v-for="(argument, index) in definition.arguments"
+                    v-for="(argument, key) in definition.arguments"
+                    @mapPropertyArgumentChanged="propertyDefinitionChanged"
+                    :aid="key"
                     :arg="Object.assign(argument, { readonly: definition.readonly })"
-                    :key="index"
-                    class="mx-1"
+                    :key="key"
+                    class="ml-2"
                 />
+
+                <button class="ml-1 px-1 py-0 text-muted" @click="addNewArgument">
+                    + Add Argument
+                </button>
             </div>
         </div>
     </div>
 </template>
 
+<style lang="scss" scoped>
+.c-map-property {
+    white-space: nowrap;
+}
+
+button {
+    background: none;
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+    font-size: 0.8em;
+}
+</style>
+
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import Editable from './Editable';
 import MapPropertyArgument from './MapPropertyArgument';
 import { IMapProperty } from '../lib/IMapProperty';
+import MapObjectHelper from '../lib/MapObjectHelper';
 
 @Component({
     name: 'map-property',
@@ -34,6 +54,19 @@ import { IMapProperty } from '../lib/IMapProperty';
     }
 })
 export default class MapProperty extends Vue {
+    @Prop() aid: number;
     @Prop() definition: IMapProperty;
+
+    addNewArgument() {
+        this.definition.arguments.push(MapObjectHelper.createMapPropertyArgument());
+    }
+
+    @Watch('definition', { deep: true })
+    propertyDefinitionChanged() {
+        this.$emit('mapPropertyChange', {
+            id: this.aid,
+            definition: this.definition
+        });
+    }
 }
 </script>

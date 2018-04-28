@@ -1,5 +1,6 @@
 export enum ArgumentType {
     Integer = 'Int',
+    Float = 'Float',
     Double = 'Double',
     String = 'String',
     Team = 'Team'
@@ -8,5 +9,5 @@ export enum ArgumentType {
 export interface IMapPropertyArgument {
     name: string;
     type: ArgumentType;
-    readonly: boolean;
+    readonly?: boolean;
 }

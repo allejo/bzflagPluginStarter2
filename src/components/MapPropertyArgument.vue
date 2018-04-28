@@ -5,11 +5,11 @@
             <editable
                 :content="arg.name"
                 :readonly="arg.readonly"
-                @textChanged="arg.name = $event"
                 :className="'c-map-argument__name'"
+                @textChanged="arg.name = $event"
             />
             <strong class="px-2">:</strong>
-            <select :disabled="arg.readonly">
+            <select :disabled="arg.readonly" v-model="arg.type">
                 <option
                     v-for="(item, index) in argumentTypes"
                     :value="item"
@@ -56,7 +56,7 @@
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { ArgumentType, IMapPropertyArgument } from '../lib/IMapPropertyArgument';
 import Editable from './Editable';
 
@@ -67,8 +67,20 @@ import Editable from './Editable';
     }
 })
 export default class MapPropertyArgument extends Vue {
+    @Prop() aid: number;
     @Prop() arg: IMapPropertyArgument;
 
-    argumentTypes = [ArgumentType.Integer, ArgumentType.Double, ArgumentType.String, ArgumentType.Team];
+    argumentTypes = [
+        ArgumentType.Integer,
+        ArgumentType.Float,
+        ArgumentType.Double,
+        ArgumentType.String,
+        ArgumentType.Team
+    ];
+
+    @Watch('arg', { deep: true })
+    argumentDefinitionChanged() {
+        this.$emit('mapPropertyArgumentChanged', this.arg);
+    }
 }
 </script>
