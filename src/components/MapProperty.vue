@@ -32,7 +32,7 @@
 .c-map-property {
     white-space: nowrap;
 
-    &[data-readonly="true"] {
+    &[data-readonly='true'] {
         .c-map-property__name {
             cursor: not-allowed;
             opacity: 0.55;

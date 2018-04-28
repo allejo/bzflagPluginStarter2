@@ -69,6 +69,32 @@
                     </article>
 
                     <article class="c-accordion">
+                        <header v-b-toggle.map_object_editor role="tab">
+                            <h2>Custom Map Objects</h2>
+                        </header>
+
+                        <b-collapse id="map_object_editor" accordion="plugin-builder-accordion" role="tabpanel">
+                            <div class="c-accordion__body">
+                                <p>A plug-in can register custom map objects. These objects have no physical appearance and instead are zones visible only to the server.</p>
+
+                                <div>
+                                    <MapObject
+                                        v-for="(value, index) in plugin.mapObjects"
+                                        :key="index"
+                                        :aid="index"
+                                        :definition="value"
+                                        :className="'mb-3'"
+                                    />
+
+                                    <button class="btn btn-primary" @click="addNewMapObject">
+                                        + Add Map Object
+                                    </button>
+                                </div>
+                            </div>
+                        </b-collapse>
+                    </article>
+
+                    <article class="c-accordion">
                         <header v-b-toggle.callback_editor role="tab">
                             <h2>Custom Callbacks</h2>
                         </header>
@@ -161,9 +187,12 @@ import PluginEventList from './components/PluginEventList.vue';
 import PluginGenerator from './components/PluginGenerator.vue';
 import SiteFooter from './components/SiteFooter.vue';
 import { CPPFormatter } from 'aclovis';
+import MapObjectHelper from './lib/MapObjectHelper';
+import MapObject from './components/MapObject';
 
 @Component({
     components: {
+        MapObject,
         CrudEditor,
         PluginDefinition,
         PluginFormatter,
@@ -180,6 +209,7 @@ export default class App extends Vue {
         callsign: '',
         events: [],
         slashCommands: [],
+        mapObjects: [],
         callbacks: [],
         useIfStatement: false,
         formatter: null,
@@ -235,6 +265,10 @@ export default class App extends Vue {
 
     delSlashCommand(command: string) {
         this.plugin.slashCommands = _.without(this.plugin.slashCommands, command);
+    }
+
+    addNewMapObject() {
+        this.plugin.mapObjects.push(MapObjectHelper.createMapObject());
     }
 
     addCallback(callback: string) {

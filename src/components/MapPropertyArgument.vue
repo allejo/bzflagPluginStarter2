@@ -35,7 +35,7 @@
     padding-left: 3px;
     padding-right: 3px;
 
-    &[data-readonly="true"] {
+    &[data-readonly='true'] {
         background-color: rgba($tag-bg, 0.5);
         cursor: not-allowed;
 
