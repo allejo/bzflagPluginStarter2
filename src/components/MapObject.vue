@@ -1,10 +1,12 @@
 <template>
-    <div class="c-map-object">
+    <div class="c-map-object py-2 px-3" :class="className">
         <p class="m-0">
-            <editable
-                :content="definition.name"
-                @textChanged="definition.name = $event"
-            />
+            <strong>
+                <editable
+                    :content="definition.name"
+                    @textChanged="definition.name = $event"
+                />
+            </strong>
         </p>
         <div class="ml-3 c-map-object__properties">
             <MapProperty
@@ -16,7 +18,7 @@
             />
         </div>
 
-        <button class="mt-1 py-1 text-muted" @click="addNewProperty">
+        <button class="mx-1 py-1 text-muted" @click="addNewProperty">
             + Add New Property
         </button>
 
@@ -25,7 +27,10 @@
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/variables';
+
 .c-map-object {
+    border: 1px dashed #c7c7c7;
     font-family: monospace;
 }
 
@@ -35,10 +40,15 @@
 
 button {
     background-color: transparent;
-    border: 1px dashed #c7c7c7;
+    border: 1px dashed $color-light-green;
+    cursor: pointer;
     font-size: 0.8em;
     text-align: center;
     width: 100%;
+
+    &:hover {
+        background-color: $tag-bg;
+    }
 }
 </style>
 
@@ -57,7 +67,13 @@ import MapObjectHelper from '../lib/MapObjectHelper';
     }
 })
 export default class MapObject extends Vue {
+    @Prop() aid: number;
     @Prop() definition: IMapObject;
+
+    @Prop({
+        default: ''
+    })
+    className: string;
 
     addNewProperty() {
         this.definition.properties.push(MapObjectHelper.createMapProperty());

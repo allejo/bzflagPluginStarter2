@@ -1,5 +1,5 @@
 <template>
-    <div class="c-map-argument d-inline-block">
+    <div class="c-map-argument d-inline-block" :data-readonly="arg.readonly">
         <div class="d-flex">
             <strong class="mr-1">{</strong>
             <editable
@@ -25,24 +25,35 @@
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/variables';
+
 .c-map-argument {
-    background-color: #e1f4e4;
+    background-color: $tag-bg;
     border-radius: 5px;
-    color: #338a42;
+    color: $tag-text;
     font-size: 0.8em;
     padding-left: 3px;
     padding-right: 3px;
 
-    select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-color: transparent;
-        border: none;
-        color: inherit;
-        font-size: inherit;
-        padding: 0;
+    &[data-readonly="true"] {
+        background-color: rgba($tag-bg, 0.5);
+        cursor: not-allowed;
+
+        select {
+            cursor: not-allowed;
+        }
     }
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    padding: 0;
 }
 
 .c-map-argument__name {

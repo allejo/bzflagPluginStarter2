@@ -1,7 +1,7 @@
 <template>
-    <div class="c-map-property">
+    <div class="c-map-property" :data-readonly="definition.readonly">
         <div class="d-flex">
-            <div class="c-map-property__name">
+            <div class="c-map-property__name mr-1">
                 <editable
                     :content="definition.name"
                     :readonly="definition.readonly"
@@ -18,7 +18,7 @@
                     class="ml-2"
                 />
 
-                <button class="ml-1 px-1 py-0 text-muted" @click="addNewArgument">
+                <button class="ml-1 px-1 py-0 text-muted" @click="addNewArgument" v-if="!definition.readonly">
                     + Add Argument
                 </button>
             </div>
@@ -27,13 +27,22 @@
 </template>
 
 <style lang="scss" scoped>
+@import '../scss/variables';
+
 .c-map-property {
     white-space: nowrap;
+
+    &[data-readonly="true"] {
+        .c-map-property__name {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+    }
 }
 
 button {
     background: none;
-    border: 1px solid #c7c7c7;
+    border: 1px solid $color-light-green;
     border-radius: 5px;
     font-size: 0.8em;
 }
