@@ -83,11 +83,14 @@ import { IPluginEvent } from '../lib/IPluginEvent';
 import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
 import { saveAs } from 'file-saver';
 import semver from 'semver';
+import IMapObject from '../lib/IMapObject';
+import {ArgumentType} from '../lib/IMapPropertyArgument';
 
 @Component({
     name: 'plugin-generator'
 })
 export default class PluginGenerator extends Vue {
+    private extraClasses: CPPClass[] = [];
     private plugin: CPPClass;
 
     @Prop() pluginDefinition: IPlugin;
@@ -147,8 +150,13 @@ export default class PluginGenerator extends Vue {
             this.plugin.addExtends([CPPVisibility.Public, 'bz_CustomSlashCommandHandler']);
         }
 
+        if (this.pluginDefinition.mapObjects.length > 0) {
+            this.plugin.addExtends([CPPVisibility.Public, 'bz_CustomMapObjectHandler']);
+        }
+
         this.buildNameFunction();
         this.buildInitFunction(this.sortedEvents);
+        this.buildMapObjectFunction(this.pluginDefinition.mapObjects);
         this.buildCleanupFunction();
         this.buildEventFunction(
             this.sortedEvents,
@@ -173,6 +181,16 @@ export default class PluginGenerator extends Vue {
         pluginChunks.push('#include "bzfsAPI.h"\n');
         pluginChunks.push('#include "plugin_utils.h"');
         pluginChunks.push('\n\n');
+
+        if (Object.keys(this.extraClasses).length > 0) {
+            for (let key in this.extraClasses) {
+                let extraClass: CPPClass = this.extraClasses[key];
+
+                pluginChunks.push(extraClass.write(this.formatter, 0));
+                pluginChunks.push('\n\n');
+            }
+        }
+
         pluginChunks.push(this.pluginCode);
 
         return pluginChunks.join('');
@@ -241,6 +259,20 @@ export default class PluginGenerator extends Vue {
             );
         }
 
+        if (this.pluginDefinition.mapObjects.length > 0) {
+            if (
+                events.length > 0 ||
+                this.pluginDefinition.slashCommands.length > 0 ||
+                this.pluginDefinition.callbacks.length > 0
+            ) {
+                initBody.push(CPPHelper.createEmptyLine());
+            }
+
+            this.pluginDefinition.mapObjects.forEach(function(object: IMapObject) {
+                initBody.push(CPPHelper.createFunctionCall('bz_registerCustomMapObject', [`"${object.name}"`, 'this']));
+            });
+        }
+
         // Build our Init() function
         let fxn = new CPPFunction('void', 'Init', [CPPVariable.createConstChar('config')]);
         fxn.implementFunction(initBody);
@@ -257,6 +289,16 @@ export default class PluginGenerator extends Vue {
 
             this.pluginDefinition.slashCommands.forEach(function(value) {
                 body.push(CPPHelper.createFunctionCall('bz_removeCustomSlashCommand', [`"${value}"`]));
+            });
+        }
+
+        if (this.pluginDefinition.mapObjects.length > 0) {
+            if (this.pluginDefinition.slashCommands.length > 0) {
+                body.push(CPPHelper.createEmptyLine());
+            }
+
+            this.pluginDefinition.mapObjects.forEach(function(object: IMapObject) {
+                body.push(CPPHelper.createFunctionCall('bz_removeCustomMapObject', [`"${object.name}"`]));
             });
         }
 
@@ -372,6 +414,103 @@ export default class PluginGenerator extends Vue {
         fxn.setVirtual(true);
         fxn.implementFunction([commandBlock, CPPHelper.createEmptyLine(), new CPPWritableObject('return false;')]);
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
+    }
+
+    private buildMapObjectFunction(mapObjects: IMapObject[]) {
+        if (mapObjects.length == 0) {
+            return;
+        }
+
+        // Always clean up, so we don't have to worry about deleting older classes that were WIPs due to text updates
+        // while typing.
+        this.extraClasses = [];
+
+        // Storage
+        let fxn = new CPPFunction('bool', 'MapObject', [
+            new CPPVariable('bz_ApiString', 'object'),
+            new CPPVariable('bz_CustomMapObjectInfo*', 'data')
+        ]);
+        let fxnBody: ILanguageWritable[] = [new CPPWritableObject('// Note, this value will be in uppercase')];
+        let shortCircuitConditions: string[] = [];
+
+        // Main loop of all the objects
+        mapObjects.forEach(
+            function(object: IMapObject) {
+                // Register conditions for our short circuit
+                shortCircuitConditions.push(`object != "${object.name.toUpperCase()}"`);
+
+                // Create class to represent our map object
+                let objClass = PluginGenerator.buildMapObjectClass(object);
+
+                this.extraClasses.push(objClass);
+            }.bind(this)
+        );
+
+        // Build a short circuit condition to ignore all other map objects we didn't register
+        shortCircuitConditions.push('!data');
+
+        let shortCircuit = new CPPIfBlock();
+        shortCircuit.defineCondition(shortCircuitConditions.join(' || '), [new CPPWritableObject('return false;')]);
+
+        fxnBody.push(shortCircuit);
+
+        // Finish off the function and register it as a method
+        fxn.setVirtual(true);
+        fxn.implementFunction(fxnBody);
+        fxn.setParentClass(this.plugin, CPPVisibility.Public);
+    }
+
+    private static buildMapObjectClass(object: IMapObject) {
+        let objClass = new CPPClass(`${object.name}Zone`);
+        objClass.addExtends([CPPVisibility.Public, 'bz_CustomZoneObject']);
+
+        let blacklist = ['position|pos', 'position', 'pos', 'size', 'rotation|rot', 'rotation', 'rot', 'height', 'radius'];
+        object.properties.forEach(function (property) {
+            let namespace = property.name;
+
+            if (blacklist.indexOf(namespace) >= 0) {
+                return;
+            }
+
+            if (property.arguments.length === 0) {
+                objClass.addVariable(CPPVariable.createBoolean(namespace), CPPVisibility.Public);
+                return;
+            }
+
+            property.arguments.forEach(function (argument) {
+                let name = `${namespace}_${argument.name}`;
+                let variable = null;
+
+                switch (argument.type) {
+                    case ArgumentType.Integer:
+                        variable = CPPVariable.createInt(name);
+                        break;
+
+                    case ArgumentType.Float:
+                        variable = CPPVariable.createFloat(name);
+                        break;
+
+                    case ArgumentType.Double:
+                        variable = CPPVariable.createDouble(name);
+                        break;
+
+                    case ArgumentType.String:
+                        variable = CPPVariable.createString(name);
+                        break;
+
+                    case ArgumentType.Team:
+                        variable = new CPPVariable('bz_eTeamType', name);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                objClass.addVariable(variable, CPPVisibility.Public);
+            });
+        });
+
+        return objClass;
     }
 
     private static buildEventBlock(
