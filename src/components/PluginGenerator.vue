@@ -90,7 +90,6 @@ import {ArgumentType} from '../lib/IMapPropertyArgument';
     name: 'plugin-generator'
 })
 export default class PluginGenerator extends Vue {
-    private extraClasses: CPPClass[] = [];
     private plugin: CPPClass;
 
     @Prop() pluginDefinition: IPlugin;
@@ -173,6 +172,21 @@ export default class PluginGenerator extends Vue {
         return output;
     }
 
+    get pluginMapObjectClasses() {
+        let mapClasses: string[] = [];
+
+        this.pluginDefinition.mapObjects.forEach(
+            function(object: IMapObject) {
+                let mapClass = PluginGenerator.buildMapObjectClass(object);
+
+                mapClasses.push(mapClass.write(this.formatter, 0));
+                mapClasses.push('\n\n');
+            }.bind(this)
+        );
+
+        return mapClasses;
+    }
+
     get pluginOutput() {
         let pluginChunks: string[] = [];
 
@@ -181,16 +195,7 @@ export default class PluginGenerator extends Vue {
         pluginChunks.push('#include "bzfsAPI.h"\n');
         pluginChunks.push('#include "plugin_utils.h"');
         pluginChunks.push('\n\n');
-
-        if (Object.keys(this.extraClasses).length > 0) {
-            for (let key in this.extraClasses) {
-                let extraClass: CPPClass = this.extraClasses[key];
-
-                pluginChunks.push(extraClass.write(this.formatter, 0));
-                pluginChunks.push('\n\n');
-            }
-        }
-
+        pluginChunks.push(...this.pluginMapObjectClasses);
         pluginChunks.push(this.pluginCode);
 
         return pluginChunks.join('');
@@ -421,10 +426,6 @@ export default class PluginGenerator extends Vue {
             return;
         }
 
-        // Always clean up, so we don't have to worry about deleting older classes that were WIPs due to text updates
-        // while typing.
-        this.extraClasses = [];
-
         // Storage
         let fxn = new CPPFunction('bool', 'MapObject', [
             new CPPVariable('bz_ApiString', 'object'),
@@ -438,11 +439,6 @@ export default class PluginGenerator extends Vue {
             function(object: IMapObject) {
                 // Register conditions for our short circuit
                 shortCircuitConditions.push(`object != "${object.name.toUpperCase()}"`);
-
-                // Create class to represent our map object
-                let objClass = PluginGenerator.buildMapObjectClass(object);
-
-                this.extraClasses.push(objClass);
             }.bind(this)
         );
 
