@@ -84,7 +84,7 @@ import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
 import { saveAs } from 'file-saver';
 import semver from 'semver';
 import IMapObject from '../lib/IMapObject';
-import {ArgumentType} from '../lib/IMapPropertyArgument';
+import { ArgumentType } from '../lib/IMapPropertyArgument';
 
 @Component({
     name: 'plugin-generator'
@@ -460,8 +460,18 @@ export default class PluginGenerator extends Vue {
         let objClass = new CPPClass(`${object.name}Zone`);
         objClass.addExtends([CPPVisibility.Public, 'bz_CustomZoneObject']);
 
-        let blacklist = ['position|pos', 'position', 'pos', 'size', 'rotation|rot', 'rotation', 'rot', 'height', 'radius'];
-        object.properties.forEach(function (property) {
+        let blacklist = [
+            'position|pos',
+            'position',
+            'pos',
+            'size',
+            'rotation|rot',
+            'rotation',
+            'rot',
+            'height',
+            'radius'
+        ];
+        object.properties.forEach(function(property) {
             let namespace = property.name;
 
             if (blacklist.indexOf(namespace) >= 0) {
@@ -473,7 +483,7 @@ export default class PluginGenerator extends Vue {
                 return;
             }
 
-            property.arguments.forEach(function (argument) {
+            property.arguments.forEach(function(argument) {
                 let name = `${namespace}_${argument.name}`;
                 let variable = null;
 
