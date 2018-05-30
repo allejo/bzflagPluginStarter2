@@ -1,6 +1,12 @@
 <template>
     <div class="c-map-property" :data-readonly="definition.readonly">
         <div class="d-flex">
+            <div :class="definition.readonly ? 'readonly-pad' : ''">
+                <button class="c-map-property__delete" v-if="!definition.readonly" @click="requestDelete">
+                    <span class="sr-only">Delete property</span>
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
             <div class="c-map-property__name mr-1">
                 <editable
                     :content="definition.name"
@@ -20,7 +26,7 @@
                     class="ml-2"
                 />
 
-                <button class="ml-1 px-1 py-0 text-muted" @click="addNewArgument" v-if="!definition.readonly">
+                <button class="c-map-property__add-argument ml-1 px-1 py-0 text-muted" @click="addNewArgument" v-if="!definition.readonly">
                     + Add Argument
                 </button>
             </div>
@@ -30,6 +36,10 @@
 
 <style lang="scss" scoped>
 @import '../scss/variables';
+
+.readonly-pad {
+    margin-right: 26px;
+}
 
 .c-map-property {
     white-space: nowrap;
@@ -42,11 +52,17 @@
     }
 }
 
-button {
+.c-map-property__add-argument {
     background: none;
     border: 1px solid $color-light-green;
     border-radius: 5px;
     font-size: 0.8em;
+}
+
+.c-map-property__delete {
+    background: none;
+    border: none;
+    color: $color-red;
 }
 </style>
 
@@ -72,6 +88,10 @@ export default class MapProperty extends Vue {
 
     addNewArgument() {
         this.definition.arguments.push(MapObjectHelper.createMapPropertyArgument());
+    }
+
+    requestDelete() {
+        this.$emit('mapPropertyRemove', this.aid);
     }
 
     @Watch('definition', { deep: true })

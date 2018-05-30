@@ -14,12 +14,13 @@
                 />
             </strong>
         </p>
-        <div class="ml-3 c-map-object__properties">
+        <div class="c-map-object__properties">
             <MapProperty
                 v-for="(property, key) in definition.properties"
                 :key="key"
                 :aid="key"
                 :definition="property"
+                @mapPropertyRemove="handleMapPropertyDelete"
                 class="my-1"
             />
         </div>
@@ -97,6 +98,10 @@ export default class MapObject extends Vue {
 
     requestDelete() {
         this.$emit('mapObjectRemove', this.aid);
+    }
+
+    handleMapPropertyDelete(aid: number) {
+        this.definition.properties.splice(aid, 1);
     }
 }
 </script>
