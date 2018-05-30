@@ -1,5 +1,5 @@
 <template>
-    <span :contenteditable="readonly ? 'false' : 'true'" @input="contentUpdated" :class="className"></span>
+    <span :contenteditable="readonly ? 'false' : 'true'" @input="contentUpdated" :class="className" :title="title"></span>
 </template>
 
 <script lang="ts">
@@ -12,6 +12,7 @@ export default class Editable extends Vue {
     @Prop() content: string;
     @Prop() readonly: boolean;
     @Prop() className: string;
+    @Prop() title: string;
 
     mounted() {
         this.$el.innerText = this.content;

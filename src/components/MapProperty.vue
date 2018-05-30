@@ -5,6 +5,7 @@
                 <editable
                     :content="definition.name"
                     :readonly="definition.readonly"
+                    :title="definition.readonly ? lockedPropertyMsg : ''"
                     @textChanged="definition.name = $event"
                 />
             </div>
@@ -15,6 +16,7 @@
                     :aid="key"
                     :arg="Object.assign(argument, { readonly: definition.readonly })"
                     :key="key"
+                    :title="definition.readonly ? lockedPropertyMsg : ''"
                     class="ml-2"
                 />
 
@@ -49,7 +51,7 @@ button {
 </style>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import Editable from './Editable';
 import MapPropertyArgument from './MapPropertyArgument';
 import { IMapProperty } from '../lib/IMapProperty';
@@ -63,6 +65,8 @@ import MapObjectHelper from '../lib/MapObjectHelper';
     }
 })
 export default class MapProperty extends Vue {
+    @Provide() lockedPropertyMsg: string = 'This is a property all map objects natively support and cannot be edited.';
+
     @Prop() aid: number;
     @Prop() definition: IMapProperty;
 

@@ -1,5 +1,11 @@
 <template>
     <div class="c-map-object py-2 px-3" :class="className">
+        <div class="c-toolbar">
+            <button class="c-map-object__close-button" data-balloon="Delete map object" data-balloon-pos="up" @click="requestDelete">
+                <span class="sr-only">Delete Object</span>
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+        </div>
         <p class="m-0">
             <strong>
                 <editable
@@ -18,7 +24,7 @@
             />
         </div>
 
-        <button class="mx-1 py-1 text-muted" @click="addNewProperty">
+        <button class="c-map-object__add-property mx-1 py-1 text-muted" @click="addNewProperty">
             + Add New Property
         </button>
 
@@ -32,13 +38,14 @@
 .c-map-object {
     border: 1px dashed #c7c7c7;
     font-family: monospace;
+    position: relative;
 }
 
 .c-map-object__properties {
     overflow: auto;
 }
 
-button {
+.c-map-object__add-property {
     background-color: transparent;
     border: 1px dashed $color-light-green;
     cursor: pointer;
@@ -49,6 +56,15 @@ button {
     &:hover {
         background-color: $tag-bg;
     }
+}
+
+.c-map-object__close-button {
+    background: none;
+    border: none;
+    color: $color-red;
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
 }
 </style>
 
@@ -77,6 +93,10 @@ export default class MapObject extends Vue {
 
     addNewProperty() {
         this.definition.properties.push(MapObjectHelper.createMapProperty());
+    }
+
+    requestDelete() {
+        this.$emit('mapObjectRemove', this.aid);
     }
 }
 </script>

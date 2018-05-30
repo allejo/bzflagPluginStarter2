@@ -1,5 +1,5 @@
 <template>
-    <div class="c-map-argument d-inline-block" :data-readonly="arg.readonly">
+    <div class="c-map-argument d-inline-block" :data-readonly="arg.readonly" :title="title">
         <div class="d-flex">
             <strong class="mr-1">{</strong>
             <editable
@@ -80,6 +80,7 @@ import Editable from './Editable';
 export default class MapPropertyArgument extends Vue {
     @Prop() aid: number;
     @Prop() arg: IMapPropertyArgument;
+    @Prop() title: string;
 
     argumentTypes = [
         ArgumentType.Integer,

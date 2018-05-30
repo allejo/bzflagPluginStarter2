@@ -84,9 +84,10 @@
                                         :aid="index"
                                         :definition="value"
                                         :className="'mb-3'"
+                                        @mapObjectRemove="delMapObject"
                                     />
 
-                                    <button class="btn btn-primary" @click="addNewMapObject">
+                                    <button class="btn btn-primary" @click="addMapObject">
                                         + Add Map Object
                                     </button>
                                 </div>
@@ -267,8 +268,12 @@ export default class App extends Vue {
         this.plugin.slashCommands = _.without(this.plugin.slashCommands, command);
     }
 
-    addNewMapObject() {
+    addMapObject() {
         this.plugin.mapObjects.push(MapObjectHelper.createMapObject());
+    }
+
+    delMapObject(aid: number) {
+        this.plugin.mapObjects.splice(aid, 1);
     }
 
     addCallback(callback: string) {
