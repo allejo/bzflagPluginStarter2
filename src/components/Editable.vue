@@ -1,5 +1,11 @@
 <template>
-    <span :contenteditable="readonly ? 'false' : 'true'" @input="contentUpdated" :class="className" :title="title"></span>
+    <span
+        :contenteditable="readonly ? 'false' : 'true'"
+        :class="className"
+        :title="title"
+        @input="contentUpdated"
+        @keydown="keyWatcher"
+    ></span>
 </template>
 
 <script lang="ts">
@@ -20,6 +26,18 @@ export default class Editable extends Vue {
 
     contentUpdated(event) {
         this.$emit('textChanged', event.target.innerText);
+    }
+
+    keyWatcher(event: KeyboardEvent) {
+        switch (event.code) {
+            case 'Enter':
+            case 'Space':
+                event.preventDefault();
+                break;
+
+            default:
+                break;
+        }
     }
 }
 </script>

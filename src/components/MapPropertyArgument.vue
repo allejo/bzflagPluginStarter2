@@ -6,7 +6,7 @@
                 :content="arg.name"
                 :readonly="arg.readonly"
                 :className="'c-map-argument__name'"
-                @textChanged="arg.name = $event"
+                @textChanged="arg.name = $event.trim()"
             />
             <strong class="px-2">:</strong>
             <select :disabled="arg.readonly" v-model="arg.type">

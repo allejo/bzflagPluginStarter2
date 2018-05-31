@@ -12,7 +12,7 @@
                     :content="definition.name"
                     :readonly="definition.readonly"
                     :title="definition.readonly ? lockedPropertyMsg : ''"
-                    @textChanged="definition.name = $event"
+                    @textChanged="definition.name = $event.trim()"
                 />
             </div>
             <div class="c-map-property__arguments">
