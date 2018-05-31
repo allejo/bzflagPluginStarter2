@@ -8,7 +8,7 @@
                 <button class="btn btn-danger"
                         data-balloon-pos="up"
                         data-balloon="Delete"
-                        @click="requestDelete"
+                        @click="requestValueDeletion"
                 >
                     <span aria-hidden="true" class="fa fa-trash-o"></span>
                     <span class="sr-only">Delete</span>
@@ -42,8 +42,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class CrudItem extends Vue {
     @Prop() itemValue: any;
 
-    requestDelete() {
-        this.$parent.$emit('crudItemRemove', this.itemValue);
+    requestValueDeletion() {
+        this.$parent.$emit('valueDeleted', this.itemValue);
     }
 }
 </script>

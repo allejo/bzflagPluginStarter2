@@ -36,17 +36,17 @@ export default class PluginDefinition extends Vue {
     callsign: string = '';
 
     @Watch('pluginName')
-    onPluginNameChange() {
+    requestNameUpdate() {
         this.$emit('pluginNameChanged', this.pluginName);
     }
 
     @Watch('pluginAuthor')
-    onPluginAuthorChange() {
+    requestAuthorUpdate() {
         this.$emit('pluginAuthorChanged', this.pluginAuthor);
     }
 
     @Watch('callsign')
-    onCallsignChange() {
+    requestCallsignUpdate() {
         this.$emit('callsignChanged', this.callsign);
     }
 }

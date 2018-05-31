@@ -8,10 +8,10 @@
             <p>Enter the details of your BZFlag plug-in and start inputting information to build the skeleton for your plug-in.</p>
 
             <plugin-definition
-                @pluginNameChanged="updateName"
-                @pluginAuthorChanged="updateAuthor"
-                @pluginLicenseSelected="updateLicense"
-                @callsignChanged="updateCallsign"
+                @pluginNameChanged="handleNameEdit"
+                @pluginAuthorChanged="handleAuthorEdit"
+                @pluginLicenseSelected="handleLicenseEdit"
+                @callsignChanged="handleCallsignEdit"
             />
         </article>
 
@@ -26,10 +26,10 @@
                         <b-collapse id="coding_style" visible accordion="plugin-builder-accordion" role="tabpanel">
                             <div class="c-accordion__body">
                                 <plugin-formatter
-                                    @pluginFormatterChanged="updateFormatter"
-                                    @docBlocksConfigChanged="updateDocBlocks"
-                                    @showCommentsChanged="updateShowComments"
-                                    @useIfStatementChanged="updateEventBlock"
+                                    @pluginFormatterChanged="handleFormatterEdit"
+                                    @docBlocksConfigChanged="handleDocBlockSettingsEdit"
+                                    @showCommentsChanged="handleShowCommentsEdit"
+                                    @useIfStatementChanged="handleIfStatementInEventBlockEdit"
                                 />
                             </div>
                         </b-collapse>
@@ -43,7 +43,7 @@
                         <b-collapse id="event_list" accordion="plugin-builder-accordion" role="tabpanel">
                             <div class="c-accordion__body">
                                 <plugin-event-list
-                                    @pluginEventSelectionUpdated="updatePluginEvent"
+                                    @pluginEventSelectionUpdated="handlePluginEventsEdit"
                                 />
                             </div>
                         </b-collapse>
@@ -61,8 +61,8 @@
                                 <crud-editor
                                     :label="'Slash Command'"
                                     :storage="plugin.slashCommands"
-                                    @crudItemAdd="addSlashCommand"
-                                    @crudItemRemove="delSlashCommand"
+                                    @valueAdded="handleSlashCommandAddition"
+                                    @valueDeleted="handleSlashCommandDeletion"
                                 />
                             </div>
                         </b-collapse>
@@ -80,14 +80,14 @@
                                 <div>
                                     <MapObject
                                         v-for="(value, index) in plugin.mapObjects"
-                                        :key="index"
                                         :aid="index"
-                                        :definition="value"
                                         :className="'mb-3'"
-                                        @mapObjectRemove="delMapObject"
+                                        :definition="value"
+                                        :key="index"
+                                        @valueDeleted="handleMapObjectDeletion"
                                     />
 
-                                    <button class="btn btn-primary" @click="addMapObject">
+                                    <button class="btn btn-primary" @click="handleMapObjectAddition">
                                         + Add Map Object
                                     </button>
                                 </div>
@@ -107,8 +107,8 @@
                                 <crud-editor
                                     :label="'Callback'"
                                     :storage="plugin.callbacks"
-                                    @crudItemAdd="addCallback"
-                                    @crudItemRemove="delCallback"
+                                    @valueAdded="handleCallbackAddition"
+                                    @valueDeleted="handleCallbackDeletion"
                                 />
                             </div>
                         </b-collapse>
@@ -218,23 +218,23 @@ export default class App extends Vue {
         showComments: true
     };
 
-    updateName(name: string) {
+    handleNameEdit(name: string) {
         this.plugin.name = name;
     }
 
-    updateAuthor(author: string) {
+    handleAuthorEdit(author: string) {
         this.plugin.author = author;
     }
 
-    updateLicense(licenseUpdateEvent: ILicense) {
+    handleLicenseEdit(licenseUpdateEvent: ILicense) {
         this.plugin.license = licenseUpdateEvent;
     }
 
-    updateCallsign(callsign: string) {
+    handleCallsignEdit(callsign: string) {
         this.plugin.callsign = callsign;
     }
 
-    updatePluginEvent(eventUpdateEvent: IPluginEventSelectionEvent) {
+    handlePluginEventsEdit(eventUpdateEvent: IPluginEventSelectionEvent) {
         if (eventUpdateEvent.selected) {
             this.plugin.events.push(eventUpdateEvent.event);
         } else {
@@ -242,45 +242,45 @@ export default class App extends Vue {
         }
     }
 
-    updateFormatter(formatter: CPPFormatter) {
+    handleFormatterEdit(formatter: CPPFormatter) {
         this.plugin.formatter = formatter;
     }
 
-    updateDocBlocks(buildDocBlocks: boolean) {
+    handleDocBlockSettingsEdit(buildDocBlocks: boolean) {
         this.plugin.buildDocBlocks = buildDocBlocks;
     }
 
-    updateShowComments(showComments: boolean) {
+    handleShowCommentsEdit(showComments: boolean) {
         this.plugin.showComments = showComments;
     }
 
-    updateEventBlock(useIfStatement: boolean) {
+    handleIfStatementInEventBlockEdit(useIfStatement: boolean) {
         this.plugin.useIfStatement = useIfStatement;
     }
 
-    addSlashCommand(command: string) {
+    handleSlashCommandAddition(command: string) {
         command = command.replace(/^\/*|\s/g, '');
 
         this.plugin.slashCommands.push(command);
     }
 
-    delSlashCommand(command: string) {
+    handleSlashCommandDeletion(command: string) {
         this.plugin.slashCommands = _.without(this.plugin.slashCommands, command);
     }
 
-    addMapObject() {
+    handleMapObjectAddition() {
         this.plugin.mapObjects.push(MapObjectHelper.createMapObject());
     }
 
-    delMapObject(aid: number) {
+    handleMapObjectDeletion(aid: number) {
         this.plugin.mapObjects.splice(aid, 1);
     }
 
-    addCallback(callback: string) {
+    handleCallbackAddition(callback: string) {
         this.plugin.callbacks.push(callback);
     }
 
-    delCallback(callback: string) {
+    handleCallbackDeletion(callback: string) {
         this.plugin.callbacks = _.without(this.plugin.callbacks, callback);
     }
 }

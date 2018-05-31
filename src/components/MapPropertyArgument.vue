@@ -91,8 +91,8 @@ export default class MapPropertyArgument extends Vue {
     ];
 
     @Watch('arg', { deep: true })
-    argumentDefinitionChanged() {
-        this.$emit('mapPropertyArgumentChanged', this.arg);
+    requestDefinitionUpdate() {
+        this.$emit('valueChanged', this.arg);
     }
 }
 </script>

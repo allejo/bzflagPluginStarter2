@@ -80,22 +80,22 @@ export default class PluginFormatter extends Vue {
     }
 
     @Watch('formatterSettings')
-    onPluginFormatterChange() {
+    requestPluginFormatterUpdate() {
         this.$emit('pluginFormatterChanged', this.formatter);
     }
 
     @Watch('buildDocBlocks')
-    onDocBlocksConfigChange() {
+    requestBuildDocBlocksUpdate() {
         this.$emit('docBlocksConfigChanged', this.buildDocBlocks);
     }
 
     @Watch('showComments')
-    onShowCommentsChange() {
+    requestShowCommentsUpdate() {
         this.$emit('showCommentsChanged', this.showComments);
     }
 
     @Watch('useIfStatement')
-    onUseIfStatementChange() {
+    requestIfStatementInEventBlockUpdate() {
         this.$emit('useIfStatementChanged', this.useIfStatement);
     }
 }

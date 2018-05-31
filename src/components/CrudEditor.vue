@@ -10,7 +10,7 @@
                        :id="uid"
                        :aria-describedby="uid + '-desc'"
                        v-model="newItem"
-                       @keyup.enter="requestAddItem"
+                       @keyup.enter="requestItemAddition"
                 />
             </div>
 
@@ -53,8 +53,8 @@ export default class CrudEditor extends Vue {
         return 'crud-' + this.label.replace(/\s/, '-').toLowerCase();
     }
 
-    requestAddItem() {
-        this.$emit('crudItemAdd', this.newItem);
+    requestItemAddition() {
+        this.$emit('valueAdded', this.newItem);
         this.newItem = '';
     }
 }

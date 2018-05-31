@@ -41,11 +41,11 @@ export default class PluginLicenseSelector extends Vue {
     licenses: ILicenseDictionary = licensesDictionary;
 
     created() {
-        this.onSelectedChange();
+        this.requestSelectionUpdate();
     }
 
     @Watch('selected')
-    onSelectedChange() {
+    requestSelectionUpdate() {
         this.$parent.$emit('pluginLicenseSelected', this.licenses[this.selected]);
     }
 }

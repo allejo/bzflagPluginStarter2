@@ -2,7 +2,7 @@
     <div class="c-map-property" :data-readonly="definition.readonly">
         <div class="d-flex">
             <div :class="definition.readonly ? 'readonly-pad' : ''">
-                <button class="c-map-property__delete" v-if="!definition.readonly" @click="requestDelete">
+                <button class="c-map-property__delete" v-if="!definition.readonly" @click="requestValueDeletion">
                     <span class="sr-only">Delete property</span>
                     <i class="fa fa-trash-o"></i>
                 </button>
@@ -17,16 +17,16 @@
             </div>
             <div class="c-map-property__arguments">
                 <MapPropertyArgument
+                    class="ml-2"
                     v-for="(argument, key) in definition.arguments"
-                    @mapPropertyArgumentChanged="propertyDefinitionChanged"
                     :aid="key"
                     :arg="Object.assign(argument, { readonly: definition.readonly })"
                     :key="key"
                     :title="definition.readonly ? lockedPropertyMsg : ''"
-                    class="ml-2"
+                    @valueChanged="requestDefinitionUpdate"
                 />
 
-                <button class="c-map-property__add-argument ml-1 px-1 py-0 text-muted" @click="addNewArgument" v-if="!definition.readonly">
+                <button class="c-map-property__add-argument ml-1 px-1 py-0 text-muted" @click="handleArgumentAddition" v-if="!definition.readonly">
                     + Add Argument
                 </button>
             </div>
@@ -86,16 +86,16 @@ export default class MapProperty extends Vue {
     @Prop() aid: number;
     @Prop() definition: IMapProperty;
 
-    addNewArgument() {
+    handleArgumentAddition() {
         this.definition.arguments.push(MapObjectHelper.createMapPropertyArgument());
     }
 
-    requestDelete() {
-        this.$emit('mapPropertyRemove', this.aid);
+    requestValueDeletion() {
+        this.$emit('valueDeleted', this.aid);
     }
 
     @Watch('definition', { deep: true })
-    propertyDefinitionChanged() {
+    requestDefinitionUpdate() {
         this.$emit('mapPropertyChange', {
             id: this.aid,
             definition: this.definition

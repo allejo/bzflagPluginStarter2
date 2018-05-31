@@ -18,7 +18,7 @@ export default class PluginEventListItem extends Vue {
     @Prop() event: IPluginEvent;
 
     @Watch('selected')
-    onSelectedChange() {
+    requestSelectionUpdate() {
         let event: IPluginEventSelectionEvent = {
             selected: this.selected,
             event: this.event

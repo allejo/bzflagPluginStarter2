@@ -1,7 +1,7 @@
 <template>
     <div class="c-map-object py-2 px-3" :class="className">
         <div class="c-toolbar">
-            <button class="c-map-object__close-button" data-balloon="Delete map object" data-balloon-pos="up" @click="requestDelete">
+            <button class="c-map-object__close-button" data-balloon="Delete map object" data-balloon-pos="up" @click="requestValueDeletion">
                 <span class="sr-only">Delete Object</span>
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
             </button>
@@ -16,16 +16,16 @@
         </p>
         <div class="c-map-object__properties">
             <MapProperty
+                class="my-1"
                 v-for="(property, key) in definition.properties"
-                :key="key"
                 :aid="key"
                 :definition="property"
-                @mapPropertyRemove="handleMapPropertyDelete"
-                class="my-1"
+                :key="key"
+                @valueDeleted="handleMapPropertyDeletion"
             />
         </div>
 
-        <button class="c-map-object__add-property mx-1 py-1 text-muted" @click="addNewProperty">
+        <button class="c-map-object__add-property mx-1 py-1 text-muted" @click="requestPropertyAddition">
             + Add New Property
         </button>
 
@@ -92,15 +92,15 @@ export default class MapObject extends Vue {
     })
     className: string;
 
-    addNewProperty() {
+    requestPropertyAddition() {
         this.definition.properties.push(MapObjectHelper.createMapProperty());
     }
 
-    requestDelete() {
-        this.$emit('mapObjectRemove', this.aid);
+    requestValueDeletion() {
+        this.$emit('valueDeleted', this.aid);
     }
 
-    handleMapPropertyDelete(aid: number) {
+    handleMapPropertyDeletion(aid: number) {
         this.definition.properties.splice(aid, 1);
     }
 }
