@@ -84,7 +84,7 @@ import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
 import { saveAs } from 'file-saver';
 import semver from 'semver';
 import IMapObject from '../lib/IMapObject';
-import { ArgumentType } from '../lib/IMapPropertyArgument';
+import MapObjectBuilder from '../lib/MapObjectBuilder';
 
 @Component({
     name: 'plugin-generator'
@@ -94,7 +94,7 @@ export default class PluginGenerator extends Vue {
 
     @Prop() pluginDefinition: IPlugin;
 
-    get className() {
+    get className(): string {
         if (this.pluginDefinition.name.trim().length === 0) {
             return 'SAMPLE_PLUGIN';
         }
@@ -111,7 +111,7 @@ export default class PluginGenerator extends Vue {
         return pluginClassName;
     }
 
-    get formatter() {
+    get formatter(): CPPFormatter {
         let formatter = new CPPFormatter({
             indentWithSpaces: true,
             indentSpaceCount: 4
@@ -120,7 +120,7 @@ export default class PluginGenerator extends Vue {
         return this.pluginDefinition.formatter || formatter;
     }
 
-    get license() {
+    get license(): string {
         let currentYear = new Date().getFullYear().toString();
 
         if (this.pluginDefinition.license === null) {
@@ -141,7 +141,11 @@ export default class PluginGenerator extends Vue {
         return _.sortBy(this.pluginDefinition.events, ['name']);
     }
 
-    get pluginCode() {
+    get mapObjectBuilder(): MapObjectBuilder {
+        return new MapObjectBuilder(this.pluginDefinition.mapObjects);
+    }
+
+    get pluginCode(): string {
         this.plugin = new CPPClass(this.className);
         this.plugin.addExtends([CPPVisibility.Public, 'bz_Plugin']);
 
@@ -155,8 +159,8 @@ export default class PluginGenerator extends Vue {
 
         this.buildNameFunction();
         this.buildInitFunction(this.sortedEvents);
-        this.buildMapObjectFunction(this.pluginDefinition.mapObjects);
         this.buildCleanupFunction();
+        this.buildMapObjectFunction();
         this.buildEventFunction(
             this.sortedEvents,
             this.pluginDefinition.showComments,
@@ -172,19 +176,18 @@ export default class PluginGenerator extends Vue {
         return output;
     }
 
-    get pluginMapObjectClasses() {
-        let mapClasses: string[] = [];
+    get pluginMapObjectClasses(): string[] {
+        let mapClassLiteral: string[] = [];
+        let mapClasses: CPPClass[] = this.mapObjectBuilder.getMapObjectClasses();
 
-        this.pluginDefinition.mapObjects.forEach(
-            function(object: IMapObject) {
-                let mapClass = PluginGenerator.buildMapObjectClass(object);
-
-                mapClasses.push(mapClass.write(this.formatter, 0));
-                mapClasses.push('\n\n');
+        mapClasses.forEach(
+            function(objClass: CPPClass) {
+                mapClassLiteral.push(objClass.write(this.formatter, 0));
+                mapClassLiteral.push('\n\n');
             }.bind(this)
         );
 
-        return mapClasses;
+        return mapClassLiteral;
     }
 
     get pluginOutput() {
@@ -298,9 +301,7 @@ export default class PluginGenerator extends Vue {
         }
 
         if (this.pluginDefinition.mapObjects.length > 0) {
-            if (this.pluginDefinition.slashCommands.length > 0) {
-                body.push(CPPHelper.createEmptyLine());
-            }
+            body.push(CPPHelper.createEmptyLine());
 
             this.pluginDefinition.mapObjects.forEach(function(object: IMapObject) {
                 body.push(CPPHelper.createFunctionCall('bz_removeCustomMapObject', [`"${object.name}"`]));
@@ -421,102 +422,14 @@ export default class PluginGenerator extends Vue {
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
     }
 
-    private buildMapObjectFunction(mapObjects: IMapObject[]) {
-        if (mapObjects.length == 0) {
+    private buildMapObjectFunction() {
+        let fxn = this.mapObjectBuilder.getMapObjectParseFunction();
+
+        if (fxn === null) {
             return;
         }
 
-        // Storage
-        let fxn = new CPPFunction('bool', 'MapObject', [
-            new CPPVariable('bz_ApiString', 'object'),
-            new CPPVariable('bz_CustomMapObjectInfo*', 'data')
-        ]);
-        let fxnBody: ILanguageWritable[] = [new CPPWritableObject('// Note, this value will be in uppercase')];
-        let shortCircuitConditions: string[] = [];
-
-        // Main loop of all the objects
-        mapObjects.forEach(
-            function(object: IMapObject) {
-                // Register conditions for our short circuit
-                shortCircuitConditions.push(`object != "${object.name.toUpperCase()}"`);
-            }.bind(this)
-        );
-
-        // Build a short circuit condition to ignore all other map objects we didn't register
-        shortCircuitConditions.push('!data');
-
-        let shortCircuit = new CPPIfBlock();
-        shortCircuit.defineCondition(shortCircuitConditions.join(' || '), [new CPPWritableObject('return false;')]);
-
-        fxnBody.push(shortCircuit);
-
-        // Finish off the function and register it as a method
-        fxn.setVirtual(true);
-        fxn.implementFunction(fxnBody);
         fxn.setParentClass(this.plugin, CPPVisibility.Public);
-    }
-
-    private static buildMapObjectClass(object: IMapObject) {
-        let objClass = new CPPClass(`${object.name}Zone`);
-        objClass.addExtends([CPPVisibility.Public, 'bz_CustomZoneObject']);
-
-        let blacklist = [
-            'position|pos',
-            'position',
-            'pos',
-            'size',
-            'rotation|rot',
-            'rotation',
-            'rot',
-            'height',
-            'radius'
-        ];
-        object.properties.forEach(function(property) {
-            let namespace = property.name;
-
-            if (blacklist.indexOf(namespace) >= 0) {
-                return;
-            }
-
-            if (property.arguments.length === 0) {
-                objClass.addVariable(CPPVariable.createBoolean(namespace), CPPVisibility.Public);
-                return;
-            }
-
-            property.arguments.forEach(function(argument) {
-                let name = `${namespace}_${argument.name}`;
-                let variable = null;
-
-                switch (argument.type) {
-                    case ArgumentType.Integer:
-                        variable = CPPVariable.createInt(name);
-                        break;
-
-                    case ArgumentType.Float:
-                        variable = CPPVariable.createFloat(name);
-                        break;
-
-                    case ArgumentType.Double:
-                        variable = CPPVariable.createDouble(name);
-                        break;
-
-                    case ArgumentType.String:
-                        variable = CPPVariable.createString(name);
-                        break;
-
-                    case ArgumentType.Team:
-                        variable = new CPPVariable('bz_eTeamType', name);
-                        break;
-
-                    default:
-                        break;
-                }
-
-                objClass.addVariable(variable, CPPVisibility.Public);
-            });
-        });
-
-        return objClass;
     }
 
     private static buildEventBlock(
