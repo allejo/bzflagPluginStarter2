@@ -178,7 +178,7 @@ export default class PluginGenerator extends Vue {
 
     get pluginMapObjectClasses(): string[] {
         let mapClassLiteral: string[] = [];
-        let mapClasses: CPPClass[] = this.mapObjectBuilder.getMapObjectClasses();
+        let mapClasses: CPPClass[] = this.mapObjectBuilder.mapObjectClasses;
 
         mapClasses.forEach(
             function(objClass: CPPClass) {
