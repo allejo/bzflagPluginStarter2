@@ -146,10 +146,11 @@ export default class MapObjectBuilder {
         let block: CPPIfBlock = new CPPIfBlock();
 
         mapObj.properties.forEach(value => {
-            let body: CPPWritable[] = this.buildPropertyArgumentParsers(varName, value.arguments);
-
             let propertyNames = value.name.split('|');
+            let namespace = propertyNames[0];
             let conditions: string[] = [];
+
+            let body: CPPWritable[] = this.buildPropertyArgumentParsers(varName, namespace, value.arguments);
 
             propertyNames.forEach(propertyName => {
                 if (MapObjectBuilder.propertyBlacklist.indexOf(propertyName) >= 0) {
@@ -167,11 +168,11 @@ export default class MapObjectBuilder {
         return block;
     }
 
-    private buildPropertyArgumentParsers(varName: string, args: IMapPropertyArgument[]) {
+    private buildPropertyArgumentParsers(varName: string, namespace: string, args: IMapPropertyArgument[]) {
         let body: CPPWritable[] = [];
 
         args.forEach((value, index) => {
-            body.push(this.buildPropertyArgumentParser(varName, index + 1, value));
+            body.push(this.buildPropertyArgumentParser(varName, index + 1, namespace, value));
         });
 
         return body;
@@ -180,32 +181,39 @@ export default class MapObjectBuilder {
     private buildPropertyArgumentParser(
         mapObjName: string,
         index: number,
+        namespace: string,
         argument: IMapPropertyArgument
     ): CPPWritable {
         let line: CPPWritable;
 
         switch (argument.type) {
             case ArgumentType.Integer:
-                line = new CPPWritableObject(`${mapObjName}.${argument.name} = atoi(nubs.get(${index}).c_str());`);
+                line = new CPPWritableObject(
+                    `${mapObjName}.${namespace}_${argument.name} = atoi(nubs.get(${index}).c_str());`
+                );
                 break;
 
             case ArgumentType.Float:
-                line = new CPPWritableObject(`${mapObjName}.${argument.name} = atof(nubs.get(${index}).c_str());`);
+                line = new CPPWritableObject(
+                    `${mapObjName}.${namespace}_${argument.name} = atof(nubs.get(${index}).c_str());`
+                );
                 break;
 
             case ArgumentType.Double:
                 line = new CPPWritableObject(
-                    `${mapObjName}.${argument.name} = (double)atof(nubs.get(${index}).c_str());`
+                    `${mapObjName}.${namespace}_${argument.name} = (double)atof(nubs.get(${index}).c_str());`
                 );
                 break;
 
             case ArgumentType.String:
-                line = new CPPWritableObject(`${mapObjName}.${argument.name} = nubs.get(${index}).c_str();`);
+                line = new CPPWritableObject(
+                    `${mapObjName}.${namespace}_${argument.name} = nubs.get(${index}).c_str();`
+                );
                 break;
 
             case ArgumentType.Team:
                 line = new CPPWritableObject(
-                    `${mapObjName}.${argument.name} = (bz_eTeamType)atoi(nubs.get(${index}).c_str());`
+                    `${mapObjName}.${namespace}_${argument.name} = (bz_eTeamType)atoi(nubs.get(${index}).c_str());`
                 );
                 break;
 
