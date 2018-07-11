@@ -3,7 +3,7 @@
         <h2 class="sr-only">Plug-in Preview</h2>
 
         <div class="plugin-container">
-            <div class="c-toolbar">
+            <div class="c-toolbar p-3">
                 <button class="btn btn-secondary"
                         data-balloon-pos="down"
                         data-balloon="Minimum BZFS requirement"
@@ -20,6 +20,7 @@
                 </button>
 
                 <button class="btn btn-primary"
+                        data-balloon-length="medium"
                         data-balloon-pos="down"
                         data-balloon="Copy the plug-in code to your clipboard"
                         v-clipboard:copy="pluginOutput"
