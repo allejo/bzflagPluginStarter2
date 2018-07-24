@@ -18,11 +18,11 @@
             <div class="c-map-property__arguments">
                 <MapPropertyArgument
                     class="ml-2"
-                    v-for="(argument, key) in definition.arguments"
-                    :aid="key"
+                    v-for="argument in definition.arguments"
                     :arg="Object.assign(argument, { readonly: definition.readonly })"
-                    :key="key"
+                    :key="argument.uuid"
                     :title="definition.readonly ? lockedPropertyMsg : ''"
+                    @argumentDeleted="handleArgumentDeletion"
                     @valueChanged="requestDefinitionUpdate"
                 />
 
@@ -67,11 +67,13 @@
 </style>
 
 <script lang="ts">
+import * as _ from 'lodash';
 import { Component, Prop, Provide, Vue, Watch } from 'vue-property-decorator';
 import Editable from './Editable';
 import MapPropertyArgument from './MapPropertyArgument';
 import { IMapProperty } from '../lib/IMapProperty';
 import MapObjectHelper from '../lib/MapObjectHelper';
+import { IMapPropertyArgument } from '../lib/IMapPropertyArgument';
 
 @Component({
     name: 'map-property',
@@ -88,6 +90,10 @@ export default class MapProperty extends Vue {
 
     handleArgumentAddition() {
         this.definition.arguments.push(MapObjectHelper.createMapPropertyArgument());
+    }
+
+    handleArgumentDeletion(arg: IMapPropertyArgument) {
+        this.definition.arguments = _.without(this.definition.arguments, arg);
     }
 
     requestValueDeletion() {

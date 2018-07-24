@@ -7,6 +7,7 @@ export enum ArgumentType {
 }
 
 export interface IMapPropertyArgument {
+    uuid: string;
     name: string;
     type: ArgumentType;
     readonly?: boolean;

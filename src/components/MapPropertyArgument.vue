@@ -21,6 +21,15 @@
             </select>
             <strong>}</strong>
         </div>
+        <button
+            class="c-delete"
+            title="Delete argument"
+            v-if="!arg.readonly"
+            @click="requestArgumentDeletion"
+        >
+            <i class="fa fa-times" aria-hidden="false"></i>
+            <span class="sr-only">Delete Argument</span>
+        </button>
     </div>
 </template>
 
@@ -34,6 +43,7 @@
     font-size: 0.8em;
     padding-left: 3px;
     padding-right: 3px;
+    position: relative;
 
     &[data-readonly='true'] {
         background-color: rgba($tag-bg, 0.5);
@@ -42,6 +52,10 @@
         select {
             cursor: not-allowed;
         }
+    }
+
+    &:hover .c-delete {
+        display: block;
     }
 }
 
@@ -64,6 +78,18 @@ select {
     font-weight: bold;
     padding: 0;
 }
+
+.c-delete {
+    background: $color-red;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    display: none;
+    padding: 0 3px;
+    position: absolute;
+    right: -5px;
+    top: -5px;
+}
 </style>
 
 <script lang="ts">
@@ -78,7 +104,6 @@ import Editable from './Editable';
     }
 })
 export default class MapPropertyArgument extends Vue {
-    @Prop() aid: number;
     @Prop() arg: IMapPropertyArgument;
     @Prop() title: string;
 
@@ -89,6 +114,10 @@ export default class MapPropertyArgument extends Vue {
         ArgumentType.String,
         ArgumentType.Team
     ];
+
+    requestArgumentDeletion() {
+        this.$emit('argumentDeleted', this.arg);
+    }
 
     @Watch('arg', { deep: true })
     requestDefinitionUpdate() {
