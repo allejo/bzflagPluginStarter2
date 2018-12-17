@@ -1,12 +1,14 @@
 import IPlugin from './IPlugin';
-import {CPPClass, CPPFormatter} from 'aclovis';
+import {CPPClass, CPPFormatter, CPPVisibility} from 'aclovis';
 import EventChunk from './ChunkWriter/EventChunk';
+import SlashCommandChunk from './ChunkWriter/SlashCommandChunk';
 
 export default class PluginWriter {
     private pluginClass: CPPClass;
 
     constructor(private readonly plugin: IPlugin) {
         this.pluginClass = new CPPClass(this.plugin.name);
+        this.pluginClass.addExtends([CPPVisibility.Public, 'bz_Plugin']);
 
         this.handleEvents();
         this.handleSlashCommands();
@@ -28,12 +30,13 @@ export default class PluginWriter {
     }
 
     private handleEvents() {
-        const eventChunkWriter = new EventChunk(this.pluginClass, this.plugin);
-        eventChunkWriter.process();
+        const chunkWriter = new EventChunk(this.pluginClass, this.plugin);
+        chunkWriter.process();
     }
 
     private handleSlashCommands() {
-
+        const chunkWriter = new SlashCommandChunk(this.pluginClass, this.plugin);
+        chunkWriter.process();
     }
 
     private handleCallbacks() {
