@@ -1,13 +1,7 @@
 import NameChunk from '../NameChunk';
 import PluginBuilder from '../../PluginBuilder';
-import { CPPClass, CPPFormatter } from 'aclovis';
-import { multiLineString } from './utilities';
-
-const codeStyle: CPPFormatter = new CPPFormatter({
-    bracesOnNewLine: true,
-    indentWithSpaces: true,
-    indentSpaceCount: 4
-});
+import { CPPClass } from 'aclovis';
+import { codeStyle, multiLineString } from './utilities';
 
 let pluginDef: PluginBuilder;
 let pluginClass: CPPClass;
