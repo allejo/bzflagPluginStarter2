@@ -7,19 +7,17 @@ import {
     CPPIfBlock,
     CPPSwitchBlock,
     CPPVariable,
-    CPPVisibility
+    CPPVisibility,
+    CPPWritable
 } from 'aclovis';
 import { IChunkWriter } from './IChunkWriter';
 import { IEvent } from '../IEvent';
-import CPPWritable from 'aclovis/dist/cpp/CPPWritable';
 
 export default class EventChunk implements IChunkWriter {
     private fxn: CPPFunction;
 
     constructor(pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
-        this.fxn = new CPPFunction('void', 'Event', [
-            new CPPVariable('bz_EventData*', 'eventData')
-        ]);
+        this.fxn = new CPPFunction('void', 'Event', [new CPPVariable('bz_EventData*', 'eventData')]);
         this.fxn.setVirtual(true);
         this.fxn.setParentClass(pluginClass, CPPVisibility.Public);
     }
@@ -34,13 +32,9 @@ export default class EventChunk implements IChunkWriter {
         let fxnBody = [];
 
         if (this.pluginDefinition.codeStyle.useIfStatement) {
-            fxnBody = [
-                this.buildIfStatement(events),
-            ];
+            fxnBody = [this.buildIfStatement(events)];
         } else {
-            fxnBody = [
-                this.buildSwitchBlock(events),
-            ];
+            fxnBody = [this.buildSwitchBlock(events)];
         }
 
         this.fxn.implementFunction(fxnBody);
@@ -52,10 +46,7 @@ export default class EventChunk implements IChunkWriter {
         for (let i = 0; i < events.length; i++) {
             const event = this.pluginDefinition.events[events[i]];
 
-            ifBlock.defineCondition(
-                `eventData->eventType == ${event.name}`,
-                this.buildEventBlock(event)
-            );
+            ifBlock.defineCondition(`eventData->eventType == ${event.name}`, this.buildEventBlock(event));
         }
 
         return ifBlock;
@@ -67,10 +58,7 @@ export default class EventChunk implements IChunkWriter {
         for (let i = 0; i < events.length; i++) {
             const event = this.pluginDefinition.events[events[i]];
 
-            switchBlock.defineCase(
-                event.name,
-                this.buildEventBlock(event)
-            );
+            switchBlock.defineCase(event.name, this.buildEventBlock(event));
         }
 
         return switchBlock;

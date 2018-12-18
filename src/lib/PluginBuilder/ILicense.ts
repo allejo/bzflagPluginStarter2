@@ -5,5 +5,5 @@ export interface ILicense {
 
 export const NullLicense: ILicense = {
     name: 'Proprietary',
-    body: 'All rights reserved.',
+    body: 'All rights reserved.'
 };

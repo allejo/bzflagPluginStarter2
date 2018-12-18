@@ -1,7 +1,7 @@
 import IPlugin from './IPlugin';
 import { CPPClass, CPPFormatter, CPPVisibility } from 'aclovis';
-import NameChunk from "./ChunkWriter/NameChunk";
-import InitChunk from "./ChunkWriter/InitChunk";
+import NameChunk from './ChunkWriter/NameChunk';
+import InitChunk from './ChunkWriter/InitChunk';
 import EventChunk from './ChunkWriter/EventChunk';
 import SlashCommandChunk from './ChunkWriter/SlashCommandChunk';
 
@@ -27,7 +27,7 @@ export default class PluginWriter {
         let formatter = new CPPFormatter({
             bracesOnNewLine: codeStyle.bracesOnNewLine,
             indentWithSpaces: codeStyle.spacingType === 'tabs',
-            indentSpaceCount: codeStyle.spacingType === 'twoSpace' ? 2 : 4,
+            indentSpaceCount: codeStyle.spacingType === 'twoSpace' ? 2 : 4
         });
 
         return this.pluginClass.write(formatter, 0);
@@ -53,19 +53,11 @@ export default class PluginWriter {
         chunkWriter.process();
     }
 
-    private handleCallbacks() {
+    private handleCallbacks() {}
 
-    }
+    private handleMapObjects() {}
 
-    private handleMapObjects() {
+    private handleFlags() {}
 
-    }
-
-    private handleFlags() {
-
-    }
-
-    private handleBZDBSettings() {
-
-    }
+    private handleBZDBSettings() {}
 }

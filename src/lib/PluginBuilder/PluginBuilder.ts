@@ -23,14 +23,14 @@ export default class PluginBuilder {
                 bracesOnNewLine: true,
                 spacingType: 'fourSpace',
                 showDocBlocks: true,
-                showComments: true,
+                showComments: true
             },
             events: {},
             slashCommands: {},
             callbacks: {},
             mapObjects: {},
             flags: {},
-            bzdbSettings: {},
+            bzdbSettings: {}
         };
 
         Object.seal(this.definition);

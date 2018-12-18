@@ -39,14 +39,10 @@ export default class SlashCommandChunk implements IChunkWriter {
 
             ifBlock.defineCondition(`command == "${slashCommand.name}"`, [
                 CPPHelper.createEmptyLine(),
-                new CPPWritableObject('return true;'),
+                new CPPWritableObject('return true;')
             ]);
         }
 
-        this.fxn.implementFunction([
-            ifBlock,
-            CPPHelper.createEmptyLine(),
-            new CPPWritableObject('return false;'),
-        ]);
+        this.fxn.implementFunction([ifBlock, CPPHelper.createEmptyLine(), new CPPWritableObject('return false;')]);
     }
 }

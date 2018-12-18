@@ -104,4 +104,4 @@ export default interface IPlugin {
     bzdbSettings: {
         [key: string]: IBZDBSetting;
     };
-}
+};

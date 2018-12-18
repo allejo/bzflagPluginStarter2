@@ -1,15 +1,12 @@
-import IPlugin from "../IPlugin";
-import CPPWritable from "aclovis/dist/cpp/CPPWritable";
-import { CPPClass, CPPComment, CPPFunction, CPPHelper, CPPVariable, CPPVisibility } from "aclovis";
-import { IChunkWriter } from "./IChunkWriter";
+import IPlugin from '../IPlugin';
+import { CPPClass, CPPComment, CPPFunction, CPPHelper, CPPVariable, CPPVisibility, CPPWritable } from 'aclovis';
+import { IChunkWriter } from './IChunkWriter';
 
 export default class InitChunk implements IChunkWriter {
     private readonly fxn: CPPFunction;
 
     constructor(private readonly pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
-        this.fxn = new CPPFunction('void', 'Init', [
-            CPPVariable.createConstChar('config'),
-        ]);
+        this.fxn = new CPPFunction('void', 'Init', [CPPVariable.createConstChar('config')]);
         this.fxn.setVirtual(true);
         this.fxn.setParentClass(pluginClass, CPPVisibility.Public);
     }
@@ -29,10 +26,7 @@ export default class InitChunk implements IChunkWriter {
         for (const eventName in this.pluginDefinition.events) {
             const event = this.pluginDefinition.events[eventName];
 
-            body.push(CPPHelper.createFunctionCall(
-                'Register',
-                [event.name]
-            ));
+            body.push(CPPHelper.createFunctionCall('Register', [event.name]));
         }
     }
 
@@ -53,10 +47,9 @@ export default class InitChunk implements IChunkWriter {
         for (const name in slashCommands) {
             const slashCommand = slashCommands[name];
 
-            body.push(CPPHelper.createFunctionCall(
-                'bz_registerCustomSlashCommand',
-                [`"${slashCommand.name}"`, 'this']
-            ));
+            body.push(
+                CPPHelper.createFunctionCall('bz_registerCustomSlashCommand', [`"${slashCommand.name}"`, 'this'])
+            );
         }
     }
 
@@ -75,10 +68,12 @@ export default class InitChunk implements IChunkWriter {
             body.push(new CPPComment('Namespace our clip fields to avoid plug-in conflicts', false));
         }
 
-        body.push(CPPHelper.createFunctionCall('bz_setclipFieldString', [
-            `"${this.pluginDefinition.author.callsign}/${this.pluginClass.getClassName()}"`,
-            'Name()'
-        ]));
+        body.push(
+            CPPHelper.createFunctionCall('bz_setclipFieldString', [
+                `"${this.pluginDefinition.author.callsign}/${this.pluginClass.getClassName()}"`,
+                'Name()'
+            ])
+        );
     }
 
     private buildMapObjectRegistration(body: CPPWritable[]): void {
@@ -95,12 +90,7 @@ export default class InitChunk implements IChunkWriter {
         for (const name in mapObjects) {
             const mapObject = mapObjects[name];
 
-            body.push(
-                CPPHelper.createFunctionCall(
-                    'bz_registerCustomMapObject',
-                    [`"${mapObject.name}"`, 'this']
-                )
-            );
+            body.push(CPPHelper.createFunctionCall('bz_registerCustomMapObject', [`"${mapObject.name}"`, 'this']));
         }
     }
 }

@@ -1,6 +1,6 @@
-import IPlugin from "../IPlugin";
-import { CPPClass, CPPFunction, CPPVisibility, CPPWritableObject } from "aclovis";
-import { IChunkWriter } from "./IChunkWriter";
+import IPlugin from '../IPlugin';
+import { CPPClass, CPPFunction, CPPVisibility, CPPWritableObject } from 'aclovis';
+import { IChunkWriter } from './IChunkWriter';
 
 export default class NameChunk implements IChunkWriter {
     private fxn: CPPFunction;
@@ -12,8 +12,6 @@ export default class NameChunk implements IChunkWriter {
     }
 
     process(): void {
-        this.fxn.implementFunction([
-            new CPPWritableObject(`return "${this.pluginDefinition.name}";`),
-        ]);
+        this.fxn.implementFunction([new CPPWritableObject(`return "${this.pluginDefinition.name}";`)]);
     }
 }
