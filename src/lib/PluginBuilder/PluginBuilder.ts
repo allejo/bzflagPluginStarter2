@@ -6,6 +6,7 @@ import { IFlag } from './IFlag';
 import { IMapObject } from './IMapObject';
 import { ISlashCommand } from './ISlashCommand';
 import { NullLicense } from './ILicense';
+import { IPollType } from "./IPollType";
 
 export default class PluginBuilder {
     public definition: IPlugin;
@@ -30,7 +31,8 @@ export default class PluginBuilder {
             callbacks: {},
             mapObjects: {},
             flags: {},
-            bzdbSettings: {}
+            bzdbSettings: {},
+            pollTypes: {},
         };
 
         Object.seal(this.definition);
@@ -82,6 +84,14 @@ export default class PluginBuilder {
 
     removeBZDBSetting(bzdbSetting: IBZDBSetting | String | string) {
         this.safeRemove('bzdbSettings', bzdbSetting, 'name');
+    }
+
+    addPollType(pollType: IPollType) {
+        this.definition.pollTypes[pollType.name] = pollType;
+    }
+
+    removePollType(pollType: IPollType | String | string) {
+        this.safeRemove('pollTypes', pollType, 'name');
     }
 
     private safeRemove(namespace: string, key: Object | String | string, secondaryKey: string = null) {

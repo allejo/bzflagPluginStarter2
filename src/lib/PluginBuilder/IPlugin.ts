@@ -5,6 +5,7 @@ import { IEvent } from './IEvent';
 import { ILicense } from './ILicense';
 import { IMapObject } from './IMapObject';
 import { ISlashCommand } from './ISlashCommand';
+import { IPollType } from "./IPollType";
 
 export default interface IPlugin {
     /**
@@ -103,5 +104,12 @@ export default interface IPlugin {
      */
     bzdbSettings: {
         [key: string]: IBZDBSetting;
+    };
+
+    /**
+     * Custom poll types this plug-in will register.
+     */
+    pollTypes: {
+        [key: string]: IPollType;
     };
 };
