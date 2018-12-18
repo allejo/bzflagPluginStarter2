@@ -10,13 +10,13 @@ import {
     CPPVisibility,
     CPPWritable
 } from 'aclovis';
-import { IChunkWriter } from './IChunkWriter';
+import { ChunkWriter } from './ChunkWriter';
 import { IEvent } from '../IEvent';
 
-export default class EventChunk implements IChunkWriter {
-    private fxn: CPPFunction;
-
+export default class EventChunk extends ChunkWriter {
     constructor(pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
+        super();
+
         this.fxn = new CPPFunction('void', 'Event', [new CPPVariable('bz_EventData*', 'eventData')]);
         this.fxn.setVirtual(true);
         this.fxn.setParentClass(pluginClass, CPPVisibility.Public);

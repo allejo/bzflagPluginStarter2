@@ -1,12 +1,13 @@
 import IPlugin from '../IPlugin';
-import { IChunkWriter } from './IChunkWriter';
+import { ChunkWriter } from './ChunkWriter';
 import { CPPClass, CPPFunction, CPPHelper, CPPIfBlock, CPPVariable, CPPVisibility, CPPWritableObject } from 'aclovis';
 
-export default class SlashCommandChunk implements IChunkWriter {
-    private fxn: CPPFunction;
+export default class SlashCommandChunk extends ChunkWriter {
     private readonly notNeeded: boolean = false;
 
     constructor(pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
+        super();
+
         const slashCommands = Object.keys(this.pluginDefinition.slashCommands);
 
         // Don't do anything if this plug-in doesn't have slash commands

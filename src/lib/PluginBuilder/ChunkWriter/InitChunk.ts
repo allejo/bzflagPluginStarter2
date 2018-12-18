@@ -1,11 +1,11 @@
 import IPlugin from '../IPlugin';
 import { CPPClass, CPPComment, CPPFunction, CPPHelper, CPPVariable, CPPVisibility, CPPWritable } from 'aclovis';
-import { IChunkWriter } from './IChunkWriter';
+import { ChunkWriter } from './ChunkWriter';
 
-export default class InitChunk implements IChunkWriter {
-    private readonly fxn: CPPFunction;
-
+export default class InitChunk extends ChunkWriter {
     constructor(private readonly pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
+        super();
+
         this.fxn = new CPPFunction('void', 'Init', [CPPVariable.createConstChar('config')]);
         this.fxn.setVirtual(true);
         this.fxn.setParentClass(pluginClass, CPPVisibility.Public);
