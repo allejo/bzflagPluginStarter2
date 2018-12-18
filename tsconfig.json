@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "target": "es2016",
     "lib": ["es6", "dom"],
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "preserveConstEnums": true,
     "declaration": false,
