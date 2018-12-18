@@ -4,6 +4,7 @@ import NameChunk from './ChunkWriter/NameChunk';
 import InitChunk from './ChunkWriter/InitChunk';
 import EventChunk from './ChunkWriter/EventChunk';
 import SlashCommandChunk from './ChunkWriter/SlashCommandChunk';
+import CleanupChunk from './ChunkWriter/CleanupChunk';
 
 export default class PluginWriter {
     private readonly pluginClass: CPPClass;
@@ -14,6 +15,7 @@ export default class PluginWriter {
 
         this.handleNameMethod();
         this.handleInitMethod();
+        this.handleCleanupMethod();
         this.handleEvents();
         this.handleSlashCommands();
         this.handleCallbacks();
@@ -41,6 +43,11 @@ export default class PluginWriter {
     private handleInitMethod() {
         const initWriter = new InitChunk(this.pluginClass, this.plugin);
         initWriter.process();
+    }
+
+    private handleCleanupMethod() {
+        const cleanupWriter = new CleanupChunk(this.pluginClass, this.plugin);
+        cleanupWriter.process();
     }
 
     private handleEvents() {
