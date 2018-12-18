@@ -11,7 +11,7 @@ beforeEach(() => {
     pluginClass = new CPPClass('TestClass');
 });
 
-test('CleanupChunk should add Cleanup() method to plugin class', () => {
+test('add Cleanup() method to plugin class', () => {
     const chunk = new CleanupChunk(pluginClass, pluginDef.definition);
     chunk.process();
 
@@ -20,7 +20,7 @@ test('CleanupChunk should add Cleanup() method to plugin class', () => {
     expect(methods).toContain(chunk.getIdentifier());
 });
 
-test('CleanupChunk should render method with just Flush() call', () => {
+test('render method with just Flush() call', () => {
     const chunk = new CleanupChunk(pluginClass, pluginDef.definition);
     chunk.process();
 
@@ -36,7 +36,7 @@ void TestClass::Cleanup()
     expect(output).toEqual(expected);
 });
 
-test('CleanupChunk should render method with Flush() call and slash commands', () => {
+test('render method with Flush() call and slash commands', () => {
     pluginDef.addSlashCommand({
         name: 'ican'
     });
@@ -56,6 +56,59 @@ void TestClass::Cleanup()
 
     bz_removeCustomSlashCommand("ican");
     bz_removeCustomSlashCommand("seethefuture");
+}
+    `);
+
+    expect(output).toEqual(expected);
+});
+
+test('render method with Flush() and map objects', () => {
+    pluginDef.addMapObject({
+        uuid: '',
+        name: 'customzone',
+        properties: [],
+    });
+
+    const chunk = new CleanupChunk(pluginClass, pluginDef.definition);
+    chunk.process();
+
+    const method = pluginClass.getMethods()[chunk.getIdentifier()];
+    const output = method.functionDef.write(codeStyle, 0);
+    const expected = multiLineString(`
+void TestClass::Cleanup()
+{
+    Flush();
+
+    bz_removeCustomMapObject("customzone");
+}
+    `);
+
+    expect(output).toEqual(expected);
+});
+
+test('render method with Flush(), slash commands, and map objects', () => {
+    pluginDef.addSlashCommand({
+        name: 'command'
+    });
+    pluginDef.addMapObject({
+        uuid: '',
+        name: 'customzone',
+        properties: [],
+    });
+
+    const chunk = new CleanupChunk(pluginClass, pluginDef.definition);
+    chunk.process();
+
+    const method = pluginClass.getMethods()[chunk.getIdentifier()];
+    const output = method.functionDef.write(codeStyle, 0);
+    const expected = multiLineString(`
+void TestClass::Cleanup()
+{
+    Flush();
+
+    bz_removeCustomSlashCommand("command");
+
+    bz_removeCustomMapObject("customzone");
 }
     `);
 

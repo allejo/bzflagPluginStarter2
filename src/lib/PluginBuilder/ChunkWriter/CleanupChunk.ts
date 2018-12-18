@@ -3,6 +3,8 @@ import { CPPClass, CPPFunction, CPPHelper, CPPVisibility, CPPWritable, CPPWritab
 import { ChunkWriter } from './ChunkWriter';
 import { IMapObject } from '../IMapObject';
 import { ISlashCommand } from '../ISlashCommand';
+import { IBZDBSetting } from "../IBZDBSetting";
+import { IPollType } from "../IPollType";
 
 export default class CleanupChunk extends ChunkWriter {
     constructor(pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
@@ -20,6 +22,8 @@ export default class CleanupChunk extends ChunkWriter {
 
         this.buildSlashCommandRemoval(fxnBody);
         this.buildMapObjectRemoval(fxnBody);
+        this.buildBZDBSettingsRemoval(fxnBody);
+        this.buildPollTypeRemoval(fxnBody);
 
         this.fxn.implementFunction(fxnBody);
     }
@@ -38,6 +42,24 @@ export default class CleanupChunk extends ChunkWriter {
             'mapObjects',
             'bz_removeCustomMapObject',
             (object: IMapObject): string[] => [`"${object.name}"`],
+            body
+        );
+    }
+
+    private buildBZDBSettingsRemoval(body: CPPWritable[]): void {
+        this.unregisterFunctionRepeater(
+            'bzdbSettings',
+            'bz_removeCustomBZDBVariable',
+            (object: IBZDBSetting): string[] => [`"${object.name}"`],
+            body
+        );
+    }
+
+    private buildPollTypeRemoval(body: CPPWritable[]): void {
+        this.unregisterFunctionRepeater(
+            'pollTypes',
+            'bz_removeCustomPollType',
+            (object: IPollType): string[] => [`"${object.name}"`],
             body
         );
     }
