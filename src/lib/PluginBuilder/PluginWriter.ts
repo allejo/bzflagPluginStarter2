@@ -2,9 +2,10 @@ import IPlugin from './IPlugin';
 import { CPPClass, CPPFormatter, CPPVisibility } from 'aclovis';
 import NameChunk from './ChunkWriter/NameChunk';
 import InitChunk from './ChunkWriter/InitChunk';
+import CleanupChunk from './ChunkWriter/CleanupChunk';
+import CallbackChunk from './ChunkWriter/CallbackChunk';
 import EventChunk from './ChunkWriter/EventChunk';
 import SlashCommandChunk from './ChunkWriter/SlashCommandChunk';
-import CleanupChunk from './ChunkWriter/CleanupChunk';
 
 export default class PluginWriter {
     private readonly pluginClass: CPPClass;
@@ -16,12 +17,10 @@ export default class PluginWriter {
         this.handleNameMethod();
         this.handleInitMethod();
         this.handleCleanupMethod();
+        this.handleCallbacks();
         this.handleEvents();
         this.handleSlashCommands();
-        this.handleCallbacks();
         this.handleMapObjects();
-        this.handleFlags();
-        this.handleBZDBSettings();
     }
 
     write(): string {
@@ -60,11 +59,10 @@ export default class PluginWriter {
         chunkWriter.process();
     }
 
-    private handleCallbacks() {}
+    private handleCallbacks() {
+        const callbackChunk = new CallbackChunk(this.pluginClass, this.plugin);
+        callbackChunk.process();
+    }
 
     private handleMapObjects() {}
-
-    private handleFlags() {}
-
-    private handleBZDBSettings() {}
 }
