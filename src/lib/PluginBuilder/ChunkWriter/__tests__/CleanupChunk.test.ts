@@ -1,7 +1,7 @@
 import CleanupChunk from '../CleanupChunk';
 import PluginBuilder from '../../PluginBuilder';
 import { CPPClass } from 'aclovis';
-import { ITestCodeDefinition, ITestCodeDefinitionRepeater } from './utilities';
+import { ITestCodeDefinition, ITestCodeDefinitionRepeater } from '../../__tests__/utilities';
 
 const tests: ITestCodeDefinition[] = [
     {

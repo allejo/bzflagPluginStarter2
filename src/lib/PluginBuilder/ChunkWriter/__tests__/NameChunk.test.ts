@@ -1,7 +1,7 @@
 import NameChunk from '../NameChunk';
 import PluginBuilder from '../../PluginBuilder';
 import { CPPClass } from 'aclovis';
-import { codeStyle, multiLineString } from './utilities';
+import { codeStyle, multiLineString } from '../../__tests__/utilities';
 
 let pluginDef: PluginBuilder;
 let pluginClass: CPPClass;

@@ -1,7 +1,7 @@
 import InitChunk from '../InitChunk';
 import PluginBuilder from '../../PluginBuilder';
-import { ITestCodeDefinition, ITestCodeDefinitionRepeater } from './utilities';
-import { getIEventMock } from './mocks/IEventMock';
+import { ITestCodeDefinition, ITestCodeDefinitionRepeater } from '../../__tests__/utilities';
+import { getIEventMock } from '../../__tests__/mocks/IEventMock';
 
 const tests: ITestCodeDefinition[] = [
     {

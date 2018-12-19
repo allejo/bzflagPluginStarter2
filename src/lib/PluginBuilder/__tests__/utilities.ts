@@ -1,7 +1,7 @@
-import { ChunkWriter } from '../ChunkWriter';
+import { ChunkWriter } from '../ChunkWriter/ChunkWriter';
 import { CPPClass, CPPFormatter } from 'aclovis';
-import PluginBuilder from '../../PluginBuilder';
-import IPlugin from '../../IPlugin';
+import PluginBuilder from '../PluginBuilder';
+import IPlugin from '../IPlugin';
 
 export interface ITestCodeDefinition {
     desc: string;
