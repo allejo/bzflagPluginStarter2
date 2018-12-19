@@ -8,4 +8,5 @@ export enum BZDBType {
 export interface IBZDBSetting {
     name: string;
     type: BZDBType;
+    value: boolean | number | string;
 }

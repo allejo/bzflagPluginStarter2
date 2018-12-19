@@ -1,6 +1,11 @@
 import IPlugin from '../IPlugin';
 import { CPPClass, CPPComment, CPPFunction, CPPHelper, CPPVariable, CPPVisibility, CPPWritable } from 'aclovis';
 import { ChunkWriter } from './ChunkWriter';
+import { ISlashCommand } from '../ISlashCommand';
+import { IEvent } from '../IEvent';
+import { BZDBType, IBZDBSetting } from '../IBZDBSetting';
+import { IFlag } from '../IFlag';
+import { IMapObject } from '../IMapObject';
 
 export default class InitChunk extends ChunkWriter {
     constructor(private readonly pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
@@ -14,43 +19,96 @@ export default class InitChunk extends ChunkWriter {
     process(): void {
         const fxnBody: CPPWritable[] = [];
 
+        this.buildCallbackRegistration(fxnBody);
         this.buildEventRegistration(fxnBody);
         this.buildSlashCommandRegistration(fxnBody);
-        this.buildCallbackRegistration(fxnBody);
+        this.buildBZDBSettingRegistration(fxnBody);
+        this.buildFlagRegistration(fxnBody);
         this.buildMapObjectRegistration(fxnBody);
 
         this.fxn.implementFunction(fxnBody);
     }
 
     private buildEventRegistration(body: CPPWritable[]): void {
-        for (const eventName in this.pluginDefinition.events) {
-            const event = this.pluginDefinition.events[eventName];
-
-            body.push(CPPHelper.createFunctionCall('Register', [event.name]));
-        }
+        this.registerFunctionRepeater(
+            'events',
+            'Register',
+            (object: IEvent) => [object.name],
+            body
+        );
     }
 
     private buildSlashCommandRegistration(body: CPPWritable[]): void {
-        const slashCommands = this.pluginDefinition.slashCommands;
+        this.registerFunctionRepeater(
+            'slashCommands',
+            'bz_registerCustomSlashCommand',
+            (object: ISlashCommand) => [`"${object.name}"`, 'this'],
+            body
+        );
+    }
 
-        // No slash commands to register
-        if (Object.keys(slashCommands).length === 0) {
-            return;
-        }
+    private buildBZDBSettingRegistration(body: CPPWritable[]): void {
+        this.registerFunctionRepeater(
+            'bzdbSettings',
+            (object: IBZDBSetting) => {
+                switch (object.type) {
+                    case BZDBType.Bool:
+                        return 'bz_registerCustomBZDBBool';
 
-        // Only add an empty line if there's content in the body already. We don't
-        // want to start the body of a method block with an empty line.
-        if (body.length > 0) {
-            body.push(CPPHelper.createEmptyLine());
-        }
+                    case BZDBType.Double:
+                        return 'bz_registerCustomBZDBDouble';
 
-        for (const name in slashCommands) {
-            const slashCommand = slashCommands[name];
+                    case BZDBType.Int:
+                        return 'bz_registerCustomBZDBInt';
 
-            body.push(
-                CPPHelper.createFunctionCall('bz_registerCustomSlashCommand', [`"${slashCommand.name}"`, 'this'])
-            );
-        }
+                    case BZDBType.String:
+                        return 'bz_registerCustomBZDBString';
+                }
+            },
+            (object: IBZDBSetting) => {
+                let defaultValue = object.value;
+
+                if (object.type === BZDBType.String) {
+                    defaultValue = `"${defaultValue}"`;
+                } else if (object.type === BZDBType.Bool) {
+                    defaultValue = (object.type) ? 'true' : 'false';
+                } else {
+                    defaultValue = `${+object.value}`;
+                }
+
+                return [
+                    `"${object.name}"`,
+                    defaultValue,
+                    '0',
+                    'false'
+                ];
+            },
+            body
+        );
+    }
+
+    private buildFlagRegistration(body: CPPWritable[]): void {
+        this.registerFunctionRepeater(
+            'flags',
+            'bz_RegisterCustomFlag',
+            (object: IFlag) => [
+                `"${object.abbreviation}"`,
+                `"${object.name}"`,
+                `"${object.helpString}"`,
+                '0',
+                object.type
+            ],
+            body
+        );
+    }
+
+    private buildMapObjectRegistration(body: CPPWritable[]): void {
+        this.registerFunctionRepeater(
+            'mapObjects',
+            'bz_registerCustomMapObject',
+            (object: IMapObject) => [`"${object.name}"`, 'this'],
+            body
+        );
     }
 
     private buildCallbackRegistration(body: CPPWritable[]): void {
@@ -76,10 +134,15 @@ export default class InitChunk extends ChunkWriter {
         );
     }
 
-    private buildMapObjectRegistration(body: CPPWritable[]): void {
-        const mapObjects = this.pluginDefinition.mapObjects;
+    private registerFunctionRepeater(
+        namespace: string,
+        functionCall: ((object: Object) => string) | string,
+        functionParams: (object: Object) => string[],
+        body: CPPWritable[]
+    ): void {
+        const objects = this.pluginDefinition[namespace];
 
-        if (Object.keys(mapObjects).length === 0) {
+        if (Object.keys(objects).length === 0) {
             return;
         }
 
@@ -87,10 +150,13 @@ export default class InitChunk extends ChunkWriter {
             body.push(CPPHelper.createEmptyLine());
         }
 
-        for (const name in mapObjects) {
-            const mapObject = mapObjects[name];
+        for (const name in objects) {
+            const object = objects[name];
+            const fxnLiteral = (typeof functionCall === 'function') ? functionCall(object) : functionCall;
 
-            body.push(CPPHelper.createFunctionCall('bz_registerCustomMapObject', [`"${mapObject.name}"`, 'this']));
+            body.push(
+                CPPHelper.createFunctionCall(fxnLiteral, functionParams(object))
+            );
         }
     }
 }
