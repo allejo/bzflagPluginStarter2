@@ -8,7 +8,7 @@ import {
     CPPSwitchBlock,
     CPPVariable,
     CPPVisibility,
-    CPPWritable
+    CPPWritable,
 } from 'aclovis';
 import { ChunkWriter } from './ChunkWriter';
 import { IEvent } from '../IEvent';

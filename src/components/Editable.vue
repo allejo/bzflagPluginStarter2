@@ -12,7 +12,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
-    name: 'editable'
+    name: 'editable',
 })
 export default class Editable extends Vue {
     @Prop() content: string;

@@ -29,12 +29,12 @@ licensesAsText.keys().forEach(key => {
 
     licensesDictionary[sanitizedKey] = {
         name: sanitizedKey,
-        body: licensesAsText(key)
+        body: licensesAsText(key),
     };
 });
 
 @Component({
-    name: 'plugin-license-selector'
+    name: 'plugin-license-selector',
 })
 export default class PluginLicenseSelector extends Vue {
     selected: string = 'Proprietary';

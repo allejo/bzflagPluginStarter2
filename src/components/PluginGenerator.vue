@@ -78,7 +78,7 @@ import {
     CPPFormatter,
     CPPWritableObject,
     CPPVisibility,
-    ILanguageWritable
+    ILanguageWritable,
 } from 'aclovis';
 import { IPluginEvent } from '../lib/IPluginEvent';
 import CPPSwitchBlock from 'aclovis/dist/cpp/CPPSwitchBlock';
@@ -88,7 +88,7 @@ import IMapObject from '../lib/IMapObject';
 import MapObjectBuilder from '../lib/MapObjectBuilder';
 
 @Component({
-    name: 'plugin-generator'
+    name: 'plugin-generator',
 })
 export default class PluginGenerator extends Vue {
     private plugin: CPPClass;
@@ -115,7 +115,7 @@ export default class PluginGenerator extends Vue {
     get formatter(): CPPFormatter {
         let formatter = new CPPFormatter({
             indentWithSpaces: true,
-            indentSpaceCount: 4
+            indentSpaceCount: 4,
         });
 
         return this.pluginDefinition.formatter || formatter;
@@ -263,7 +263,7 @@ export default class PluginGenerator extends Vue {
             initBody.push(
                 CPPHelper.createFunctionCall('bz_setclipFieldString', [
                     `"${this.pluginDefinition.callsign}/${this.className}"`,
-                    'Name()'
+                    'Name()',
                 ])
             );
         }
@@ -366,7 +366,7 @@ export default class PluginGenerator extends Vue {
 
         let fxn = new CPPFunction('int', 'GeneralCallback', [
             CPPVariable.createConstChar('name'),
-            new CPPVariable('void*', 'data')
+            new CPPVariable('void*', 'data'),
         ]);
 
         let nullCheck = new CPPIfBlock();
@@ -376,7 +376,7 @@ export default class PluginGenerator extends Vue {
             nullCheck,
             CPPHelper.createEmptyLine(),
             new CPPVariable('std::string', 'callback', 'name'),
-            CPPHelper.createEmptyLine()
+            CPPHelper.createEmptyLine(),
         ];
 
         let callbackMatching = new CPPIfBlock();
@@ -384,7 +384,7 @@ export default class PluginGenerator extends Vue {
         callbacks.forEach(function(value) {
             callbackMatching.defineCondition(`callback == "${value}"`, [
                 CPPHelper.createEmptyLine(),
-                new CPPWritableObject('return 1;')
+                new CPPWritableObject('return 1;'),
             ]);
         });
 
@@ -406,7 +406,7 @@ export default class PluginGenerator extends Vue {
             CPPVariable.createInt('playerID'),
             new CPPVariable('bz_ApiString', 'command'),
             new CPPVariable('bz_ApiString', '/*message*/'),
-            new CPPVariable('bz_APIStringList', '*params')
+            new CPPVariable('bz_APIStringList', '*params'),
         ]);
 
         let commandBlock = new CPPIfBlock();
@@ -414,7 +414,7 @@ export default class PluginGenerator extends Vue {
         slashCommands.forEach(function(value) {
             commandBlock.defineCondition(`command == "${value}"`, [
                 CPPHelper.createEmptyLine(),
-                new CPPWritableObject('return true;')
+                new CPPWritableObject('return true;'),
             ]);
         });
 

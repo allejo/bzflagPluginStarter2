@@ -22,7 +22,7 @@ export default class SlashCommandChunk extends ChunkWriter {
             CPPVariable.createInt('playerID'),
             new CPPVariable('bz_ApiString', 'command'),
             new CPPVariable('bz_ApiString', '/*message*/'),
-            new CPPVariable('bz_APIStringList', '*params')
+            new CPPVariable('bz_APIStringList', '*params'),
         ]);
         this.fxn.setVirtual(true);
         this.fxn.setParentClass(pluginClass, CPPVisibility.Public);
@@ -40,7 +40,7 @@ export default class SlashCommandChunk extends ChunkWriter {
 
             ifBlock.defineCondition(`command == "${slashCommand.name}"`, [
                 CPPHelper.createEmptyLine(),
-                new CPPWritableObject('return true;')
+                new CPPWritableObject('return true;'),
             ]);
         }
 

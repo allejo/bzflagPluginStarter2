@@ -58,7 +58,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { CPPFormatter } from 'aclovis';
 
 @Component({
-    name: 'plugin-formatter'
+    name: 'plugin-formatter',
 })
 export default class PluginFormatter extends Vue {
     spacingFormat: string = '4-spaces';
@@ -75,7 +75,7 @@ export default class PluginFormatter extends Vue {
         return new CPPFormatter({
             indentWithSpaces: this.spacingFormat != 'tabs',
             indentSpaceCount: this.spacingFormat == '2-spaces' ? 2 : 4,
-            bracesOnNewLine: this.bracesOnNewLine
+            bracesOnNewLine: this.bracesOnNewLine,
         });
     }
 

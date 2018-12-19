@@ -3,7 +3,7 @@ export enum MapArgumentType {
     Float = 'Float',
     Double = 'Double',
     String = 'String',
-    Team = 'Team'
+    Team = 'Team',
 }
 
 export interface IMapPropertyArgument {

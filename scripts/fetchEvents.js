@@ -12,7 +12,7 @@ octokit.repos
     .getContent({
         owner: 'bzflag-dev',
         repo: 'bzflag.org',
-        path: '_documentation/developer/bzfs_api_events'
+        path: '_documentation/developer/bzfs_api_events',
     })
     .then(function(result) {
         result.data.forEach(function(value) {

@@ -100,8 +100,8 @@ import Editable from './Editable';
 @Component({
     name: 'map-property-argument',
     components: {
-        Editable
-    }
+        Editable,
+    },
 })
 export default class MapPropertyArgument extends Vue {
     @Prop() arg: IMapPropertyArgument;
@@ -112,7 +112,7 @@ export default class MapPropertyArgument extends Vue {
         ArgumentType.Float,
         ArgumentType.Double,
         ArgumentType.String,
-        ArgumentType.Team
+        ArgumentType.Team,
     ];
 
     requestArgumentDeletion() {

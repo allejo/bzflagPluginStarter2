@@ -19,7 +19,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-    name: 'site-footer'
+    name: 'site-footer',
 })
 export default class SiteFooter extends Vue {
     get year() {

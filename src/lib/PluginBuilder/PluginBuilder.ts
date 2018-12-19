@@ -6,7 +6,7 @@ import { IFlag } from './IFlag';
 import { IMapObject } from './IMapObject';
 import { ISlashCommand } from './ISlashCommand';
 import { NullLicense } from './ILicense';
-import { IPollType } from "./IPollType";
+import { IPollType } from './IPollType';
 
 export default class PluginBuilder {
     public definition: IPlugin;
@@ -16,7 +16,7 @@ export default class PluginBuilder {
             name: 'Sample Plugin',
             author: {
                 copyright: '',
-                callsign: ''
+                callsign: '',
             },
             license: NullLicense,
             codeStyle: {
@@ -24,7 +24,7 @@ export default class PluginBuilder {
                 bracesOnNewLine: true,
                 spacingType: 'fourSpace',
                 showDocBlocks: true,
-                showComments: true
+                showComments: true,
             },
             events: {},
             slashCommands: {},

@@ -199,8 +199,8 @@ import MapObject from './components/MapObject';
         PluginFormatter,
         PluginEventList,
         PluginGenerator,
-        SiteFooter
-    }
+        SiteFooter,
+    },
 })
 export default class App extends Vue {
     plugin: IPlugin = {
@@ -215,7 +215,7 @@ export default class App extends Vue {
         useIfStatement: false,
         formatter: null,
         buildDocBlocks: true,
-        showComments: true
+        showComments: true,
     };
 
     handleNameEdit(name: string) {

@@ -37,7 +37,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
-    name: 'crud-item'
+    name: 'crud-item',
 })
 export default class CrudItem extends Vue {
     @Prop() itemValue: any;

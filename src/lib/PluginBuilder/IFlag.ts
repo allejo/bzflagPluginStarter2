@@ -1,6 +1,6 @@
 export enum FlagType {
     Good = 'eGoodFlag',
-    Bad = 'eBadFlag'
+    Bad = 'eBadFlag',
 }
 
 export interface IFlag {

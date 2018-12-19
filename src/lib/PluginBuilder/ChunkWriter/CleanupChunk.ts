@@ -3,8 +3,8 @@ import { CPPClass, CPPFunction, CPPHelper, CPPVisibility, CPPWritable, CPPWritab
 import { ChunkWriter } from './ChunkWriter';
 import { IMapObject } from '../IMapObject';
 import { ISlashCommand } from '../ISlashCommand';
-import { IBZDBSetting } from "../IBZDBSetting";
-import { IPollType } from "../IPollType";
+import { IBZDBSetting } from '../IBZDBSetting';
+import { IPollType } from '../IPollType';
 
 export default class CleanupChunk extends ChunkWriter {
     constructor(pluginClass: CPPClass, private readonly pluginDefinition: IPlugin) {
@@ -16,9 +16,7 @@ export default class CleanupChunk extends ChunkWriter {
     }
 
     process(): void {
-        let fxnBody: CPPWritable[] = [
-            new CPPWritableObject('Flush();'),
-        ];
+        let fxnBody: CPPWritable[] = [new CPPWritableObject('Flush();')];
 
         this.buildSlashCommandRemoval(fxnBody);
         this.buildMapObjectRemoval(fxnBody);
@@ -81,9 +79,7 @@ export default class CleanupChunk extends ChunkWriter {
         for (const name in objects) {
             const object = objects[name];
 
-            body.push(
-                CPPHelper.createFunctionCall(functionCall, functionParams(object))
-            );
+            body.push(CPPHelper.createFunctionCall(functionCall, functionParams(object)));
         }
     }
 }

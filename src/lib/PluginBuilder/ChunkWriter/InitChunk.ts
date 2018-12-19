@@ -30,12 +30,7 @@ export default class InitChunk extends ChunkWriter {
     }
 
     private buildEventRegistration(body: CPPWritable[]): void {
-        this.registerFunctionRepeater(
-            'events',
-            'Register',
-            (object: IEvent) => [object.name],
-            body
-        );
+        this.registerFunctionRepeater('events', 'Register', (object: IEvent) => [object.name], body);
     }
 
     private buildSlashCommandRegistration(body: CPPWritable[]): void {
@@ -71,17 +66,12 @@ export default class InitChunk extends ChunkWriter {
                 if (object.type === BZDBType.String) {
                     defaultValue = `"${defaultValue}"`;
                 } else if (object.type === BZDBType.Bool) {
-                    defaultValue = (object.type) ? 'true' : 'false';
+                    defaultValue = object.type ? 'true' : 'false';
                 } else {
                     defaultValue = `${+object.value}`;
                 }
 
-                return [
-                    `"${object.name}"`,
-                    defaultValue,
-                    '0',
-                    'false'
-                ];
+                return [`"${object.name}"`, defaultValue, '0', 'false'];
             },
             body
         );
@@ -96,7 +86,7 @@ export default class InitChunk extends ChunkWriter {
                 `"${object.name}"`,
                 `"${object.helpString}"`,
                 '0',
-                object.type
+                object.type,
             ],
             body
         );
@@ -129,7 +119,7 @@ export default class InitChunk extends ChunkWriter {
         body.push(
             CPPHelper.createFunctionCall('bz_setclipFieldString', [
                 `"${this.pluginDefinition.author.callsign}/${this.pluginClass.getClassName()}"`,
-                'Name()'
+                'Name()',
             ])
         );
     }
@@ -152,11 +142,9 @@ export default class InitChunk extends ChunkWriter {
 
         for (const name in objects) {
             const object = objects[name];
-            const fxnLiteral = (typeof functionCall === 'function') ? functionCall(object) : functionCall;
+            const fxnLiteral = typeof functionCall === 'function' ? functionCall(object) : functionCall;
 
-            body.push(
-                CPPHelper.createFunctionCall(fxnLiteral, functionParams(object))
-            );
+            body.push(CPPHelper.createFunctionCall(fxnLiteral, functionParams(object)));
         }
     }
 }

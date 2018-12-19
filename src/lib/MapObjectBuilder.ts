@@ -26,7 +26,7 @@ export default class MapObjectBuilder {
         'rotation',
         'rot',
         'height',
-        'radius'
+        'radius',
     ];
 
     private readonly mapObjectDefinitions: { [key: string]: MapObjectStorage } = {};
@@ -40,7 +40,7 @@ export default class MapObjectBuilder {
             this.mapObjectClasses.push(mapObjectClass);
             this.mapObjectDefinitions[object.name] = {
                 cppClass: mapObjectClass,
-                mapDef: object
+                mapDef: object,
             };
         });
     }
@@ -53,7 +53,7 @@ export default class MapObjectBuilder {
         // Storage
         let fxn = new CPPFunction('bool', 'MapObject', [
             new CPPVariable('bz_ApiString', 'object'),
-            new CPPVariable('bz_CustomMapObjectInfo*', 'data')
+            new CPPVariable('bz_CustomMapObjectInfo*', 'data'),
         ]);
         let fxnBody: CPPWritable[] = [new CPPWritableObject('// Note, this value will be in uppercase')];
 
@@ -123,7 +123,7 @@ export default class MapObjectBuilder {
             CPPHelper.createEmptyLine(),
             new CPPVariable('bz_APIStringList', 'nubs'),
             new CPPWritableObject('nubs.tokenize(line.c_str(), " ", 0, true);'),
-            CPPHelper.createEmptyLine()
+            CPPHelper.createEmptyLine(),
         ]);
 
         let ifBlock: CPPIfBlock = new CPPIfBlock();
@@ -131,7 +131,7 @@ export default class MapObjectBuilder {
         ifBlock.defineCondition('nubs.size() > 0', [
             new CPPVariable('std::string', 'key', 'bz_toupper(nubs.get(0).c_str())'),
             CPPHelper.createEmptyLine(),
-            this.buildPropertyParser(varName, definition.mapDef)
+            this.buildPropertyParser(varName, definition.mapDef),
         ]);
         ifBlock.defineElseCondition([]);
 

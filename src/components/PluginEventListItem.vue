@@ -10,7 +10,7 @@ import { IPluginEvent } from '../lib/IPluginEvent';
 import IPluginEventSelectionEvent from '../lib/IPluginEventSelectionEvent';
 
 @Component({
-    name: 'plugin-event-list-item'
+    name: 'plugin-event-list-item',
 })
 export default class PluginEventListItem extends Vue {
     selected: boolean = false;
@@ -21,7 +21,7 @@ export default class PluginEventListItem extends Vue {
     requestSelectionUpdate() {
         let event: IPluginEventSelectionEvent = {
             selected: this.selected,
-            event: this.event
+            event: this.event,
         };
 
         this.$parent.$emit('pluginEventSelectionUpdated', event);

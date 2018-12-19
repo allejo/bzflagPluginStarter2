@@ -27,8 +27,8 @@ import PluginLicenseSelector from './PluginLicenseSelector.vue';
 @Component({
     name: 'plugin-definition',
     components: {
-        PluginLicenseSelector
-    }
+        PluginLicenseSelector,
+    },
 })
 export default class PluginDefinition extends Vue {
     pluginName: string = '';

@@ -2,7 +2,7 @@ export enum BZDBType {
     Bool,
     Double,
     Int,
-    String
+    String,
 }
 
 export interface IBZDBSetting {

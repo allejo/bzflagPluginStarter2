@@ -29,7 +29,7 @@ export default class PluginWriter {
         let formatter = new CPPFormatter({
             bracesOnNewLine: codeStyle.bracesOnNewLine,
             indentWithSpaces: codeStyle.spacingType === 'tabs',
-            indentSpaceCount: codeStyle.spacingType === 'twoSpace' ? 2 : 4
+            indentSpaceCount: codeStyle.spacingType === 'twoSpace' ? 2 : 4,
         });
 
         return this.pluginClass.write(formatter, 0);

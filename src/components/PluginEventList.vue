@@ -29,14 +29,14 @@ eventsAsYaml.keys().forEach(key => {
         since: eventDefinition.attributes.since,
         dataType: eventDefinition.attributes.dataType,
         description: eventDefinition.body,
-        parameters: eventDefinition.attributes.parameters
+        parameters: eventDefinition.attributes.parameters,
     };
 });
 
 @Component({
     components: {
-        PluginEventListItem
-    }
+        PluginEventListItem,
+    },
 })
 export default class PluginEventList extends Vue {
     events = eventsDictionary;

@@ -5,7 +5,7 @@ import { IEvent } from './IEvent';
 import { ILicense } from './ILicense';
 import { IMapObject } from './IMapObject';
 import { ISlashCommand } from './ISlashCommand';
-import { IPollType } from "./IPollType";
+import { IPollType } from './IPollType';
 
 export default interface IPlugin {
     /**

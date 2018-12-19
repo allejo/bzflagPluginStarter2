@@ -36,14 +36,14 @@ import CrudItem from './CrudItem';
 @Component({
     name: 'crud-editor',
     components: {
-        CrudItem
-    }
+        CrudItem,
+    },
 })
 export default class CrudEditor extends Vue {
     newItem: string = '';
 
     @Prop({
-        default: ''
+        default: '',
     })
     label: string;
 

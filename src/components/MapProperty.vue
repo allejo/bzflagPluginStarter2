@@ -79,8 +79,8 @@ import { IMapPropertyArgument } from '../lib/IMapPropertyArgument';
     name: 'map-property',
     components: {
         Editable,
-        MapPropertyArgument
-    }
+        MapPropertyArgument,
+    },
 })
 export default class MapProperty extends Vue {
     @Provide() lockedPropertyMsg: string = 'This is a property all map objects natively support and cannot be edited.';
@@ -104,7 +104,7 @@ export default class MapProperty extends Vue {
     requestDefinitionUpdate() {
         this.$emit('mapPropertyChange', {
             id: this.aid,
-            definition: this.definition
+            definition: this.definition,
         });
     }
 }

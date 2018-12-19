@@ -8,7 +8,7 @@ export default class MapObjectHelper {
         return {
             uuid: nanoid(),
             name: 'arg',
-            type: ArgumentType.Integer
+            type: ArgumentType.Integer,
         };
     }
 
@@ -17,7 +17,7 @@ export default class MapObjectHelper {
             uuid: nanoid(),
             name: 'property',
             readonly: false,
-            arguments: []
+            arguments: [],
         };
     }
 
@@ -34,19 +34,19 @@ export default class MapObjectHelper {
                         {
                             uuid: nanoid(),
                             name: 'x-pos',
-                            type: ArgumentType.Float
+                            type: ArgumentType.Float,
                         },
                         {
                             uuid: nanoid(),
                             name: 'y-pos',
-                            type: ArgumentType.Float
+                            type: ArgumentType.Float,
                         },
                         {
                             uuid: nanoid(),
                             name: 'z-pos',
-                            type: ArgumentType.Float
-                        }
-                    ]
+                            type: ArgumentType.Float,
+                        },
+                    ],
                 },
                 {
                     uuid: nanoid(),
@@ -56,19 +56,19 @@ export default class MapObjectHelper {
                         {
                             uuid: nanoid(),
                             name: 'x-size',
-                            type: ArgumentType.Float
+                            type: ArgumentType.Float,
                         },
                         {
                             uuid: nanoid(),
                             name: 'y-size',
-                            type: ArgumentType.Float
+                            type: ArgumentType.Float,
                         },
                         {
                             uuid: nanoid(),
                             name: 'z-size',
-                            type: ArgumentType.Float
-                        }
-                    ]
+                            type: ArgumentType.Float,
+                        },
+                    ],
                 },
                 {
                     uuid: nanoid(),
@@ -78,11 +78,11 @@ export default class MapObjectHelper {
                         {
                             uuid: nanoid(),
                             name: 'rotation',
-                            type: ArgumentType.Float
-                        }
-                    ]
-                }
-            ]
+                            type: ArgumentType.Float,
+                        },
+                    ],
+                },
+            ],
         };
     }
 }

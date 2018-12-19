@@ -38,10 +38,10 @@ void TestClass::Cleanup()
 
 test('render method with Flush() call and slash commands', () => {
     pluginDef.addSlashCommand({
-        name: 'ican'
+        name: 'ican',
     });
     pluginDef.addSlashCommand({
-        name: 'seethefuture'
+        name: 'seethefuture',
     });
 
     const chunk = new CleanupChunk(pluginClass, pluginDef.definition);
@@ -88,7 +88,7 @@ void TestClass::Cleanup()
 
 test('render method with Flush(), slash commands, and map objects', () => {
     pluginDef.addSlashCommand({
-        name: 'command'
+        name: 'command',
     });
     pluginDef.addMapObject({
         uuid: '',

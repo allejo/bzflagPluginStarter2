@@ -80,15 +80,15 @@ import MapObjectHelper from '../lib/MapObjectHelper';
     name: 'map-object',
     components: {
         MapProperty,
-        Editable
-    }
+        Editable,
+    },
 })
 export default class MapObject extends Vue {
     @Prop() aid: number;
     @Prop() definition: IMapObject;
 
     @Prop({
-        default: ''
+        default: '',
     })
     className: string;
 
