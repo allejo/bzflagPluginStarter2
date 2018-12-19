@@ -1,10 +1,9 @@
-import PluginBuilder from '../../PluginBuilder';
 import InitChunk from '../InitChunk';
-import { CPPClass } from 'aclovis';
-import { codeStyle, multiLineString } from './utilities';
+import PluginBuilder from '../../PluginBuilder';
+import { ITestCodeDefinition, ITestCodeDefinitionRepeater } from './utilities';
 import { getIEventMock } from './mocks/IEventMock';
 
-const tests = [
+const tests: ITestCodeDefinition[] = [
     {
         desc: 'Init() should render a single slash command registration with nothing else',
         setup: (def: PluginBuilder) => {
@@ -35,26 +34,4 @@ void TestClass::Init(const char* config)
     },
 ];
 
-let pluginDef: PluginBuilder;
-let pluginClass: CPPClass;
-
-beforeEach(() => {
-    pluginDef = new PluginBuilder();
-    pluginClass = new CPPClass('TestClass');
-});
-
-for (let i = 0; i < tests.length; i++) {
-    const testDef = tests[i];
-
-    test(testDef.desc, () => {
-        testDef.setup(pluginDef);
-
-        const chunk = new InitChunk(pluginClass, pluginDef.definition);
-        chunk.process();
-
-        const method = pluginClass.getMethods()[chunk.getIdentifier()];
-        const output = method.functionDef.write(codeStyle, 0);
-
-        expect(output).toEqual(multiLineString(testDef.expected));
-    });
-}
+ITestCodeDefinitionRepeater((c, d) => new InitChunk(c, d), tests);
