@@ -1,3 +1,5 @@
+> **Heads up!** This project has been superseded by [version 3, available here](https://github.com/allejo/bzflagPluginStarter3).
+
 # BZFlag Plug-in Starter
 
 A [Vue.js](https://vuejs.org/) powered website used to generate the skeleton of a BZFlag 2.4 compatible plug-in. The roadmap and currently supported features for this website are as follows:
